@@ -1,0 +1,3 @@
+[submodule "utils/external/firepython"]
+	path = utils/external/firepython
+	url = git://github.com/woid/firepython.git
