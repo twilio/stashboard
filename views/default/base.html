@@ -1,0 +1,22 @@
+<!DOCTYPE>
+<html>
+  <head>
+    <title>Is My Web Service Up?</title>
+    <link rel="stylesheet" href="/static/default/reset.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/static/default/style.css" type="text/css" media="screen" />    
+    <script type="text/javascript"      src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    {% block js %}
+    {% endblock %}
+  </head>
+  <body>
+    <div id="wrapper">
+      <div id="header">
+        <h1>Is My Web Service Up and Running?</h1>
+      </div>
+      <div id="content">
+        {% block content %}
+          
+        {% endblock %}
+    </div>
+  </body>
+</html>

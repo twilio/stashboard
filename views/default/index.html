@@ -1,0 +1,115 @@
+{% block js %}
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $("#statusBox").click(function(){
+          if($(this).is(":checked")){
+            $("#submit .status").removeAttr('disabled');
+          } else {
+            $("#submit .status").attr('disabled', 'disabled');
+          }
+        });
+        
+        $("#messageBox").click(function(){
+          if($(this).is(":checked")){
+            $("#submit .message").removeAttr('disabled');
+          } else {
+            $("#submit .message").attr('disabled', 'disabled');
+          }
+        });
+        
+      });
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div id="status">
+      <h2>{{ state.message }}</h2>
+    </div>
+    <div id="sidebar">
+        
+        <div class="panel">
+          <script src="http://widgets.twimg.com/j/2/widget.js"></script>
+          <script>
+          new TWTR.Widget({
+            version: 2,
+            type: 'profile',
+            rpp: 4,
+            interval: 6000,
+            width: 250,
+            height: 300,
+            theme: {
+              shell: {
+                background: '#1f6f91',
+                color: '#ffffff'
+              },
+              tweets: {
+                background: '#000000',
+                color: '#ffffff',
+                links: '#fcc100'
+              }
+            },
+            features: {
+              scrollbar: false,
+              loop: false,
+              live: false,
+              hashtags: true,
+              timestamp: true,
+              avatars: false,
+              behavior: 'all'
+            }
+          }).render().setUser('{{ twitter }}').start();
+          </script>
+        </div>
+        
+        {% if user_is_admin %}
+        <div class="panel">
+            <h3>Administrative Panel</h3>
+            <ul>
+                <li><a id="newblog" href="#">Edit Statuses</a></li>
+                <li><a id="updatestatus" href="#">Edit Reasons</a></li>
+            </ul>
+        </div>
+        {% endif %}
+        
+      </div>
+    
+      {% if user_is_admin %}
+      <div id="submit">
+        <form method="post">
+          <h3>Update Web Service Status</h3>
+          <input id="statusBox" type="checkbox" checked="checked"></input>
+          <label id="statusLabel" for="status">Status:</label>
+          <select class="status" name="status">
+            {% for status in statuses %}
+              <option selected  value="{{ status }}">{{ status|capfirst }}</option>
+            {% endfor %}
+          </select>
+          <input id="messageBox" type="checkbox" checked="checked"></input>
+          <label id="messageLabel" for="message">Message:</label>
+          <textarea class="message" name="message"></textarea>
+
+          <input class="submit" type="submit" value="Submit"></input>
+        </form>
+      </div>
+      {% endif %}
+
+        
+      <div id="posts">
+        {% for post in posts %}
+        <div class="post">
+            <div class="postMeta">
+                {% if user_is_admin %}
+                <span class="articlebtn"><a id="deletebtn" href="#">Delete</a></span>
+                {% endif %}
+                <span class="date">{{ post.date|date:"F jS, fA" }}</span>
+            </div>
+            <div class="entry">
+                <p>{{ post.text }}</p>
+            </div>
+        </div>
+        {% endfor %}
+      </div>
+      
+    </div>
+{% endblock %}
+

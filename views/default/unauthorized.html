@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block first_column %}
+    <div id="mainCol" class="fix"><a name="main"></a>
+        <div class="post">
+            <div class="postMeta"><span class="date">Authorization Error</span></div>
+            <h2>Permission Denied</h2>
+            <div class="entry">
+                <p>Sorry. You are trying to access a web page without proper authorization.</p>
+                {% if user %}
+                <p>You are currently logged in as {{ user.email }}, and this account doesn't have permission to access the information.</p>
+                <p>If you believe this is a mistake, try <a href="{{ logout_url }}">logging out</a> and then 
+                    <a href="{{ login_url }}">logging in</a> again.</p>
+                {% else %}
+                <p>You should try to <a href="{{ login_url }}">log in</a> with your Google ID if you feel you should have access.</p>
+                {% endif %}
+                <p>After logging in with an authorized account, revisit the desired web page.</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
