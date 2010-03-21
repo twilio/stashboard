@@ -90,7 +90,7 @@ TODO Add a link to the messages?
 
 #### Parameters
 
-* **state**: An valid system state. See /states
+* **status**: An valid system state. See /states
 * **message**: Optional. Will create a message at the same time
 
 Will return the newly created status

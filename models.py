@@ -4,13 +4,17 @@ import config
 
 class Service(db.Model):
     #ensure that name is url friendly
+    @staticmethod
+    def get_by_name(service_name):
+        return Service.all().filter('name = ', service_name).get()
+    
     name = db.StringProperty(required=True)
     description = db.StringProperty(required=True)
     
     def sid(self):
         return str(self.key())
         
-    def obj(self):
+    def rest(self):
         """ Return a Python object representing this model"""
 
         m = {}
@@ -20,20 +24,23 @@ class Service(db.Model):
         return m
 
 class Status(db.Model):
-    text = db.TextProperty(required=True)
-    description = db.TextProperty(required=True)
+    @staticmethod
+    def get_by_name(status_name, service):
+        return Status.all().filter('name = ', status_name).filter('service =', service).get()
+    
+    name = db.StringProperty(required=True)
+    description = db.StringProperty(required=True)
     service = db.ReferenceProperty(Service, required=True, 
         collection_name="statuses")
     
     def sid(self):
         return str(self.key())
         
-    def obj(self):
+    def rest(self):
         """ Return a Python object representing this model"""
 
         m = {}
-        m["sid"] = self.sid()
-        m["text"] = unicode(self.text)
+        m["name"] = unicode(self.name)
         m["description"] = unicode(self.description)
 
         return m
@@ -59,19 +66,20 @@ class Event(db.Model):
     def sid(self):
         return str(self.key())
     
-    def obj(self):
+    def rest(self):
         """ Return a Python object representing this model"""
         
         m = {}
         m["sid"] = self.sid()
-        m["start"] = self.start
-        m["status"] = self.status.text
-        m["duration"] = self.duration()
+        m["start"] = self.start.isoformat()
+        m["status"] = self.status.name
         
         if self.end == None:
-            m["end"] = datetime.now()
+            m["end"] = None
+            m["duration"] = self.duration()
         else:
             m["end"] = self.end
+            m["duration"] = self.duration()
         
         return m
         
@@ -83,7 +91,7 @@ class Message(db.Model):
     def sid(self):
         return str(self.key())
     
-    def obj(self):
+    def rest(self):
         """ Return a Python object representing this model"""
         
         m = {}
