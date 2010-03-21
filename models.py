@@ -49,8 +49,8 @@ class Status(db.Model):
 class Event(db.Model):
     
     @staticmethod
-    def current():
-        pass
+    def current(service):
+        return Event.all().filter('service =', service).order('-start').get()
     
     start = db.DateTimeProperty(required=True, auto_now_add=True)
     end = db.DateTimeProperty()
@@ -84,9 +84,15 @@ class Event(db.Model):
         return m
         
 class Message(db.Model):
+    @staticmethod
+    def get_by_sid(sid):
+        return Message.get(db.Key(encoded=sid))
+    
     text = db.TextProperty(required=True)
     date = db.DateTimeProperty(required=True, auto_now_add=True)
     event = db.ReferenceProperty(Event, required=True)
+    service = service = db.ReferenceProperty(Service, required=True, 
+        collection_name="messages")
     
     def sid(self):
         return str(self.key())
@@ -96,9 +102,9 @@ class Message(db.Model):
         
         m = {}
         m["sid"] = self.sid()
-        m["date"] = self.date
-        m["message"] = self.text
-        m["event"] = event.sid()
+        m["date"] = self.date.isoformat()
+        m["message"] = str(self.text)
+        m["event"] = self.event.sid()
         
         return m
         

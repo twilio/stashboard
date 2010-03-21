@@ -155,7 +155,7 @@ class CurrentEventHandler(restful.Controller):
         service = Service.get_by_name(service_name)
         
         if (service):
-            event = Event.all().filter('service =', service).order('-start').get()
+            event = Event.current(service)
         
             if (event):
                 self.json(event.rest()) 
@@ -189,47 +189,111 @@ class MessagesListHandler(restful.Controller):
 
         service = Service.get_by_name(service_name)
                 
-        if (service):
-            query = Message.all()
-            query.filter('service =', service)
-        
-            if (query):
-                data = []
-        
-                for s in query:
-                    data.append(s.rest())
-        
-                self.json(data) 
-            else:
-                self.error(404, "No messages for Service %s" % service_name)
-        else:
+        if not service:
             self.error(404, "Service %s not found" % service_name)
+            return
+        
+        query = Message.all()
+        query.filter('service =', service)
+        
+        if not query:
+            self.error(404, "No messages for Service %s" % service_name)
+            return
+            
+        data = []
+
+        for s in query:
+            data.append(s.rest())
+
+        self.json(data) 
+            
 
 
-    @authorized.role("admin")
-    def post(self):
+    #@authorized.role("admin")
+    def post(self, service_name):
         logging.debug("MessagesListHandler#post")
-        self.redirect("/")
+        
+        text = self.request.get('text', default_value=None)
+        if not text:
+            self.error(400, "No message text")
+            return
+        
+        service = Service.get_by_name(service_name)
+        if not service:
+            self.error(404, "No messages for Service %s" % service_name)
+            return
+        
+        event = Event.current(service)
+        if not event:
+            self.error(404, "No current event for Service %s" % service_name)
+            return
+        
+        message = Message(service=service,event=event,text=text)
+        message.put()
+        self.json(message.rest())
         
 class MessageInstanceHandler(restful.Controller):
     def get(self, service_name, sid):
         logging.debug("MessageInstanceHandler#get sid=%s" % sid)
         
+        service = Service.get_by_name(service_name)
+
+        if not service: 
+            self.error(404, "Service %s not found" % service_name)
+            return
+        
+        event = Message.get_by_sid(sid)
+        
+        if not event:
+            self.error(404, "No message for Service %s with sid = %s" % (service_name,sid))
+            return
+        
+        self.json(event.rest()) 
+
+    #@authorized.role("admin")
+    def post(self, service_name, sid):
+        logging.debug("MessageInstanceHandler#post sid=%s" % sid)
+        
+        text = self.request.get('text', default_value=None)
+        
+        if not text:
+            self.error(400, "Parameter 'text' required")
+            return
         
         service = Service.get_by_name(service_name)
         
-        if (service):
-            event = Message.get_by_key_name(sid)
-            if (event):
-                self.json(event.rest()) 
-            else:
-                self.error(404, "No message for Service %s with sid = %s" % (service_name,sid))
-        else:
+        if not service: 
             self.error(404, "Service %s not found" % service_name)
-
-    @authorized.role("admin")
-    def post(self):
-        self.redirect("/")
+            return
+        
+        msg = Message.get_by_sid(sid)
+        
+        if not msg:
+            self.error(404, "No message for Service %s with sid = %s" % (service_name,sid))
+            return
+            
+        msg.text = text
+        msg.put()
+        self.json(msg.rest())
+        
+    def delete(self, service_name, sid):
+        logging.debug("MessageInstanceHandler#delete sid=%s" % sid)
+        
+        service = Service.get_by_name(service_name)
+        
+        if not service: 
+            self.error(404, "Service %s not found" % service_name)
+            return
+        
+        msg = Message.get_by_sid(sid)
+        
+        if not msg:
+            self.error(404, "No message for Service %s with sid = %s" % (service_name,sid))
+            return
+        
+        self.json(msg.rest())
+        msg.delete()
+        
         
 class StatusesListHandler(restful.Controller):
     def get(self, service_name):

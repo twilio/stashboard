@@ -49,6 +49,8 @@ ROUTES = [
     ('/*$', site.RootHandler),
     #('/(.*[^/])$', site.SlashHandler),
     #('/*[^/]', site.) redirect pages without slashed to pages with slashes
+    
+    #API
     ('/403.html', site.UnauthorizedHandler),
     ('/404.html', site.NotFoundHandler),
     (r'/api/services/', api.ServicesListHandler),
@@ -60,11 +62,13 @@ ROUTES = [
     (r'/api/services/(.*)/statuses/', api.StatusesListHandler),
     (r'/api/services/(.*)/statuses/(.*)/', api.StatusInstanceHandler),
     (r'/api/services/(.*)/', api.ServiceInstanceHandler),
+    
+    #SITE
+    
+    
     ('/.*$', site.NotFoundHandler),
-    #(config.BLOG['master_atom_url'] + '/*$', blog.AtomHandler),
-    # ('/articles', blog.ArticlesHandler),
-    #('/sitemap.xml', blog.SitemapHandler),
-    #('/(.*)', blog.ArticleHandler)
+    
+    
 ]
 
 def main():

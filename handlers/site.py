@@ -53,22 +53,22 @@ from google.appengine.ext import db
 from handlers import restful
 from utils import authorized
 from utils import sanitizer
-from models import Status, Message
+from models import Status, Message, Service, Event
 import config
 
-class NotFoundHandler(restful.Controller):
+class NotFoundHandler(webapp.RequestHandler):
     def get(self):
         logging.debug("NotFoundHandler#get")
         self.error(404)
-        template_data = {}
-        self.render(template_data, '404.html')
+        #template_data = {}
+        #self.render(template_data, '404.html')
 
-class UnauthorizedHandler(restful.Controller):
+class UnauthorizedHandler(webapp.RequestHandler):
     def get(self):
         logging.debug("UnauthorizedHandler#get")
         self.error(403)
-        template_data = {}
-        self.render(template_data, 'unathorized.html')
+        #template_data = {}
+        #self.render(template_data, 'unathorized.html')
         
 class SlashHandler(restful.Controller):
     def get(self, url):
@@ -79,17 +79,16 @@ class RootHandler(restful.Controller):
         user = users.get_current_user()
         logging.debug("RootHandler#get")
         
-        q = Message.all()
-        q.order("-date")
+        q = Service.all()
+        q.order("-name")
         
         template_data = {
             "user": users.get_current_user(),
             "user_is_admin": users.is_current_user_admin(),
-            "statuses": config.SITE["options"],
-            "posts": q.fetch(10),
+            "services": q.fetch(10),
             "twitter": config.SITE["twitter"],
         }
-        self.render(template_data, 'base.html')
+        self.render(template_data, 'index.html')
 
     # @authorized.role("admin")
     # def post(self):

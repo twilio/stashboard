@@ -94,20 +94,18 @@
       {% endif %}
 
         
-      <div id="posts">
-        {% for post in posts %}
-        <div class="post">
-            <div class="postMeta">
+      <div id="services">
+        <table>
+          {% for service in services %}
+            <tr>
+                <td>{{ service.name }}</td>
+                <td>{{ service.status }}</td>
                 {% if user_is_admin %}
-                <span class="articlebtn"><a id="deletebtn" href="#">Delete</a></span>
+                <td><a id="deletebtn" href="#">Delete</a></td>
                 {% endif %}
-                <span class="date">{{ post.date|date:"F jS, fA" }}</span>
-            </div>
-            <div class="entry">
-                <p>{{ post.text }}</p>
-            </div>
-        </div>
-        {% endfor %}
+            </tr>
+          {% endfor %}
+        </table>
       </div>
       
     </div>
