@@ -1,0 +1,16 @@
+<div>
+  <table class="legend">
+    {% for status in all_statuses %}
+      <tr>
+          <td class="icon">
+            <img src="/images/status/{{ status.image}}"
+              alt="{{ status.name }}"/>
+          </td>
+                
+          <td>
+            {{ status.description }}
+          </td>
+      </tr>
+    {% endfor %}
+  </table>
+</div>

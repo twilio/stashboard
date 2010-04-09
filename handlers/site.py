@@ -97,6 +97,7 @@ class RootHandler(restful.Controller):
             "user_is_admin": users.is_current_user_admin(),
             "services": q.fetch(10),
             "past": get_past_days(5),
+            "all_statuses": Status.all().order('severity'),
             "default_status": Status.lowest_severity(),
             "recent_events": Event.all().order('-start').fetch(10),
             "twitter": config.SITE["twitter"],

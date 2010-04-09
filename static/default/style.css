@@ -42,6 +42,10 @@ h3 {font-size: 24px;}
   padding:4px 0 4px 16px;
 }
 
+.legend {border: solid 5px rgb(228, 228, 228); width: 100%; margin: 20px 0;}
+.legend tr td:first-child {width: 16px;}
+
+
 /* wordpress entries styling - main content column */
 #services { padding: 20px; }
 #services table { width: 100%; border-spacing:10; font-size: 1.1em;}
@@ -51,6 +55,7 @@ h3 {font-size: 24px;}
 #services .today {background: rgb(228, 228, 228);}
 #services .highlight {background: rgb(247, 247, 247);}
 #services .status, #services .date, #services .today {text-align: center;}
+#services table a {text-decoration: underline;}
 
 #services .event-log th {font-size: 16px;text-align: center;}
 #services .event-log td {fonst-size: 14px;}
