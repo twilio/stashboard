@@ -3,11 +3,25 @@ import datetime
 import config
 
 class Service(db.Model):
-    #ensure that name is url friendly
+    """A service to track
+
+        Properties:
+        name        -- string: The name of this service
+        description -- string: The function of the service
+        slug        -- stirng: URL friendly version of the name
+
+    """
     @staticmethod
-    def get_by_name(service_name):
-        return Service.all().filter('name = ', service_name).get()
-    
+    def get_by_slug(service_slug):
+        return Service.all().filter('slug = ', service_slug).get()
+        
+    def current_event(self):
+        return self.events.order('-start').get()
+        
+    def past_five_days(self):
+        return [None] * 5
+
+    slug = db.StringProperty(required=True)
     name = db.StringProperty(required=True)
     description = db.StringProperty(required=True)
     
@@ -19,19 +33,33 @@ class Service(db.Model):
 
         m = {}
         m["name"] = str(self.name)
+        m["id"] = str(self.slug)
         m["description"] = str(self.description)
 
         return m
 
 class Status(db.Model):
+    """A possible system status
+
+        Properties:
+        name        -- string: The name of this status
+        description -- string: The state this status represents
+        image       -- string: Image in /static/images/status
+        severity    -- int: The serverity of this status
+
+    """
     @staticmethod
-    def get_by_name(status_name, service):
-        return Status.all().filter('name = ', status_name).filter('service =', service).get()
-    
+    def get_by_name(status_name):
+        return Status.all().filter('name = ', status_name).get()
+        
+    @staticmethod
+    def lowest_severity():
+        return Status.all().order('severity').get()
+        
     name = db.StringProperty(required=True)
     description = db.StringProperty(required=True)
-    service = db.ReferenceProperty(Service, required=True, 
-        collection_name="statuses")
+    image = db.StringProperty(required=True)
+    severity = db.IntegerProperty(required=True)
     
     def sid(self):
         return str(self.key())
@@ -42,7 +70,8 @@ class Status(db.Model):
         m = {}
         m["name"] = unicode(self.name)
         m["description"] = unicode(self.description)
-
+        m["severity"] = str(self.severity)
+        
         return m
     
 
@@ -55,6 +84,7 @@ class Event(db.Model):
     start = db.DateTimeProperty(required=True, auto_now_add=True)
     end = db.DateTimeProperty()
     status = db.ReferenceProperty(Status, required=True)
+    message = db.TextProperty(required=True)
     service = db.ReferenceProperty(Service, required=True, 
         collection_name="events")
         
@@ -73,6 +103,7 @@ class Event(db.Model):
         m["sid"] = self.sid()
         m["start"] = self.start.isoformat()
         m["status"] = self.status.name
+        m["message"] = str(self.message)
         
         if self.end == None:
             m["end"] = None
@@ -82,31 +113,5 @@ class Event(db.Model):
             m["duration"] = self.duration()
         
         return m
-        
-class Message(db.Model):
-    @staticmethod
-    def get_by_sid(sid):
-        return Message.get(db.Key(encoded=sid))
-    
-    text = db.TextProperty(required=True)
-    date = db.DateTimeProperty(required=True, auto_now_add=True)
-    event = db.ReferenceProperty(Event, required=True)
-    service = service = db.ReferenceProperty(Service, required=True, 
-        collection_name="messages")
-    
-    def sid(self):
-        return str(self.key())
-    
-    def rest(self):
-        """ Return a Python object representing this model"""
-        
-        m = {}
-        m["sid"] = self.sid()
-        m["date"] = self.date.isoformat()
-        m["message"] = str(self.text)
-        m["event"] = self.event.sid()
-        
-        return m
-        
     
 

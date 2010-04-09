@@ -36,7 +36,7 @@ SITE = {
     "root_url": "http://ismywebservicedown.appspot.com",
     "master_atom_url": "/feeds/atom.xml",
     "template_path": os.path.join(APP_ROOT_DIR, "views/default"),
-    "twitter": "twitter",
+    "twitter": "twiliobot",
 
     # If you want to use legacy ID mapping for your former blog platform,
     # define it here and insert the necessary mapping code in the

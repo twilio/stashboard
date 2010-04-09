@@ -1,42 +1,30 @@
 html, body{height: 100%;}
-body{font:12px arial,helvetica,verdana,sans-serif;}
+body{font:12px arial,helvetica,verdana,sans-serif;background: rgb(247, 247, 247);}
 
 a{color:#333;text-decoration:none;}
 a:hover{color:#666;}
 
-#wrapper { padding: 0px 30px; width: 900px; 
-           border-left: 1px solid black; border-right: 1px solid black;
-           min-height: 100%; height: auto !important; height: 100%; margin: 0 auto -2em;
+#wrapper { width: 900px; min-height: 100%;
+           height: auto !important; height: 100%; margin: 0 auto -3em;
          }
-#wrapper.down { background: #bf1911; background: -moz-radial-gradient(top center, #ee0000, #bf1911, #7b100b); }
-#wrapper.partial { background: #f1cd2c; background: -moz-radial-gradient(top center, #eaf108, #f1cd2c, #ddab16); }
-#wrapper.up { background: #009202; background: -moz-radial-gradient(top center, #00d703, #009202, #005601); }
-#wrapper.rainbow { background: #009202; background: -moz-radial-gradient(top center, red, orange, yellow, green, blue, indigo, violet); }
+         
+h1 {font-size: 32px;}
+h2 {font-size: 32px;}
+h3 {font-size: 24px;}
+         
+#header {height: 100px;}
 
-#header {
-  border-left: 1px solid black; 
-  border-right: 1px solid black;
-  border-bottom: 1px solid black;
-  border-bottom-right-radius: 10px;
-  -moz-border-radius-bottomright: 10px;
-  -webkit-border-bottom-right-radius: 10px;
-  border-bottom-left-radius: 10px;
-  -moz-border-radius-bottomleft: 10px;
-  -webkit-border-bottom-left-radius: 10px;
-  background: white;
-  height: 50px;
-}
-#header h1 {font-size: 24px; padding: 10px;}
+#header h1 {padding: 15px; float: left;}
+#header h2 {padding: 15px; float: left; line-height: 67px;}
+#logo {width: 200px;}
+#logo img { width: 200px; }
 
 
 #status { height: 200px; }
 #status h2 { font-size: 60px; color: #FFF; text-align: center; padding-top: 65px;text-shadow: 2px 2px 0px #000;}
 
 #content {
-  border: 1px solid black; 
-  border-radius: 10px;
-  -moz-border-radius: 10px;
-  -webkit-border-radius: 10px;
+  border: 1px solid rgb(228, 228, 228); 
   background: white;
   height: 500px;
   padding-bottom: 30px;
@@ -55,54 +43,42 @@ a:hover{color:#666;}
 }
 
 /* wordpress entries styling - main content column */
-#posts { padding: 10px 40px; margin-right: 270px;}
-.postMeta{background:url(images/dot.gif) repeat-x left center;text-transform:uppercase;font-size:11px;text-align:right;margin-bottom:5px;}
-.postMeta span.date{background:#FFF;color:#7F7F7F;padding:0 2px 0 4px;}
-.postMeta span.comments{background:#FFF url(images/chat_grey.gif) no-repeat right center;padding-right:15px;margin-right:2px;}
-.postMeta span.comments a,
-.postMeta span.date{color:#555;}
-.postMeta span.articlebtn{background:#FFF;}
-.postMeta span.articlebtn a{background:#CCC;color:#000;padding:0 6px;margin:0 2px;text-transform:none;}
-.postMeta span.articlebtn a:hover{background:#D33;}
-.post{margin:0 0 15px 0;}
-.post h2{line-height:1.2em;margin-bottom:7px;}
-.post h2 a{width:100%;display:block;outline:none;}
-.entry h3{margin:1em 0;}
-.post .entry{line-height:1.4em;overflow:hidden;}
-.post .entry p{margin:1em 0;}
-.post .entry a{background:url(images/dot.gif) repeat-x bottom left;font-weight:bold;}
-.entry blockquote,cite,code{margin:0.8em 1.3em; display:block;}
-.entry ul{margin:0 1.3em 0;list-style:square;}
-.entry li a{color:#333;font-weight:bold;background:url(images/dot.gif) repeat-x bottom left;}
-.entry ul li{margin:0 10px 7px 7px;}
-.entry ol{margin:0 1em 0 3em;}
-.entry ol li{margin:0 0 7px 0;}
-.entry img,.entry a img{border:3px solid #EEE;}
-.entry a:hover img{border-color:#DFDFDF;}
-.entry table tr { padding: 15px 0; }
-.entry table tr.alt { background: #eee; }
+#services { padding: 20px; }
+#services table { width: 100%; border-spacing:10; font-size: 1.1em;}
+#services th {text-align: left;font-size: 20px;padding: 10px;border-bottom: 1px solid rgb(228, 228, 228);border-right: 1px solid rgb(228, 228, 228);}
+#services tr {font-size: 16px;}
+#services td {padding: 10px;border-bottom: 1px solid rgb(228, 228, 228);border-right: 1px solid rgb(228, 228, 228);}
+#services .today {background: rgb(228, 228, 228);}
+#services .highlight {background: rgb(247, 247, 247);}
+#services .status, #services .date, #services .today {text-align: center;}
+
+#services .event-log th {font-size: 16px;text-align: center;}
+#services .event-log td {fonst-size: 14px;}
+#services .event-log td:first-child {text-align: center;}
+.status-header {width: 10%;}
+.time-header {width: 20%;}
 
 #submit { 
-  background: #ddd;
-  border: 1px solid #aaa;
-  margin: 20px 290px 20px 20px;
+  background: rgb(228, 228, 228);
+  margin: 20px 0px;
   padding: 10px;
   text-align: right;
-  border-radius: 10px;
-  -moz-border-radius: 10px;
-  -webkit-border-radius: 10px;
 }
 
 #submit label {
   float: left;
+  clear: left;
   width: 55px;
   padding: 10px;
 }
 
-#statusBox, #messageBox {float: left; margin: 10px; clear: left;}
-#submit .message { float: left; width: 390px; height: 60px; padding: 3px;}
-#submit .status { float: left; margin: 10px 0px;}
-#submit .submit { clear: left; display: block; margin-left: auto;}
+#submit h3 {text-align: left;}
 
-#footer, #push {height: 2em;}
-#footer {padding: 0 30px; width: 900px; margin: auto; background: #000; border: 1px solid #000; color: white;}
+#submit .update-message { float: left; width: 390px; height: 100px; padding: 3px;}
+#submit .update-status { float: left; margin: 10px 0px;}
+#submit .update-submit { clear: left; display: block; margin-left: auto;}
+
+#footer, #push {height: 3em;}
+#footer {padding: 0 30px; width: 900px; margin: auto;}
+#footer ul {padding: 10px 0px;}
+#footer ul li {display: inline;}   

@@ -53,8 +53,18 @@ from google.appengine.ext import db
 from handlers import restful
 from utils import authorized
 from utils import sanitizer
-from models import Status, Message, Service, Event
+from models import Status, Service, Event
 import config
+
+def get_past_days(num):
+    date = datetime.date.today()
+    dates = []
+    
+    for i in range(1, num+1):
+        dates.append(date - datetime.timedelta(days=i))
+    
+    return dates
+    
 
 class NotFoundHandler(webapp.RequestHandler):
     def get(self):
@@ -72,7 +82,7 @@ class UnauthorizedHandler(webapp.RequestHandler):
         
 class SlashHandler(restful.Controller):
     def get(self, url):
-        self.redirect("%s/" % url)
+        self.redirect("/%s/" % url)
 
 class RootHandler(restful.Controller):
     def get(self):
@@ -86,26 +96,65 @@ class RootHandler(restful.Controller):
             "user": users.get_current_user(),
             "user_is_admin": users.is_current_user_admin(),
             "services": q.fetch(10),
+            "past": get_past_days(5),
+            "default_status": Status.lowest_severity(),
+            "recent_events": Event.all().order('-start').fetch(10),
             "twitter": config.SITE["twitter"],
         }
         self.render(template_data, 'index.html')
+        
+class ServiceHandler(restful.Controller):
+    def get(self, service_slug):
+        user = users.get_current_user()
+        logging.debug("ServiceHandler#get")
+
+        service = Service.get_by_slug(service_slug)
+        
+        if not service:
+            self.render({}, '404.html')
+            return
+            
+        events = service.events.order("-start")
+
+        template_data = {
+            "user": users.get_current_user(),
+            "user_is_admin": users.is_current_user_admin(),
+            "service": service,
+            "past": get_past_days(5),
+            "events": events,
+            "statuses": Status.all().order('severity'),
+            "twitter": config.SITE["twitter"],
+        }
+        self.render(template_data, 'service.html')
 
     # @authorized.role("admin")
-    # def post(self):
-    #     logging.debug("RootHandler#post")
-    #     message = cgi.escape(self.request.get('message'))
-    #     status = cgi.escape(self.request.get('status'))
-    #     
-    #     if status and status in config.SITE["options"].keys():
-    #         state = currentStatus()
-    #         state.status = status
-    #         state.put()
-    #         
-    #     if message:
-    #         post = Message(text=message)
-    #         post.put()
-    #         
-    #     self.redirect("/")
-    #         
+    def post(self, service_slug):
+        logging.debug("RootHandler#post")
+        
+        service = Service.get_by_slug(service_slug)
+        
+        if not service:
+            self.render({},'404.html')
+            return
+        
+        message = cgi.escape(self.request.get('message'))
+        key = cgi.escape(self.request.get('severity'))
+        
+        if len(key) == 0:
+            d = {"type":"error", "message": "Please provide a valid message"}
+            self.redirect(self.request.path)
+        
+        status = db.get(db.Key(key))
+                
+        if status and len(message) > 0:
+            e = Event(service=service,status=status,message=message)
+            e.put()
+            d = {"type":"success", "message": "Created a new event"}
+        else:
+            d = {"type":"error", "message": "Please provide a valid message"}
+            pass
+        
+        self.redirect(self.request.path)
+            
             
         

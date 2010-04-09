@@ -11,12 +11,21 @@
   <body>
     <div id="wrapper">
       <div id="header">
-        <h1>Is My Web Service Up and Running?</h1>
+       <a href="/"><h1 id="logo"><img src="/images/twilio_logo.png" alt="Twilio Status Dashboard"/></h1></a>
+       <h2>Status Dashboard</h2>
       </div>
       <div id="content">
         {% block content %}
           
         {% endblock %}
+      </div>
+      <div id="push"></div>
+    </div>
+    <div id="footer">
+      <ul>
+        <li><a href="/admin">Admin</a></li>
+        <li>-</li>
+        <li>Copyright (c)  {% now "Y" %}</li>
     </div>
   </body>
 </html>

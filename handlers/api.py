@@ -44,7 +44,8 @@ from google.appengine.ext import db
 from handlers import restful
 from utils import authorized
 from utils import sanitizer
-from models import Status, Message, Event, Service
+from utils import slugify
+from models import Status, Event, Service
 import config
 
 class ServicesListHandler(restful.Controller):
@@ -65,7 +66,7 @@ class ServicesListHandler(restful.Controller):
         description = self.request.get('description', default_value=None)
         
         if name and description:
-            existing_s = Service.get_by_name(name)
+            existing_s = Service.get_by_slug(name)
             
             # Update existing resource
             if existing_s:
@@ -74,7 +75,8 @@ class ServicesListHandler(restful.Controller):
                 self.json(s.rest())
             # Create new service
             else:
-                s = Service(name=name, description=description)
+                slug = slugify.slugify(name)
+                s = Service(name=name, slug=slug, description=description)
                 s.put()
                 self.json(s.rest())
         else:
@@ -84,32 +86,32 @@ class ServiceInstanceHandler(restful.Controller):
     def get(self, service):
         logging.debug("ServiceInstanceHandler#get")
         
-        service = Service.get_by_name(service)
+        service = Service.get_by_slug(service)
         
         if (service):
             self.json(service.rest())
         else:
-            self.error(404, "Service %s does not exist" % service_name)
+            self.error(404, "Service %s does not exist" % service_slug)
 
     #@authorized.role("admin")
-    def post(self, service_name):
+    def post(self, service_slug):
         logging.debug("ServiceInstanceHandler#post")
         description = self.request.get('description')
         
-        service = Service.get_by_name(service_name)
+        service = Service.get_by_slug(service_slug)
         
         if service:
             service.description = description
             service.put()
             self.json(service.rest())
         else:
-            self.error(404, "Service %s does not exist" % service_name)
+            self.error(404, "Service %s does not exist" % service_slug)
 
 class EventsListHandler(restful.Controller):
-    def get(self, service_name):
+    def get(self, service_slug):
         logging.debug("StatusesListHandler#get")
         
-        service = Service.get_by_name(service_name)
+        service = Service.get_by_slug(service_slug)
         
         if (service):
             query = Event.all()
@@ -123,36 +125,37 @@ class EventsListHandler(restful.Controller):
         
                 self.json(data) 
             else:
-                self.error(404, "No events for Service %s" % service_name)
+                self.error(404, "No events for Service %s" % service_slug)
         else:
-            self.error(404, "Service %s not found" % service_name)
+            self.error(404, "Service %s not found" % service_slug)
 
     #@authorized.role("admin")
-    def post(self, service_name):
+    def post(self, service_slug):
         logging.debug("EventsListHandler#post")
         
         status_name = self.request.get("status", default_value=None)
+        message = self.request.get("message", default_value=None)
         
-        if status_name:
-            service = Service.get_by_name(service_name)
+        if status_name and message:
+            service = Service.get_by_slug(service_slug)
             if service:
-                status = Status.get_by_name(status_name, service)
+                status = Status.get_by_name(status_name)
                 if status:
-                    e = Event(status=status, service=service)
+                    e = Event(status=status, service=service, message=message)
                     e.put()
                     self.json(e.rest())
                 else:
                     self.error(404, "Status %s not found" % status_name)
             else:
-                self.error(404, "Service %s not found" % service_name)
+                self.error(404, "Service %s not found" % service_slug)
         else:
             self.error(400, "Event status is required")
         
 class CurrentEventHandler(restful.Controller):
-    def get(self, service_name):
+    def get(self, service_slug):
         logging.debug("CurrentStatusHandler#get")
 
-        service = Service.get_by_name(service_name)
+        service = Service.get_by_slug(service_slug)
         
         if (service):
             event = Event.current(service)
@@ -160,170 +163,48 @@ class CurrentEventHandler(restful.Controller):
             if (event):
                 self.json(event.rest()) 
             else:
-                self.error(404, "No current event for Service %s" % service_name)
+                self.error(404, "No current event for Service %s" % service_slug)
         else:
-            self.error(404, "Service %s not found" % service_name)
+            self.error(404, "Service %s not found" % service_slug)
     
 class EventInstanceHandler(restful.Controller):
-    def get(self, service_name, sid):
+    def get(self, service_slug, sid):
         logging.debug("StatusInstanceHandler#get sid=%s" % sid)
         
-        service = Service.get_by_name(service_name)
+        service = Service.get_by_slug(service_slug)
         
         if (service):
             event = Event.get_by_key_name(sid)
             if (event):
                 self.json(event.rest()) 
             else:
-                self.error(404, "No event for Service %s with sid = %s" % (service_name,sid))
+                self.error(404, "No event for Service %s with sid = %s" % (service_slug,sid))
         else:
-            self.error(404, "Service %s not found" % service_name)
+            self.error(404, "Service %s not found" % service_slug)
 
-    #@authorized.role("admin")
-    #def post(self):
-    #    self.redirect("/")
-        
-class MessagesListHandler(restful.Controller):
-    def get(self, service_name):
-        logging.debug("MessagesListHandler#get")
-
-        service = Service.get_by_name(service_name)
-                
-        if not service:
-            self.error(404, "Service %s not found" % service_name)
-            return
-        
-        query = Message.all()
-        query.filter('service =', service)
-        
-        if not query:
-            self.error(404, "No messages for Service %s" % service_name)
-            return
-            
-        data = []
-
-        for s in query:
-            data.append(s.rest())
-
-        self.json(data) 
-            
-
-
-    #@authorized.role("admin")
-    def post(self, service_name):
-        logging.debug("MessagesListHandler#post")
-        
-        text = self.request.get('text', default_value=None)
-        if not text:
-            self.error(400, "No message text")
-            return
-        
-        service = Service.get_by_name(service_name)
-        if not service:
-            self.error(404, "No messages for Service %s" % service_name)
-            return
-        
-        event = Event.current(service)
-        if not event:
-            self.error(404, "No current event for Service %s" % service_name)
-            return
-        
-        message = Message(service=service,event=event,text=text)
-        message.put()
-        self.json(message.rest())
-        
-class MessageInstanceHandler(restful.Controller):
-    def get(self, service_name, sid):
-        logging.debug("MessageInstanceHandler#get sid=%s" % sid)
-        
-        service = Service.get_by_name(service_name)
-
-        if not service: 
-            self.error(404, "Service %s not found" % service_name)
-            return
-        
-        event = Message.get_by_sid(sid)
-        
-        if not event:
-            self.error(404, "No message for Service %s with sid = %s" % (service_name,sid))
-            return
-        
-        self.json(event.rest()) 
-
-    #@authorized.role("admin")
-    def post(self, service_name, sid):
-        logging.debug("MessageInstanceHandler#post sid=%s" % sid)
-        
-        text = self.request.get('text', default_value=None)
-        
-        if not text:
-            self.error(400, "Parameter 'text' required")
-            return
-        
-        service = Service.get_by_name(service_name)
-        
-        if not service: 
-            self.error(404, "Service %s not found" % service_name)
-            return
-        
-        msg = Message.get_by_sid(sid)
-        
-        if not msg:
-            self.error(404, "No message for Service %s with sid = %s" % (service_name,sid))
-            return
-            
-        msg.text = text
-        msg.put()
-        self.json(msg.rest())
-        
-    def delete(self, service_name, sid):
-        logging.debug("MessageInstanceHandler#delete sid=%s" % sid)
-        
-        service = Service.get_by_name(service_name)
-        
-        if not service: 
-            self.error(404, "Service %s not found" % service_name)
-            return
-        
-        msg = Message.get_by_sid(sid)
-        
-        if not msg:
-            self.error(404, "No message for Service %s with sid = %s" % (service_name,sid))
-            return
-        
-        self.json(msg.rest())
-        msg.delete()
-        
-        
 class StatusesListHandler(restful.Controller):
-    def get(self, service_name):
+    def get(self):
         logging.debug("StatusesListHandler#get")
-
-        service = Service.get_by_name(service_name)
         
-        if (service):
-            query = Status.all().filter('service =', service)
+        query = Status.all()
         
-            if (query):
-                data = []
+        if (query):
+            data = []
         
-                for s in query:
-                    data.append(s.rest())
+            for s in query:
+                data.append(s.rest())
         
-                self.json(data) 
-            else:
-                self.error(404, "No statuses for Service %s" % service_name)
+            self.json(data) 
         else:
-            self.error(404, "Service %s not found" % service_name)
+            self.error(404, "No statuses")
 
     #@authorized.role("admin")
-    def post(self, service_name):
+    def post(self):
         name = self.request.get('name', default_value=None)
         description = self.request.get('description', default_value=None)
-        service = Service.get_by_name(service_name)
         
-        if name and description and service:
-            status = Status.get_by_name(name, service)
+        if name and description:
+            status = Status.get_by_name(name)
             
             # Update existing resource
             if status:
@@ -332,42 +213,37 @@ class StatusesListHandler(restful.Controller):
                 self.json(status.rest())
             # Create new service
             else:
-                status = Status(name=name, description=description, service=service)
+                status = Status(name=name, description=description)
                 status.put()
                 self.json(status.rest())
         else:
             self.error(400, "Bad Data")
 
 class StatusInstanceHandler(restful.Controller):
-    def get(self, service_name, status_name):
+    def get(self, status_name):
         logging.debug("CurrentStatusHandler#get")
 
-        service = Service.get_by_name(service_name)
         
-        if (service):
-            status = Status.get_by_name(status_name, service)
+        status = Status.get_by_name(status_name)
         
-            if (status):
-                self.json(status.rest()) 
-            else:
-                self.error(404, "No status %s for Service %s" % (status_name, service_name))
+        if (status):
+            self.json(status.rest()) 
         else:
-            self.error(404, "Service %s not found" % service_name)
+            self.error(404, "No status %s for Service %s" % status_name)
+
 
     #@authorized.role("admin")
-    def post(self, service_name, status_name):
-        service = Service.get_by_name(service_name)
+    def post(self, status_name):
         description = self.request.get('description', default_value=None)
         
-        if service and description:
-            status = Status.get_by_name(status_name, service)
+        if description:
+            status = Status.get_by_name(status_name)
             if status:
                 status.description = description
                 status.put()
                 self.json(status.rest())
             else:
-                self.error(404, "Status %s not found for %s" % 
-                    (status_name, service_name))
+                self.error(404, "Status %s not found" % status_name)
         else:
-            self.error(404, "Service %s not found" % service_name)
+            self.error(400, "Description is required" % service_slug)
 

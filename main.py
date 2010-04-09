@@ -47,7 +47,7 @@ logging.info('Loading %s, app version = %s',
 
 ROUTES = [
     ('/*$', site.RootHandler),
-    #('/(.*[^/])$', site.SlashHandler),
+    ('/(.*[^/])$', site.SlashHandler),
     #('/*[^/]', site.) redirect pages without slashed to pages with slashes
     
     #API
@@ -57,14 +57,13 @@ ROUTES = [
     (r'/api/services/(.*)/events/', api.EventsListHandler),
     (r'/api/services/(.*)/events/current/', api.CurrentEventHandler),
     (r'/api/services/(.*)/events/(.*)/', api.EventInstanceHandler),
-    (r'/api/services/(.*)/messages/', api.MessagesListHandler),
-    (r'/api/services/(.*)/messages/(.*)/', api.MessageInstanceHandler),
-    (r'/api/services/(.*)/statuses/', api.StatusesListHandler),
-    (r'/api/services/(.*)/statuses/(.*)/', api.StatusInstanceHandler),
     (r'/api/services/(.*)/', api.ServiceInstanceHandler),
+    (r'/api/statuses/', api.StatusesListHandler),
+    (r'/api/statuses/(.*)/', api.StatusInstanceHandler),
+    
     
     #SITE
-    
+    (r'/services/(.*)/', site.ServiceHandler),
     
     ('/.*$', site.NotFoundHandler),
     
