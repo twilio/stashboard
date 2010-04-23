@@ -19,6 +19,64 @@
           }
         });
         
+        $(".button").button();
+        
+        $("#add-service").click(function(){
+          $("#add-service-modal").dialog('open');
+        });
+        
+        $("#add-status").click(function(){
+          $("#add-status-modal").dialog('open');
+        })
+        
+        $("#add-service-modal").dialog({
+              height: 300,
+              width: 450,
+              resizable: false,
+              modal: true,
+              autoOpen: false,
+              buttons: {
+                'Create Service': function(){
+                  $.ajax({ 
+                    type: "POST",
+                    url: "/api/services/",
+                    data: { 
+                      name: $("#service-name").val(), 
+                      description: $("#service-description").val()
+                      }, 
+                    context: $(this), 
+                    success: function(data){ 
+                      $(this).dialog('close');
+                      location.reload();
+                      },
+                    error: function(){ 
+                      $(this).dialog('close');
+                      },
+                    });
+                    
+                },
+                'Cancel': function(){
+                  $(this).dialog('close');
+                }
+              }
+        });
+        
+        $("#add-status-modal").dialog({
+              height: 140,
+              resizable: false,
+              modal: true,
+              autoOpen: false,
+              buttons: {
+                'Create Status': function(){
+                  $(this).dialog('close');
+                },
+                'Cancel': function(){
+                  $(this).dialog('close');
+                }
+              }
+        });
+        
+        
       });
     </script>
 {% endblock %}
@@ -26,6 +84,7 @@
 {% block content %}
 
       <div id="services">
+        
         <table>
           <thead>
             <tr>
@@ -44,33 +103,49 @@
                 </td>
                 
                 <td class="status highlight">
-            <img src="/images/status/{{ service.current_event.status.image}}"
+                  <a href="services/{{ service.slug }}">
+                  <img src="/images/status/{{ service.current_event.status.image}}"
                     alt="{{ service.current_event.name }}"/>
+                  </a>
                 </td>
                 
-                {% for status in service.past_five_days %}
+                {% for date in service.past_five_days %}
                   <td class="status">
-                    {% if status %}
-                      <img src="/images/status/{{ status.image}}"
-                                    alt="{{ status.name }}"/>
+                    {% if date %}
+                      <a href="services/{{ service.slug }}/{{ date.year}}/{{ date.month }}/{{ date.day }}/">
+                        <img src="/images/status/{{ info_status.image}}"
+                                    alt="{{ info_status.name }}"/>
+                        </a>
                     {% else %}
                       <img src="/images/status/{{ default_status.image}}"
                                     alt="{{ default_status.name }}"/>
                     {% endif %}
                   </td>
                 {% endfor %}
-                
-                
-                {% if user_is_admin %}
-                <td><a id="deletebtn" href="#">Delete</a></td>
-                {% endif %}
             </tr>
           {% endfor %}
         </table>
         
+        {% if user_is_admin %}
+          <a id="add-service" class="button" href="#">Add New Service</a>
+        {% endif %}
+        
         {% include "_legend.html" %}
         
       </div>
+      
+      <div class="dialog" id="add-service-modal" title="Add New Service">
+        <label  for="service-name">Name</label>
+        <input type="text" id="service-name"name="service-name"></input>
+        <label for="service-description">Description</label>
+        <textarea
+          id="service-description" name="service-description"></textarea>
+      </div>
+      
+      <div id="add-status-modal" title="Add New Status">
+        <p>Adding the modal overlay screen makes the dialog look more prominent because it dims out the page content.</p>
+      </div>
+      
       
 {% endblock %}
 

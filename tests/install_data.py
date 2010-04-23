@@ -1,6 +1,6 @@
 from google.appengine.ext import db
 from models import Status, Service, Event
-
+from datetime import datetime, timedelta
 
 def create_services():
 
@@ -43,9 +43,10 @@ def create_statuses():
 
 def create_events():
     for service in Service.all():
-        up = Status.get_by_name("up")
+        up = Status.get_by_name("down")
+        day = datetime.today() - timedelta(days=2)
         e = Event(service=service, status=up, 
-            message="Twilio is operating fine")
+            message="Twilio is operating fine", start=day)
         e.put()
 
 create_events()

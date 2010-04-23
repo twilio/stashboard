@@ -63,7 +63,11 @@ ROUTES = [
     
     
     #SITE
+    (r'/services/(.*)/(.*)/(.*)/(.*)/', site.ServiceHandler),
+    (r'/services/(.*)/(.*)/(.*)/', site.ServiceHandler),
+    (r'/services/(.*)/(.*)/', site.ServiceHandler),
     (r'/services/(.*)/', site.ServiceHandler),
+    
     
     ('/.*$', site.NotFoundHandler),
     

@@ -1,0 +1,98 @@
+html, body{height: 100%;}
+body{font:12px arial,helvetica,verdana,sans-serif;background: rgb(247, 247, 247);}
+
+a{color:#333;text-decoration:none;}
+a:hover{color:#666;}
+
+#wrapper { width: 900px; min-height: 100%;
+           height: auto !important; height: 100%; margin: 0 auto -3em;
+         }
+         
+h1 {font-size: 32px;}
+h2 {font-size: 32px;}
+h3 {font-size: 24px;}
+h3.date-range {color: #999;}
+         
+#header {height: 100px;}
+
+#header h1 {padding: 15px; float: left;}
+#header h2 {padding: 15px; float: left; line-height: 67px;}
+#logo {width: 200px;}
+#logo img { width: 200px; }
+
+
+#status { height: 200px; }
+#status h2 { font-size: 60px; color: #FFF; text-align: center; padding-top: 65px;text-shadow: 2px 2px 0px #000;}
+
+#content {
+  border: 1px solid rgb(228, 228, 228); 
+  background: white;
+}
+
+#sidebar { float: right; margin: 20px; width: 250px; }
+
+#sidebar .panel { margin-bottom: 20px; }
+#sidebar .panel { margin-bottom:20px; }
+#sidebar .panel h3 { margin-bottom:7px; }
+#sidebar .panel ul li {
+  background:url(images/li.gif) no-repeat 0 3px;
+  color:#7F7F7F;line-height:1.2em;
+  border-top:1px solid #BBB;
+  padding:4px 0 4px 16px;
+}
+
+#add-service { margin-top: 20px;}
+
+.legend {border: solid 5px rgb(228, 228, 228); width: 100%; margin: 20px 0;}
+.legend tr td:first-child {width: 16px;}
+
+
+/* wordpress entries styling - main content column */
+#services { padding: 20px; }
+#services table { width: 100%; border-spacing:10; font-size: 1.1em;}
+#services th {text-align: left;font-size: 20px;padding: 10px;border-bottom: 1px solid rgb(228, 228, 228);border-right: 1px solid rgb(228, 228, 228);}
+#services tr {font-size: 16px;}
+#services td {padding: 10px;border-bottom: 1px solid rgb(228, 228, 228);border-right: 1px solid rgb(228, 228, 228);}
+#services .today {background: rgb(228, 228, 228);}
+#services .highlight {background: rgb(247, 247, 247);}
+#services .status, #services .date, #services .today, .delete {text-align: center;}
+#services table a {text-decoration: underline;}
+
+#services .event-log th {font-size: 16px;text-align: center;}
+#services .event-log td {fonst-size: 14px;}
+#services .event-log td:first-child {text-align: center;}
+.status-header {width: 10%;}
+.time-header {width: 20%;}
+.delete-header {width: 8%;}
+
+#submit { 
+  background: rgb(228, 228, 228);
+  border: 1px solid #ccc;
+  margin: 20px 0px;
+  padding: 10px;
+  text-align: right;
+}
+
+#submit label {
+  float: left;
+  clear: left;
+  width: 55px;
+  padding: 10px;
+}
+
+#submit h3 {text-align: left;}
+
+#submit .update-message { float: left; width: 390px; height: 100px; padding: 3px;}
+#submit .update-status { float: left; margin: 10px 0px;}
+#submit .update-submit { clear: left; display: block; margin-left: auto;}
+
+#footer, #push {height: 3em;}
+#footer {padding: 0 30px; width: 900px; margin: auto;}
+#footer ul {padding: 10px 0px;}
+#footer ul li {display: inline;}   
+
+.dialog label, .dialog textarea, .dialog input 
+    { margin: 10px; clear: right; display: block;}
+    
+.dialog textarea { width: 400px; height: 75px;}
+

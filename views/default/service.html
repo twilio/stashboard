@@ -1,28 +1,61 @@
 {% extends "base.html" %}
 
 {% block js %}
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $(".button").button();
+        $(".delete-event").click(function(event){
+          event.preventDefault();
+          $.ajax({ 
+            type: "DELETE",
+            data: {},
+            url: $(this).attr("href"), 
+            context: $(this).parent().parent(), 
+            success: function(){
+                  $(this).fadeOut('fast', function(){
+                    $(this).remove();
+                  });
+                },
+            error: function(){
+                  alert("CRAP");
+                },
+            });
+        });
+      });
+    </script>
 {% endblock %}
 
 {% block content %}
         
       <div id="services">
-        <h2>{{ service.name }}</h2>
+        <h2>
+          {{ service.name }}
+        </h2>
         
-        {% if not foo %}
+        <h3 class="date-range">
+          {% if start_date %}
+            {{ start_date|date:"n/j/Y"  }}
+          {% endif %}
+
+          {% if end_date %}
+             - {{ end_date|date:"n/j/Y"  }}
+          {% endif %}
+        </h3>
+        
+        {% if user_is_admin %}
         <div id="submit">
-          <h3>Update {{service.name}} Status</h3>
           <form method="post">
             <label id="statusLabel" for="status">Status:</label>
-            <select class="update-status" name="severity  ">
+            <select class="update-status" name="severity">
               {% for status in statuses %}
-                <option selected  value="{{ status.key }}">{{ status.name|capfirst }}</option>
+                <option selected  name="severity" value="{{ status.key }}">{{ status.name|capfirst }}</option>
               {% endfor %}
             </select>
             <label id="messageLabel" for="message">Message:</label>
             <textarea class="update-message" name="message"></textarea>
 
             <input class="update-submit" type="submit" 
-              value="Update Status"></input>
+              value="Add New Event"></input>
           </form>
         </div>
         {% endif %}
@@ -34,7 +67,7 @@
               <th class="status-header">Status</th>
               <th>Message</th>
               {% if user_is_admin %}
-                <th><a id="deletebtn" href="#">Delete</a></th>
+                <th class="delete-header">Delete</th>
               {% endif %}
             </tr>
           </thead>
@@ -48,7 +81,11 @@
                 <td>{{ event.message }}</td>
                 
                 {% if user_is_admin %}
-                  <td><a id="deletebtn" href="#">Delete</a></td>
+                  <td class="delete"><a class="delete-event" 
+                    href="/api/services/{{ service.slug }}/events/{{ event.sid }}/">
+                    <img src="/images/status/minus-circle.png"
+                            alt="Delete"/>
+                  </a></td>
                 {% endif %}
             </tr>
           {% endfor %}

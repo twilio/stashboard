@@ -39,6 +39,8 @@ clients, like a Flex app or a desktop program.
 __author__ = 'Kyle Conroy'
 
 import datetime
+from datetime import date, timedelta
+import calendar
 import string
 import re
 import os
@@ -90,7 +92,7 @@ class RootHandler(restful.Controller):
         logging.debug("RootHandler#get")
         
         q = Service.all()
-        q.order("-name")
+        q.order("name")
         
         template_data = {
             "user": users.get_current_user(),
@@ -99,36 +101,65 @@ class RootHandler(restful.Controller):
             "past": get_past_days(5),
             "all_statuses": Status.all().order('severity'),
             "default_status": Status.lowest_severity(),
+            "info_status": Status.get_info(),
             "recent_events": Event.all().order('-start').fetch(10),
             "twitter": config.SITE["twitter"],
         }
         self.render(template_data, 'index.html')
         
 class ServiceHandler(restful.Controller):
-    def get(self, service_slug):
+        
+    def get(self, service_slug, year=None, month=None, day=None):
         user = users.get_current_user()
         logging.debug("ServiceHandler#get")
-
+        
         service = Service.get_by_slug(service_slug)
         
         if not service:
             self.render({}, '404.html')
             return
             
-        events = service.events.order("-start")
-
+        show_admin = False
+            
+        try: 
+            if day:
+                start_date = date(int(year),int(month),int(day))
+                end_date = start_date + timedelta(days=1)
+            elif month:
+                start_date = date(int(year),int(month),1)
+                days = calendar.monthrange(start_date.year, start_date.month)[1]
+                end_date = start_date + timedelta(days=days)
+            elif year:
+                start_date = date(int(year),1,1)
+                end_date = start_date + timedelta(days=365)
+            else:
+                start_date = None
+                end_date = None
+                show_admin = True
+        except ValueError:
+            self.render({},'404.html')
+            return
+            
+        if start_date and end_date:
+            events = service.events.filter("start > ", start_date) \
+                .filter("start <", end_date).order("-start")
+        else:
+            events = service.events.order("-start")
+            
         template_data = {
             "user": users.get_current_user(),
-            "user_is_admin": users.is_current_user_admin(),
+            "user_is_admin": users.is_current_user_admin() and show_admin,
             "service": service,
             "past": get_past_days(5),
             "events": events,
+            "start_date": start_date,
+            "end_date": end_date,
             "statuses": Status.all().order('severity'),
             "twitter": config.SITE["twitter"],
         }
         self.render(template_data, 'service.html')
 
-    # @authorized.role("admin")
+    @authorized.role("admin")
     def post(self, service_slug):
         logging.debug("RootHandler#post")
         
@@ -142,8 +173,11 @@ class ServiceHandler(restful.Controller):
         key = cgi.escape(self.request.get('severity'))
         
         if len(key) == 0:
-            d = {"type":"error", "message": "Please provide a valid message"}
+            d = {"type":"error", "message": "Please provide a valid key"}
             self.redirect(self.request.path)
+            return
+            
+        logging.debug("Key %s %d" % (key, len(key)))
         
         status = db.get(db.Key(key))
                 

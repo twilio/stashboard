@@ -1,5 +1,7 @@
 from google.appengine.ext import db
 import datetime
+from datetime import timedelta
+from datetime import date
 import config
 
 class Service(db.Model):
@@ -18,8 +20,39 @@ class Service(db.Model):
     def current_event(self):
         return self.events.order('-start').get()
         
+    def critical_incident(self, day):
+        """ Return the largest seveirty (of events) for a given day. If no 
+        events occured, return the lowest severity rating.
+        
+        Arguments: 
+        day         -- Date object: The day to summarize
+        
+        """
+        
+        next_day = day + timedelta(days=1)
+        
+        events = self.events.filter('start >', day) \
+            .filter('start <', next_day).fetch(40)
+            
+        if events:
+            levels = map(lambda x: x.status.severity, events)
+            lowest = Status.lowest_severity()
+            return max(levels) > lowest.severity
+        else:
+            return False 
+        
+        
     def past_five_days(self):
-        return [None] * 5
+        days = []
+        day = date.today()
+        for i in range(5):
+            day = day - timedelta(days=1)
+            if self.critical_incident(day):
+                days.append(day)
+            else:
+                days.append(None)
+            
+        return days
 
     slug = db.StringProperty(required=True)
     name = db.StringProperty(required=True)
@@ -51,6 +84,18 @@ class Status(db.Model):
     @staticmethod
     def get_by_name(status_name):
         return Status.all().filter('name = ', status_name).get()
+        
+    @staticmethod
+    def get_info():
+        """ The info status. We don't make this a real status object because 
+            it should not have a severity ranking. This is prety hacky
+        """
+        info = {}
+        info["name"] = "Information Available"
+        info["image"] = "information.png"
+        info["description"] = "There is information available"
+        info["severity"] = -1
+        return info
         
     @staticmethod
     def lowest_severity():
@@ -101,16 +146,10 @@ class Event(db.Model):
         
         m = {}
         m["sid"] = self.sid()
-        m["start"] = self.start.isoformat()
+        m["timestamp"] = self.start.isoformat()
         m["status"] = self.status.name
         m["message"] = str(self.message)
-        
-        if self.end == None:
-            m["end"] = None
-            m["duration"] = self.duration()
-        else:
-            m["end"] = self.end
-            m["duration"] = self.duration()
+        #m["service"] = self.service.sid()
         
         return m
     

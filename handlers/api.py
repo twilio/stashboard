@@ -60,24 +60,30 @@ class ServicesListHandler(restful.Controller):
         
         self.json(data)
 
-    #@authorized.role("admin")
+    @authorized.role("admin")
     def post(self):
         name = self.request.get('name', default_value=None)
         description = self.request.get('description', default_value=None)
         
         if name and description:
-            existing_s = Service.get_by_slug(name)
+            slug = slugify.slugify(name)
+            existing_s = Service.get_by_slug(slug)
             
             # Update existing resource
             if existing_s:
                 existing_s.description = description
                 existing_s.put()
-                self.json(s.rest())
+                self.json(existing_s.rest())
             # Create new service
             else:
-                slug = slugify.slugify(name)
                 s = Service(name=name, slug=slug, description=description)
                 s.put()
+                
+                low = Status.lowest_severity()
+                e = Event(service=s, status=low, 
+                    message="%s is alive!" % name)
+                e.put()
+                
                 self.json(s.rest())
         else:
             self.error(400, "Bad Data")
@@ -93,7 +99,7 @@ class ServiceInstanceHandler(restful.Controller):
         else:
             self.error(404, "Service %s does not exist" % service_slug)
 
-    #@authorized.role("admin")
+    @authorized.role("admin")
     def post(self, service_slug):
         logging.debug("ServiceInstanceHandler#post")
         description = self.request.get('description')
@@ -129,7 +135,7 @@ class EventsListHandler(restful.Controller):
         else:
             self.error(404, "Service %s not found" % service_slug)
 
-    #@authorized.role("admin")
+    @authorized.role("admin")
     def post(self, service_slug):
         logging.debug("EventsListHandler#post")
         
@@ -169,14 +175,30 @@ class CurrentEventHandler(restful.Controller):
     
 class EventInstanceHandler(restful.Controller):
     def get(self, service_slug, sid):
-        logging.debug("StatusInstanceHandler#get sid=%s" % sid)
+        logging.debug("EventInstanceHandler#get sid=%s" % sid)
         
         service = Service.get_by_slug(service_slug)
         
         if (service):
-            event = Event.get_by_key_name(sid)
-            if (event):
+            event = Event.get(db.Key(sid))
+            if (event and service.key() == event.service.key()):
                 self.json(event.rest()) 
+            else:
+                self.error(404, "No event for Service %s with sid = %s" % (service_slug,sid))
+        else:
+            self.error(404, "Service %s not found" % service_slug)
+            
+    @authorized.role("admin")
+    def delete(self, service_slug, sid):
+        logging.debug("EventInstanceHandler#delete sid=%s" % sid)
+        
+        service = Service.get_by_slug(service_slug)
+        
+        if (service):
+            event = Event.get(db.Key(sid))
+            if (event and service.key() == event.service.key()):
+                event.delete()
+                self.success("Deleted Event %s from service %s" % (sid, service_slug))
             else:
                 self.error(404, "No event for Service %s with sid = %s" % (service_slug,sid))
         else:
@@ -198,7 +220,7 @@ class StatusesListHandler(restful.Controller):
         else:
             self.error(404, "No statuses")
 
-    #@authorized.role("admin")
+    @authorized.role("admin")
     def post(self):
         name = self.request.get('name', default_value=None)
         description = self.request.get('description', default_value=None)
@@ -232,7 +254,7 @@ class StatusInstanceHandler(restful.Controller):
             self.error(404, "No status %s for Service %s" % status_name)
 
 
-    #@authorized.role("admin")
+    @authorized.role("admin")
     def post(self, status_name):
         description = self.request.get('description', default_value=None)
         

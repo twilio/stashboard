@@ -13,4 +13,8 @@
       </tr>
     {% endfor %}
   </table>
+  
+  {% if user_is_admin %}
+    <a id="add-status" class="button" href="#">Add New Status</a>
+  {% endif %}
 </div>

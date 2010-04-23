@@ -137,6 +137,15 @@ class Controller(webapp.RequestHandler):
             
         self.json(error)
         
+    def success(self, message=None):
+        self.response.set_status(200)
+        
+        success = { "error": False, "code": 200}
+        if (message):
+            success["message"] = message
+            
+        self.json(success)
+        
     
     def get(self, *params):
         self.redirect("/.html")
@@ -149,7 +158,7 @@ class Controller(webapp.RequestHandler):
         self.response.out.write(template.render(path, templateparams))
         
     def json(self, data):
-        self.response.headers.add_header("Content-Type", "application/json")
+        self.response.headers.add_header("Content-Type", "text/plain")
         data = jsonpickle.encode(data)
         self.response.out.write(data)
         
