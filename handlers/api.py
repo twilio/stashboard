@@ -109,9 +109,21 @@ class ServiceInstanceHandler(restful.Controller):
         if service:
             service.description = description
             service.put()
-            self.json(service.rest())
+            self.json(service.rest())   
         else:
             self.error(404, "Service %s does not exist" % service_slug)
+            
+    @authorized.role("admin")
+    def delete(self, service_slug):
+        logging.debug("ServiceInstanceHandler#delete slug=%s" % service_slug)
+
+        service = Service.get_by_slug(service_slug)
+
+        if service:
+            service.delete()
+            self.json(service.rest())
+        else:
+            self.error(404, "Service %s not found" % service_slug)
 
 class EventsListHandler(restful.Controller):
     def get(self, service_slug):
@@ -119,11 +131,11 @@ class EventsListHandler(restful.Controller):
         
         service = Service.get_by_slug(service_slug)
         
-        if (service):
+        if service:
             query = Event.all()
             query.filter('service =', service).order('-start')
         
-            if (query):
+            if query:
                 data = []
         
                 for s in query:
@@ -224,18 +236,24 @@ class StatusesListHandler(restful.Controller):
     def post(self):
         name = self.request.get('name', default_value=None)
         description = self.request.get('description', default_value=None)
+        severity = self.request.get('severity', default_value=None)
+        image = self.request.get('image', default_value=None)
         
-        if name and description:
+        if name and description and severity and image:
             status = Status.get_by_name(name)
+            severity = int(severity)
             
             # Update existing resource
             if status:
                 status.description = description
+                status.severity = severity
+                status.image = image
                 status.put()
                 self.json(status.rest())
             # Create new service
             else:
-                status = Status(name=name, description=description)
+                status = Status(name=name, description=description, 
+                    severity=severity, image=image)
                 status.put()
                 self.json(status.rest())
         else:

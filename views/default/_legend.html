@@ -1,6 +1,20 @@
 <div>
   <table class="legend">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Description</th>
+        {% if user_is_admin %}
+          <th> Severity </th>
+        {% endif %}
+      </tr>
+
+    </thead>
+    <tbody>
     {% for status in all_statuses %}
+      
+
+    
       <tr>
           <td class="icon">
             <img src="/images/status/{{ status.image}}"
@@ -10,11 +24,33 @@
           <td>
             {{ status.description }}
           </td>
+          
+          {% if user_is_admin %}
+          <td>
+            {{ status.severity }}
+          </td>
+          {% endif %}
       </tr>
     {% endfor %}
+    </tbody>
   </table>
   
   {% if user_is_admin %}
     <a id="add-status" class="button" href="#">Add New Status</a>
+    
+    <div id="add-status-modal" class="dialog" title="Add New Status">
+      <label  for="status-name">Name</label>
+      <input type="text" id="status-name"name="status-name">
+      
+      <label for="status-image">Image</label>
+      <input type="text" id="status-image" name="status-image">
+      
+      <label for="status-severity">Severity</label>
+      <input type="text" id="status-severity" name="status-severity">
+      
+      <label for="status-description">Description</label>
+      <textarea
+        id="status-description" name="status-description"></textarea>
+    </div>
   {% endif %}
 </div>

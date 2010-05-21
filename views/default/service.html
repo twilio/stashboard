@@ -3,8 +3,82 @@
 {% block js %}
     <script type="text/javascript">
       $(document).ready(function(){
+
         $(".button").button();
-        $(".delete-event").click(function(event){
+        
+        
+        $("#delete-service").click(function(event){
+          $("#delete-service-modal").dialog({
+                resizable: false,
+                modal: true,
+                buttons: {
+                  'Delete Service': function(){
+                    $.ajax({ 
+                      type: "DELETE",
+                      url: "/api/services/{{ service.slug }}/",
+                      dataType: 'json', 
+                      success: function(data){
+                        location.replace("/");  
+                      }
+                    });
+                  },
+                  'Cancel': function(){
+                    $(this).dialog('close');
+                  }
+                }
+          });
+        });
+        
+        $("#add-event").click(function(event){
+          event.preventDefault();
+          
+          $.ajax({ 
+            type: "POST",
+            url: "/api/services/{{ service.slug }}/events/",
+            data: {
+              status: $("#statusValue").val(),
+              message: $("#messageValue").val(),
+            },
+            dataType: "json",
+            context: $(".event-log").children('tbody'), 
+            success: function(data){
+                var d = new Date(data.timestamp);
+                
+                var time = $.datepicker.formatDate("MM d, ", d);
+                var hour;
+                var period; 
+                
+                if (d.getHours() < 12) {
+                    if (d.getHours() == 0) {
+                        hour = 12;
+                    } else {
+                        hour = d.getHours();
+                    }
+                    period = "AM";
+                } else if (d.getHours() == 12){
+                    hour = d.getHours();
+                    period = "PM";
+                } else {
+                    hour = d.getHours() - 12;
+                    period = "PM";
+                }
+                
+                time += hour + ":" + d.getMinutes() + period;
+                
+                var row = '<tr><td>' + time + '</td>';
+                row += '<td class="status highlight"><img src="' + data.status.image + '" alt=""/></td>';
+                row += '<td>' + data.message + '</td>';
+                row += '<td class="delete"><a class="delete-event"  href="/api/services/{{ service.slug }}/events/' +                           data.sid + '/"> <img src="/images/status/minus-circle.png" alt="Delete"/></a></td>';
+                row += '</tr>';
+                $(this).prepend(row);
+              },
+            error: function(){
+              },
+            });
+        });
+        
+        
+        $(".delete-event").live('click', function(event){
           event.preventDefault();
           $.ajax({ 
             type: "DELETE",
@@ -28,6 +102,13 @@
 {% block content %}
         
       <div id="services">
+        
+        {% if user_is_admin %}
+          <a class="button" id="delete-service">
+            Delete Service
+          </a>
+        {% endif %}
+        
         <h2>
           {{ service.name }}
         </h2>
@@ -44,19 +125,18 @@
         
         {% if user_is_admin %}
         <div id="submit">
-          <form method="post">
             <label id="statusLabel" for="status">Status:</label>
-            <select class="update-status" name="severity">
+            <select id="statusValue" class="update-status" name="severity">
               {% for status in statuses %}
-                <option selected  name="severity" value="{{ status.key }}">{{ status.name|capfirst }}</option>
+                <option   name="severity" value="{{ status.name }}">{{ status.name|capfirst }}</option>
               {% endfor %}
             </select>
             <label id="messageLabel" for="message">Message:</label>
-            <textarea class="update-message" name="message"></textarea>
+            <textarea id="messageValue" class="update-message" name="message"></textarea>
 
-            <input class="update-submit" type="submit" 
-              value="Add New Event"></input>
-          </form>
+            <a id="add-event" class="button update-submit" href="#">
+              Add New Event
+            </a>
         </div>
         {% endif %}
         
@@ -91,6 +171,14 @@
           {% endfor %}
         </table>
       </div>
+      
+      {% if user_is_admin %}
+      
+      <div id="delete-service-modal" title="Delete New Service">
+        <p>Are you sure you want to delete the {{ service.name }} service?</p>
+      </div>
+
+      {% endif %}
 
 {% endblock %}
 

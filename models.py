@@ -116,6 +116,8 @@ class Status(db.Model):
         m["name"] = unicode(self.name)
         m["description"] = unicode(self.description)
         m["severity"] = str(self.severity)
+        # This link shouldn't be hardcoded
+        m["image"] = "/static/images/status/" + unicode(self.image)
         
         return m
     
@@ -147,7 +149,7 @@ class Event(db.Model):
         m = {}
         m["sid"] = self.sid()
         m["timestamp"] = self.start.isoformat()
-        m["status"] = self.status.name
+        m["status"] = self.status.rest()
         m["message"] = str(self.message)
         #m["service"] = self.service.sid()
         

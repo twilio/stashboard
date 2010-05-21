@@ -49,4 +49,7 @@ def create_events():
             message="Twilio is operating fine", start=day)
         e.put()
 
+create_statuses()
+create_services()
 create_events()
+

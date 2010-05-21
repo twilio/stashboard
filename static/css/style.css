@@ -13,16 +13,26 @@ h2 {font-size: 32px;}
 h3 {font-size: 24px;}
 h3.date-range {color: #999;}
          
-#header {height: 100px;}
+#header {height: 85px;}
 
-#header h1 {padding: 15px; float: left;}
-#header h2 {padding: 15px; float: left; line-height: 67px;}
+#header h1 {padding: 15px 15px 0px 15px; float: left;}
+#header h2 {padding: 15px 15px 0px 15px; float: left; line-height: 67px;}
 #logo {width: 200px;}
 #logo img { width: 200px; }
 
-
 #status { height: 200px; }
 #status h2 { font-size: 60px; color: #FFF; text-align: center; padding-top: 65px;text-shadow: 2px 2px 0px #000;}
+
+#message { 
+    background: #ffee9c;
+    display: none;
+    padding: 7px;
+}
+
+#message-holder {
+    min-height: 30px;
+    text-align: center;
+}
 
 #content {
   border: 1px solid rgb(228, 228, 228); 
@@ -84,7 +94,7 @@ h3.date-range {color: #999;}
 
 #submit .update-message { float: left; width: 390px; height: 100px; padding: 3px;}
 #submit .update-status { float: left; margin: 10px 0px;}
-#submit .update-submit { clear: left; display: block; margin-left: auto;}
+#submit .update-submit { clear: left; display: block; margin-left: auto; width: 150px;}
 
 #footer, #push {height: 3em;}
 #footer {padding: 0 30px; width: 900px; margin: auto;}
@@ -95,4 +105,7 @@ h3.date-range {color: #999;}
     { margin: 10px; clear: right; display: block;}
     
 .dialog textarea { width: 400px; height: 75px;}
+
+#delete-service { float: right;}
+#delete-service-modal {display: none;}  
 

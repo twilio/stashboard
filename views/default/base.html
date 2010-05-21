@@ -5,9 +5,11 @@
     <link rel="stylesheet" href="/static/css/reset.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="/static/css/style.css" type="text/css" media="screen" />    
     <link rel="stylesheet" href="/static/css/jqueryui.css" type="text/css" media="screen" />    
-    <script type="text/javascript"      src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <!-- <script type="text/javascript"      src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
     <script type="text/javascript"
-src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></script>
+src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></script> -->
+    <script type="text/javascript" src="/static/js/local-jquery.js"></script>
+    <script type="text/javascript" src="/static/js/local-jquery-ui.js"></script>
     {% block js %}
     {% endblock %}
   </head>
@@ -16,6 +18,10 @@ src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></scr
       <div id="header">
        <a href="/"><h1 id="logo"><img src="/images/twilio_logo.png" alt="Twilio Status Dashboard"/></h1></a>
        <h2>Status Dashboard</h2>
+      </div>
+      <div id="message-holder">
+        <div id="message">
+        </div>
       </div>
       <div id="content">
         {% block content %}

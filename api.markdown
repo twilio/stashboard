@@ -55,7 +55,7 @@ Update a service's description
 
 ### DELETE
 
-Delete a service, returns??
+Delete a service, returns the service object deleted
 
 > DELETE /services/{service}/
 

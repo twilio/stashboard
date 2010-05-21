@@ -1,5 +1,5 @@
 application: ismywebservicedown
-version: 2
+version: 3
 runtime: python
 api_version: 1
 

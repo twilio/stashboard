@@ -43,14 +43,33 @@
                     data: { 
                       name: $("#service-name").val(), 
                       description: $("#service-description").val()
-                      }, 
-                    context: $(this), 
+                      },
+                    dataType: 'json', 
+                    context: $("#service-list"), 
                     success: function(data){ 
-                      $(this).dialog('close');
-                      location.reload();
+                      $("#add-service-modal").dialog('close');
+                      $("#message")
+                        .text("Service Added")
+                        .css('display','inline-block');
+                        
+                      //This is kinda ugly
+                      var tr = '<tr><td><a href="services/' + data.id;
+                      tr += '">' + data.name + '</a></td>';
+                      tr += '<td class="status highlight"><img src="/images/status/question-white.png" alt=""></td>';
+                      
+                      for (var i=0; i < 5; i++) {
+                        tr += '<td class="status"><img src="/images/status/question-white.png" alt=""></td>';
+                      };
+                      
+                      tr += '</tr>';
+                      
+                      $("#service-list").fadeIn('fast', function(){    
+                        $("#service-list").children('tbody').append(tr);
+                      });
+                      
                       },
                     error: function(){ 
-                      $(this).dialog('close');
+                      $("#add-service-modal").dialog('close');
                       },
                     });
                     
@@ -62,13 +81,38 @@
         });
         
         $("#add-status-modal").dialog({
-              height: 140,
+              height: 300,
+              width: 450,
               resizable: false,
               modal: true,
               autoOpen: false,
               buttons: {
                 'Create Status': function(){
-                  $(this).dialog('close');
+                  $.ajax({ 
+                    type: "POST",
+                    url: "/api/statuses/",
+                    data: { 
+                      name: $("#status-name").val(), 
+                      description: $("#status-description").val(),
+                      image: $("#status-image").val(),
+                      severity: $("#status-severity").val()
+                    },
+                    dataType: 'json', 
+                    context: $("#service-list"), 
+                    success: function(data){ 
+                      $("#add-status-modal").dialog('close');
+                      $("#message")
+                        .text("Status added")
+                        .css('display','inline-block');
+                    },
+                    error: function(){ 
+                      $("#add-status-modal").dialog('close');
+                      $("#message")
+                        .text("Error adding status")
+                        .css('display','inline-block');
+                    },
+                  });
+                    
                 },
                 'Cancel': function(){
                   $(this).dialog('close');
@@ -85,7 +129,7 @@
 
       <div id="services">
         
-        <table>
+        <table id="service-list">
           <thead>
             <tr>
               <th>Service</th>
@@ -134,17 +178,17 @@
         
       </div>
       
+      {% if user_is_admin %}
+      
       <div class="dialog" id="add-service-modal" title="Add New Service">
         <label  for="service-name">Name</label>
-        <input type="text" id="service-name"name="service-name"></input>
+        <input type="text" id="service-name"name="service-name">
         <label for="service-description">Description</label>
         <textarea
           id="service-description" name="service-description"></textarea>
       </div>
       
-      <div id="add-status-modal" title="Add New Status">
-        <p>Adding the modal overlay screen makes the dialog look more prominent because it dims out the page content.</p>
-      </div>
+      {% endif %}
       
       
 {% endblock %}
