@@ -84,12 +84,11 @@ def get_past_days(num):
     return dates
     
 
-class NotFoundHandler(webapp.RequestHandler):
+class NotFoundHandler(restful.Controller):
     def get(self):
         logging.debug("NotFoundHandler#get")
-        self.error(404)
-        #template_data = {}
-        #self.render(template_data, '404.html')
+        template_data = {}
+        self.render(template_data, '404.html')
 
 class UnauthorizedHandler(webapp.RequestHandler):
     def get(self):

@@ -10,10 +10,8 @@ def create_services():
     foo = Service(name="Service Bar", slug="service-bar",
         description="Scalable and reliable bar service across the globe")
         
-    voice.put()
-    sms.put()
-    inter.put()
     foo.put()
+    bar.put()
     
 def create_statuses():
     up = Status(name="up", description="This service is up and running",

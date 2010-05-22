@@ -20,6 +20,8 @@ h3.date-range {color: #999;}
 #logo {width: 67px;}
 #logo img { width: 67px; }
 
+#rest-docs { float: right; margin: 30px 30px 0 0;}
+
 #status { height: 200px; }
 #status h2 { font-size: 60px; color: #FFF; text-align: center; padding-top: 65px;text-shadow: 2px 2px 0px #000;}
 
@@ -27,6 +29,8 @@ h3.date-range {color: #999;}
   border: 1px solid rgb(228, 228, 228); 
   background: white;
 }
+
+.frame { padding: 20px;}
 
 #sidebar { float: right; margin: 20px; width: 250px; }
 
@@ -47,7 +51,6 @@ h3.date-range {color: #999;}
 
 
 /* wordpress entries styling - main content column */
-#services { padding: 20px; }
 #services table { width: 100%; border-spacing:10; font-size: 1.1em;}
 #services th {text-align: left;font-size: 20px;padding: 10px;border-bottom: 1px solid rgb(228, 228, 228);border-right: 1px solid rgb(228, 228, 228);}
 #services tr {font-size: 16px;}

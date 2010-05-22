@@ -10,14 +10,23 @@
 src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></script> -->
     <script type="text/javascript" src="/static/js/local-jquery.js"></script>
     <script type="text/javascript" src="/static/js/local-jquery-ui.js"></script>
+    <script type="text/javascript">
+    //Global Script
+    $(document).ready(function(){
+      $(".button").button();
+    });
+    </script>
     {% block js %}
     {% endblock %}
   </head>
   <body>
     <div id="wrapper">
       <div id="header">
-       <a href="/"><h1 id="logo"><img src="/images/logo.png" alt="Status Dashboard"/></h1></a>
-       <h2>Status Dashboard</h2>
+        <a href="/"><h1 id="logo"><img src="/images/logo.png" alt="Status Dashboard"/></h1></a>
+        <h2>Status Dashboard</h2>
+        <a id="rest-docs" href="documentation" class="button">
+          REST API Documentation
+        </a>
       </div>
       <div id="content">
         {% block content %}

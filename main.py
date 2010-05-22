@@ -60,7 +60,7 @@ ROUTES = [
     (r'/api/services/(.*)/', api.ServiceInstanceHandler),
     (r'/api/statuses/', api.StatusesListHandler),
     (r'/api/statuses/(.*)/', api.StatusInstanceHandler),
-    
+    (r'/api/.*/', api.NotFoundHandler),
     
     #SITE
     (r'/services/(.*)/(.*)/(.*)/(.*)/', site.ServiceHandler),

@@ -19,8 +19,6 @@
           }
         });
         
-        $(".button").button();
-        
         $("#add-service").click(function(){
           $("#add-service-modal").dialog('open');
         });
@@ -147,7 +145,7 @@
 
 {% block content %}
 
-      <div id="services">
+      <div id="services" class="frame">
         
           <table id="service-list">
             <thead>

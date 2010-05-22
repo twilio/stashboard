@@ -48,6 +48,11 @@ from utils import slugify
 from models import Status, Event, Service
 import config
 
+class NotFoundHandler(restful.Controller):
+    def get(self):
+        logging.debug("NotFoundAPIHandler#get")
+        self.error(404, "Can't find resouce")
+
 class ServicesListHandler(restful.Controller):
     def get(self):
         logging.debug("ServicesListHandler#get")
