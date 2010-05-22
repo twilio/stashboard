@@ -16,12 +16,8 @@ src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></scr
   <body>
     <div id="wrapper">
       <div id="header">
-       <a href="/"><h1 id="logo"><img src="/images/twilio_logo.png" alt="Twilio Status Dashboard"/></h1></a>
+       <a href="/"><h1 id="logo"><img src="/images/logo.png" alt="Status Dashboard"/></h1></a>
        <h2>Status Dashboard</h2>
-      </div>
-      <div id="message-holder">
-        <div id="message">
-        </div>
       </div>
       <div id="content">
         {% block content %}
@@ -32,7 +28,7 @@ src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></scr
     </div>
     <div id="footer">
       <ul>
-        <li><a href="/admin">Admin</a></li>
+        <li>{{ login_link }}</li>
         <li>-</li>
         <li>Copyright (c)  {% now "Y" %}</li>
     </div>

@@ -13,26 +13,15 @@ h2 {font-size: 32px;}
 h3 {font-size: 24px;}
 h3.date-range {color: #999;}
          
-#header {height: 85px;}
+#header {height: 100px;}
 
-#header h1 {padding: 15px 15px 0px 15px; float: left;}
-#header h2 {padding: 15px 15px 0px 15px; float: left; line-height: 67px;}
-#logo {width: 200px;}
-#logo img { width: 200px; }
+#header h1 {margin: 15px; float: left;}
+#header h2 {margin: 15px 0; float: left; line-height: 67px;}
+#logo {width: 67px;}
+#logo img { width: 67px; }
 
 #status { height: 200px; }
 #status h2 { font-size: 60px; color: #FFF; text-align: center; padding-top: 65px;text-shadow: 2px 2px 0px #000;}
-
-#message { 
-    background: #ffee9c;
-    display: none;
-    padding: 7px;
-}
-
-#message-holder {
-    min-height: 30px;
-    text-align: center;
-}
 
 #content {
   border: 1px solid rgb(228, 228, 228); 

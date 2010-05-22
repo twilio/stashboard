@@ -58,6 +58,24 @@ from utils import sanitizer
 from models import Status, Service, Event
 import config
 
+def default_template_data():
+    user = users.get_current_user()
+    
+    if user:
+        greeting = ("<a href=\"%s\">Sign out</a>" % \
+                    users.create_logout_url("/"))
+    else:
+        greeting = ("<a href=\"%s\">Sign in or Register</a>." % \
+                    users.create_login_url("/"))
+    
+    data = {
+        "user": user,
+        "user_is_admin": users.is_current_user_admin(),
+        "login_link": greeting, 
+    }
+    
+    return data
+
 def get_past_days(num):
     date = datetime.date.today()
     dates = []
@@ -94,18 +112,15 @@ class RootHandler(restful.Controller):
         q = Service.all()
         q.order("name")
         
-        template_data = {
-            "user": users.get_current_user(),
-            "user_is_admin": users.is_current_user_admin(),
-            "services": q.fetch(10),
-            "past": get_past_days(5),
-            "all_statuses": Status.all().order('severity'),
-            "default_status": Status.lowest_severity(),
-            "info_status": Status.get_info(),
-            "recent_events": Event.all().order('-start').fetch(10),
-            "twitter": config.SITE["twitter"],
-        }
-        self.render(template_data, 'index.html')
+        td = default_template_data()
+        td["services"] = q.fetch(10)
+        td["past"] = get_past_days(5)
+        td["all_statuses"] = Status.all().order('severity')
+        td["default_status"] = Status.lowest_severity()
+        td["info_status"] = Status.get_info()
+        td["recent_events"] = Event.all().order('-start').fetch(10)
+
+        self.render(td, 'index.html')
         
 class ServiceHandler(restful.Controller):
         
@@ -146,50 +161,14 @@ class ServiceHandler(restful.Controller):
         else:
             events = service.events.order("-start")
             
-        template_data = {
-            "user": users.get_current_user(),
-            "user_is_admin": users.is_current_user_admin() and show_admin,
-            "service": service,
-            "past": get_past_days(5),
-            "events": events,
-            "start_date": start_date,
-            "end_date": end_date,
-            "statuses": Status.all().order('severity'),
-            "twitter": config.SITE["twitter"],
-        }
-        self.render(template_data, 'service.html')
+        td = default_template_data()
+        td["service"] = service
+        td["past"] = get_past_days(5)
+        td["events"] = events
+        td["start_date"] = start_date
+        td["end_date"] = end_date
+        td["statuses"] = Status.all().order('severity')
 
-    @authorized.role("admin")
-    def post(self, service_slug):
-        logging.debug("RootHandler#post")
-        
-        service = Service.get_by_slug(service_slug)
-        
-        if not service:
-            self.render({},'404.html')
-            return
-        
-        message = cgi.escape(self.request.get('message'))
-        key = cgi.escape(self.request.get('severity'))
-        
-        if len(key) == 0:
-            d = {"type":"error", "message": "Please provide a valid key"}
-            self.redirect(self.request.path)
-            return
-            
-        logging.debug("Key %s %d" % (key, len(key)))
-        
-        status = db.get(db.Key(key))
-                
-        if status and len(message) > 0:
-            e = Event(service=service,status=status,message=message)
-            e.put()
-            d = {"type":"success", "message": "Created a new event"}
-        else:
-            d = {"type":"error", "message": "Please provide a valid message"}
-            pass
-        
-        self.redirect(self.request.path)
-            
-            
+        self.render(td, 'service.html')
+
         

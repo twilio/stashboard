@@ -48,9 +48,6 @@
                     context: $("#service-list"), 
                     success: function(data){ 
                       $("#add-service-modal").dialog('close');
-                      $("#message")
-                        .text("Service Added")
-                        .css('display','inline-block');
                         
                       //This is kinda ugly
                       var tr = '<tr><td><a href="services/' + data.id;
@@ -98,18 +95,19 @@
                       severity: $("#status-severity").val()
                     },
                     dataType: 'json', 
-                    context: $("#service-list"), 
+                    context: $(".legend").children('tbody'), 
                     success: function(data){ 
                       $("#add-status-modal").dialog('close');
-                      $("#message")
-                        .text("Status added")
-                        .css('display','inline-block');
+                      var tr = "<tr><td class=\"icon\">";
+                      tr += '<img src="' + data.image + '" ';
+                      tr += 'alt="' + data.name + '"/></td>';
+                      tr += '<td>' + data.description + '</td>';
+                      tr += '<td>' + data.severity + '</td>';
+                      tr += '</tr>';
+                      $(this).append(tr);
                     },
                     error: function(){ 
                       $("#add-status-modal").dialog('close');
-                      $("#message")
-                        .text("Error adding status")
-                        .css('display','inline-block');
                     },
                   });
                     
@@ -118,6 +116,28 @@
                   $(this).dialog('close');
                 }
               }
+        });
+        
+        $(".delete-status").live('click', function(event){
+          event.preventDefault(); 
+        });
+        
+        $(".delete-status").live('click', function(event){
+          event.preventDefault();
+          $.ajax({ 
+            type: "DELETE",
+            data: {},
+            url: $(this).attr("href"), 
+            context: $(this).parent().parent(), 
+            success: function(){
+                  $(this).fadeOut('fast', function(){
+                    $(this).remove();
+                  });
+                },
+            error: function(){
+                  alert("CRAP");
+                },
+            });
         });
         
         

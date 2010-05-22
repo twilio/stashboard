@@ -1,19 +1,17 @@
 <div>
   <table class="legend">
     <thead>
+      {% if user_is_admin %}
       <tr>
         <th></th>
         <th>Description</th>
-        {% if user_is_admin %}
-          <th> Severity </th>
-        {% endif %}
+        <th>Severity  </th>
       </tr>
+      {% endif %}
 
     </thead>
     <tbody>
     {% for status in all_statuses %}
-      
-
     
       <tr>
           <td class="icon">
