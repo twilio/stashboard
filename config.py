@@ -2,15 +2,15 @@ import os
 import logging
 
 # Stupid error
-# from google.appengine.dist import use_library
-# use_library('django', '1.1')
+from google.appengine.dist import use_library
+use_library('django', '1.1')
 
 APP_ROOT_DIR = os.path.abspath(os.path.dirname(__file__))
 
 # If we're debugging, turn the cache off, etc.
 # Set to true if we want to have our webapp print stack traces, etc
-# DEBUG = os.environ['SERVER_SOFTWARE'].startswith('Dev')
-# logging.info("Starting application in DEBUG mode: %s", DEBUG)
+DEBUG = os.environ['SERVER_SOFTWARE'].startswith('Dev')
+logging.info("Starting application in DEBUG mode: %s", DEBUG)
 
 # Don't change default_blog or default_page to prevent conflicts when merging #  Bloog source code updates.
 # Do change blog or page dictionaries at the bottom of this config module.
