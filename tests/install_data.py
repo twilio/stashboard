@@ -3,18 +3,12 @@ from models import Status, Service, Event
 from datetime import datetime, timedelta
 
 def create_services():
-
-    voice = Service(name="Twilio Voice", slug="twilio-voice", 
-        description="Twilio's voice communications platform")
     
-    sms = Service(name="Twilio SMS", slug="twilio-sms", 
-        description="SMS broadcast, queuing, and messaging service")
-    
-    inter = Service(name="Twilio International", slug="twilio-international",
-        description="Phone and SMS service to international numbers")
+    bar = Service(name="Service Foo", slug="service-foo",
+        description="Scalable and reliable foo service across the globe")
 
-    foo = Service(name="Twilio Foo", slug="twilio-foo",
-        description="If I'm a Foo and you're a Foo, are we both Foos?")
+    foo = Service(name="Service Bar", slug="service-bar",
+        description="Scalable and reliable bar service across the globe")
         
     voice.put()
     sms.put()
@@ -43,10 +37,10 @@ def create_statuses():
 
 def create_events():
     for service in Service.all():
-        up = Status.get_by_name("down")
+        low = Status.lowest_severity()
         day = datetime.today() - timedelta(days=2)
-        e = Event(service=service, status=up, 
-            message="Twilio is operating fine", start=day)
+        e = Event(service=service, status=low, 
+            message="This service is operating fine", start=day)
         e.put()
 
 create_statuses()

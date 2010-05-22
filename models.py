@@ -88,7 +88,7 @@ class Status(db.Model):
     @staticmethod
     def get_info():
         """ The info status. We don't make this a real status object because 
-            it should not have a severity ranking. This is prety hacky
+            it should not have a severity ranking.
         """
         info = {}
         info["name"] = "Information Available"
