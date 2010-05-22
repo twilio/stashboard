@@ -28,7 +28,13 @@ src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></scr
     </div>
     <div id="footer">
       <ul>
-        <li>{{ login_link }}</li>
+        <li>
+          {% if user %}
+            <a href="{{ login_link }}">Logout</a>
+          {% else %}
+            <a href="{{ login_link }}">Login</a>
+          {% endif %}
+        </li>
         <li>-</li>
         <li>Copyright (c)  {% now "Y" %}</li>
     </div>

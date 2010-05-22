@@ -149,46 +149,52 @@
 
       <div id="services">
         
-        <table id="service-list">
-          <thead>
-            <tr>
-              <th>Service</th>
-              <th class="today">Today</th>
+          <table id="service-list">
+            <thead>
+              <tr>
+                <th>Service</th>
+                <th class="today">Today</th>
               
-              {% for day in past %}
-                <th class="date">{{ day|date:"N j" }}</th>
-              {% endfor %}
-
-          </thead>
-          {% for service in services %}
-            <tr>
-                <td>
-                  <a href="services/{{service.slug}}/">{{ service.name }}
-                </td>
-                
-                <td class="status highlight">
-                  <a href="services/{{ service.slug }}">
-                  <img src="/images/status/{{ service.current_event.status.image}}"
-                    alt="{{ service.current_event.name }}"/>
-                  </a>
-                </td>
-                
-                {% for date in service.past_five_days %}
-                  <td class="status">
-                    {% if date %}
-                      <a href="services/{{ service.slug }}/{{ date.year}}/{{ date.month }}/{{ date.day }}/">
-                        <img src="/images/status/{{ info_status.image}}"
-                                    alt="{{ info_status.name }}"/>
-                        </a>
-                    {% else %}
-                      <img src="/images/status/{{ default_status.image}}"
-                                    alt="{{ default_status.name }}"/>
-                    {% endif %}
-                  </td>
+                {% for day in past %}
+                  <th class="date">{{ day|date:"N j" }}</th>
                 {% endfor %}
-            </tr>
-          {% endfor %}
-        </table>
+
+            </thead>
+            {% for service in services %}
+              <tr>
+                  <td>
+                    <a href="services/{{service.slug}}/">{{ service.name }}
+                  </td>
+                
+                  <td class="status highlight">
+                    <a href="services/{{ service.slug }}">
+                    <img src="/images/status/{{ service.current_event.status.image}}"
+                      alt="{{ service.current_event.name }}"/>
+                    </a>
+                  </td>
+                
+                  {% for date in service.past_five_days %}
+                    <td class="status">
+                      {% if date %}
+                        <a href="services/{{ service.slug }}/{{ date.year}}/{{ date.month }}/{{ date.day }}/">
+                          <img src="/images/status/{{ info_status.image}}"
+                                      alt="{{ info_status.name }}"/>
+                          </a>
+                      {% else %}
+                        <img src="/images/status/{{ default_status.image}}"
+                                      alt="{{ default_status.name }}"/>
+                      {% endif %}
+                    </td>
+                  {% endfor %}
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="7">
+                  No service information available 
+                </td>
+              </tr>
+            {% endfor %}
+          </table>
         
         {% if user_is_admin %}
           <a id="add-service" class="button" href="#">Add New Service</a>

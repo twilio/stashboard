@@ -62,11 +62,9 @@ def default_template_data():
     user = users.get_current_user()
     
     if user:
-        greeting = ("<a href=\"%s\">Sign out</a>" % \
-                    users.create_logout_url("/"))
+        greeting = users.create_logout_url("/")
     else:
-        greeting = ("<a href=\"%s\">Sign in or Register</a>." % \
-                    users.create_login_url("/"))
+        greeting = users.create_login_url("/")
     
     data = {
         "user": user,

@@ -128,7 +128,8 @@
             <label id="statusLabel" for="status">Status:</label>
             <select id="statusValue" class="update-status" name="severity">
               {% for status in statuses %}
-                <option   name="severity" value="{{ status.name }}">{{ status.name|capfirst }}</option>
+                <option   name="severity" value="{{ status.name }}">
+                  {{ status.name|capfirst }}</option>
               {% endfor %}
             </select>
             <label id="messageLabel" for="message">Message:</label>
