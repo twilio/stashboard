@@ -29,8 +29,34 @@ Copyright (c) 2008 Publishare LLC.  Distributed under MIT License.
 __author__ = 'William T. Katz'
 
 from google.appengine.api import users
+from google.appengine.api import oauth
 
 import logging
+
+def api(role):
+    """
+    A decorator to enforce user roles in context of the API
+    """
+    def wrapper(handler_method):
+        def check_login(self, *args, **kwargs):
+            try:
+                user = oauth.get_current_user()
+            except oauth.OAuthRequestError, e:
+                user = users.get_current_user()
+        
+            if not user:
+                logging.debug("Unauthorized API access attempt")
+                self.error(403, "Authorization Failure")
+            elif role == "user" or (role == "admin" and     
+                                    users.is_current_user_admin()):
+                logging.debug("Role is %s so will allow handler", role)
+                handler_method(self, *args, **kwargs)
+            else:
+                logging.debug("Unknown role: %s", role)
+                self.error(403, "Unknown Role")
+
+        return check_login
+    return wrapper
 
 def role(role):
     """
@@ -55,7 +81,9 @@ def role(role):
     """
     def wrapper(handler_method):
         def check_login(self, *args, **kwargs):
+            
             user = users.get_current_user()
+            
             if not user:
                 if self.request.method != 'GET':
                     logging.debug("Not user - aborting")

@@ -47,15 +47,18 @@ import os
 import cgi
 import urllib
 import logging
+import urlparse
 
 from google.appengine.ext import webapp
-from google.appengine.api import users
 from google.appengine.ext import db
+from google.appengine.api import users
+from google.appengine.api import oauth
 
+import oauth2 as oauth
 from handlers import restful
 from utils import authorized
 from utils import sanitizer
-from models import Status, Service, Event
+from models import Status, Service, Event, Profile, AuthRequest
 import config
 
 def default_template_data():
@@ -96,10 +99,6 @@ class UnauthorizedHandler(webapp.RequestHandler):
         self.error(403)
         #template_data = {}
         #self.render(template_data, 'unathorized.html')
-        
-class SlashHandler(restful.Controller):
-    def get(self, url):
-        self.redirect("/%s/" % url)
 
 class RootHandler(restful.Controller):
     def get(self):
@@ -167,5 +166,110 @@ class ServiceHandler(restful.Controller):
         td["statuses"] = Status.all().order('severity')
 
         self.render(td, 'service.html')
+        
+class DocumentationHandler(restful.Controller):
+    
+    def get(self):
+        self.json("yes")
+            
+class VerifyAccessHandler(restful.Controller):
+    
+    @authorized.role("admin")
+    def get(self):
+        oauth_token = self.request.get('oauth_token', default_value=None)
+        oauth_verifier = self.request.get('oauth_verifier', default_value=None)
+        user = users.get_current_user()
+        authr = AuthRequest.all().filter('owner = ', user).get()
+
+        if oauth_token and oauth_verifier and user and authr:
+            
+            host = self.request.headers.get('host', 'nohost')
+            access_token_url = 'https://%s/_ah/OAuthGetAccessToken' % host
+            
+            consumer_key = 'anonymous'
+            consumer_secret = 'anonymous'
+
+            consumer = oauth.Consumer(consumer_key, consumer_secret)
+            
+            token = oauth.Token(oauth_token, authr.request_secret)
+            token.set_verifier(oauth_verifier)
+            client = oauth.Client(consumer, token)
+            
+            if "localhost" not in host:
+                
+                resp, content = client.request(access_token_url, "POST")
+                
+                if resp['status'] == '200':
+                
+                    access_token = dict(cgi.parse_qsl(content))
+                
+                    profile = Profile(owner=user,
+                                      token=access_token['oauth_token'],
+                                      secret=access_token['oauth_token_secret'])
+                    profile.put()
+                
+        self.redirect("/profile")
+
+        
+            
+class ProfileHandler(restful.Controller):
+    
+    @authorized.api("admin")
+    def get(self):
+        user = users.get_current_user()
+        
+        profile = Profile.all().filter('owner = ', user).get()
+        
+        if profile:
+            
+            td = {
+                "user_is_authorized": True,
+                "profile": profile,
+            }
+            
+        else:
+            
+            host = self.request.headers.get('host', 'nohost')
+
+            consumer_key = 'anonymous'
+            consumer_secret = 'anonymous'
+            
+            callback = 'http://%s/profile/verify' % host
+
+            request_token_url = 'https://%s/_ah/OAuthGetRequestToken?oauth_callback=%s' % (host, callback)
+            authorize_url = 'https://%s/_ah/OAuthAuthorizeToken' % host
+
+            consumer = oauth.Consumer(consumer_key, consumer_secret)
+            client = oauth.Client(consumer)
+
+            # Step 1: Get a request token. This is a temporary token that is used for 
+            # having the user authorize an access token and to sign the request to obtain 
+            # said access token.
+            
+            td = { "user_is_authorized": False, }
+            
+            if "localhost" not in host:
+                
+                resp, content = client.request(request_token_url, "GET")
+            
+                if resp['status'] == '200':
+
+                    request_token = dict(cgi.parse_qsl(content))
+                    
+                    authr = AuthRequest.all().filter("owner =", user).get()
+                    
+                    if authr:
+                        authr.request_secret = request_token['oauth_token_secret']
+                    else:
+                        authr = AuthRequest(owner=user,
+                                request_secret=request_token['oauth_token_secret'])
+                                
+                    authr.put()
+                
+                    td["oauth_url"] = "%s?oauth_token=%s" % (authorize_url, request_token['oauth_token'])
+                
+        self.render(td, 'profile.html')
+        
+            
 
         

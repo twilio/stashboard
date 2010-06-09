@@ -1,5 +1,10 @@
 # Is My Web Service Down Rest API
 
+Rest API always returns a JSON object. A list resources is represented as a object with a "data" attribute
+
+    {
+        "data": ["List", "of", "objects"]
+    }
 
 ## /services/
 
@@ -9,24 +14,28 @@ Returns a list of services
 
 > GET /services/
 
-    [
-        {
-            "name": "twiliophone",
-            "description": "An explanation of what this service represents"
-        },
-        {
-            "name": "twiliosms",
-            "description": "An explanation of what this service represents"
-        }
-    ]
+    {
+        "data": [
+            {
+                "name": "Example Foo",
+                "id": "example-foo",
+                "description": "An explanation of this service"
+            },
+            {
+                "name": "Example Bar",
+                "id": "example-bar",
+                "description": "An explanation of this service"
+            }
+        ]
+    }
     
 ### POST
 
-Create a new service
+Create a new service (or updates an existing server) and returns the new service object
 
 #### Parameters
 
-* **name**: Name of new service
+* **name**: Name of the service
 * **description**: Description of service
 
 ## /services/{service}/
@@ -38,19 +47,21 @@ Returns a service instance
 > GET /services/{service}/
 
     {
-        "name": "twiliophone",
+        "name": "Example Service",
+        "id": "example-service",
         "description": "An explanation of what this service represents"
     }
     
 ### POST
 
-Update a service's description
+Update a service's description. Returns the updated object
 
 > POST /services/{service}/ description=System%20is%20now%20operational
 
     {
-        "name": "twiliophone",
-        "description": "An explanation of what this service represents"
+        "name": "Example Service",
+        "id": "example-service",
+        "description": "System% is now operational"
     }
 
 ### DELETE
@@ -59,32 +70,46 @@ Delete a service, returns the service object deleted
 
 > DELETE /services/{service}/
 
+    {
+        "name": "Example Service",
+        "id": "example-service",
+        "description": "System% is now operational"
+    }
+
 ## /services/{service}/events/
 
 ### GET
 
-Returns an array of status objects, ordering by reverse chronological order
-
-TODO Add a link to the messages?
+Returns all events associated with a given service, ordered by reverse chronological order. 
 
 > GET /services/{service}/events/
 
-    [
-        {
-            "sid": "908903jkdjf92349asdf",
-            "start": "2010-03-11 20:00:00Z",
-            "end": "2010-03-11 20:50:34Z",
-            "duration": "00:50:34",
-            "state": "AVAILABLE"
-        },
-        {
-            "sid": "908903jkdjf92349asdf",
-            "start": "2010-03-11 20:00:00Z",
-            "end": "2010-03-11 20:50:34Z",
-            "duration": "00:50:34",
-            "state": "AVAILABLE"
-        }
-    ]
+    {
+        "data": [
+            {
+                "status": {
+                    "image": "/static/images/status/tick-circle.png",       
+                    "description": "This service is up and running",            
+                    "severity": "1", 
+                    "name": "up"
+                }, 
+                "timestamp": "2010-05-22T01:52:23.104012", 
+                "message": "Problem fixed", 
+                "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GBAM"
+            }, 
+            {
+                "status": {
+                    "image": "/static/images/status/exclamation.png", 
+                    "description": "The service is currently         experiencing intermittent problems", 
+                    "severity": "10", 
+                    "name": "intermittent"
+                }, 
+                "timestamp": "2010-05-22T01:52:16.383246", 
+                "message": "Might be up", 
+                "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M"
+            }
+        ]
+    }
 
 ### POST
 

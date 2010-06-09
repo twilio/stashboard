@@ -37,7 +37,7 @@
                 'Create Service': function(){
                   $.ajax({ 
                     type: "POST",
-                    url: "/api/services/",
+                    url: "/api/services",
                     data: { 
                       name: $("#service-name").val(), 
                       description: $("#service-description").val()
@@ -174,7 +174,7 @@
                   {% for date in service.past_five_days %}
                     <td class="status">
                       {% if date %}
-                        <a href="services/{{ service.slug }}/{{ date.year}}/{{ date.month }}/{{ date.day }}/">
+                        <a href="services/{{ service.slug }}/{{ date.year}}/{{ date.month }}/{{ date.day }}">
                           <img src="/images/status/{{ info_status.image}}"
                                       alt="{{ info_status.name }}"/>
                           </a>

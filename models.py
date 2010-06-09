@@ -154,5 +154,13 @@ class Event(db.Model):
         #m["service"] = self.service.sid()
         
         return m
-    
+        
+class Profile(db.Model):
+    owner = db.UserProperty(required=True)
+    token = db.StringProperty(required=True)
+    secret = db.StringProperty(required=True)
+
+class AuthRequest(db.Model):
+    owner = db.UserProperty(required=True)
+    request_secret = db.StringProperty()
 

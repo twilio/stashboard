@@ -65,7 +65,7 @@ class ServicesListHandler(restful.Controller):
         
         self.json(data)
 
-    @authorized.role("admin")
+    @authorized.api("admin")
     def post(self):
         name = self.request.get('name', default_value=None)
         description = self.request.get('description', default_value=None)
@@ -104,7 +104,7 @@ class ServiceInstanceHandler(restful.Controller):
         else:
             self.error(404, "Service %s does not exist" % service_slug)
 
-    @authorized.role("admin")
+    @authorized.api("admin")
     def post(self, service_slug):
         logging.debug("ServiceInstanceHandler#post")
         description = self.request.get('description')
@@ -118,7 +118,7 @@ class ServiceInstanceHandler(restful.Controller):
         else:
             self.error(404, "Service %s does not exist" % service_slug)
             
-    @authorized.role("admin")
+    @authorized.api("admin")
     def delete(self, service_slug):
         logging.debug("ServiceInstanceHandler#delete slug=%s" % service_slug)
 
@@ -152,7 +152,7 @@ class EventsListHandler(restful.Controller):
         else:
             self.error(404, "Service %s not found" % service_slug)
 
-    @authorized.role("admin")
+    @authorized.api("admin")
     def post(self, service_slug):
         logging.debug("EventsListHandler#post")
         
@@ -205,7 +205,7 @@ class EventInstanceHandler(restful.Controller):
         else:
             self.error(404, "Service %s not found" % service_slug)
             
-    @authorized.role("admin")
+    @authorized.api("admin")
     def delete(self, service_slug, sid):
         logging.debug("EventInstanceHandler#delete sid=%s" % sid)
         
@@ -237,7 +237,7 @@ class StatusesListHandler(restful.Controller):
         else:
             self.error(404, "No statuses")
 
-    @authorized.role("admin")
+    @authorized.api("admin")
     def post(self):
         name = self.request.get('name', default_value=None)
         description = self.request.get('description', default_value=None)
@@ -277,7 +277,7 @@ class StatusInstanceHandler(restful.Controller):
             self.error(404, "No status %s for Service %s" % status_name)
 
 
-    @authorized.role("admin")
+    @authorized.api("admin")
     def post(self, status_name):
         description = self.request.get('description', default_value=None)
         
