@@ -68,6 +68,7 @@ class Service(db.Model):
         m["name"] = str(self.name)
         m["id"] = str(self.slug)
         m["description"] = str(self.description)
+        m["url"] = None
 
         return m
 
@@ -149,8 +150,10 @@ class Event(db.Model):
         m = {}
         m["sid"] = self.sid()
         m["timestamp"] = self.start.isoformat()
+        #Change this to the url of the status instead of the status itself
         m["status"] = self.status.rest()
         m["message"] = str(self.message)
+        m["url"] = None
         #m["service"] = self.service.sid()
         
         return m

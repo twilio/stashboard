@@ -62,6 +62,8 @@ class ServicesListHandler(restful.Controller):
         
         for s in query:
             data.append(s.rest())
+            
+        data = { "data": data }
         
         self.json(data)
 
@@ -145,6 +147,8 @@ class EventsListHandler(restful.Controller):
         
                 for s in query:
                     data.append(s.rest())
+                    
+                data = { "data": data }
         
                 self.json(data) 
             else:

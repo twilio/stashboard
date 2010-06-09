@@ -170,7 +170,9 @@ class ServiceHandler(restful.Controller):
 class DocumentationHandler(restful.Controller):
     
     def get(self):
-        self.json("yes")
+        td = default_template_data()
+        self.render(td, 'documentation.html')
+        
             
 class VerifyAccessHandler(restful.Controller):
     
@@ -214,18 +216,18 @@ class VerifyAccessHandler(restful.Controller):
             
 class ProfileHandler(restful.Controller):
     
-    @authorized.api("admin")
+    @authorized.role("admin")
     def get(self):
         user = users.get_current_user()
         
         profile = Profile.all().filter('owner = ', user).get()
         
+        td = default_template_data()
+        
         if profile:
             
-            td = {
-                "user_is_authorized": True,
-                "profile": profile,
-            }
+            td["user_is_authorized"] = True
+            td["profile"] = profile
             
         else:
             
@@ -246,7 +248,7 @@ class ProfileHandler(restful.Controller):
             # having the user authorize an access token and to sign the request to obtain 
             # said access token.
             
-            td = { "user_is_authorized": False, }
+            td["user_is_authorized"] = False
             
             if "localhost" not in host:
                 
@@ -269,7 +271,5 @@ class ProfileHandler(restful.Controller):
                     td["oauth_url"] = "%s?oauth_token=%s" % (authorize_url, request_token['oauth_token'])
                 
         self.render(td, 'profile.html')
-        
-            
 
         

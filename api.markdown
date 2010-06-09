@@ -1,18 +1,26 @@
-# Is My Web Service Down Rest API
-
-Rest API always returns a JSON object. A list resources is represented as a object with a "data" attribute
+The REST API always returns a JSON object. A list resources is represented as a object with a "data" attribute
 
     {
         "data": ["List", "of", "objects"]
     }
+    
+No authentication is needed to access resources via GET; however, all other methods require authentication
+    
+## Base URL
 
-## /services/
+All URLs referenced in this document have the following base:
+
+    http[s]://ismywebservicedown.appspot.com/api/v1
+    
+This includes urls included in the sample JSON responses
+
+## /services
 
 ### GET
 
 Returns a list of services
 
-> GET /services/
+> GET /services HTTP/1.1
 
     {
         "data": [
@@ -20,93 +28,103 @@ Returns a list of services
                 "name": "Example Foo",
                 "id": "example-foo",
                 "description": "An explanation of this service"
+                "url": "/services/example-foo",
             },
             {
                 "name": "Example Bar",
                 "id": "example-bar",
                 "description": "An explanation of this service"
+                "url": "/services/example-bar",
             }
         ]
     }
     
 ### POST
 
-Create a new service (or updates an existing server) and returns the new service object
+Create a new service (or updates an existing server) and returns the new service object. 
 
 #### Parameters
 
 * **name**: Name of the service
 * **description**: Description of service
 
-## /services/{service}/
+> POST /services HTTP/1.1
+name=New%20Service&description=A%20great%20service
+
+    {
+        "name": "New Service",
+        "id": "new-service",
+        "description": "A great service"
+        "url": "/services/new-service",
+    }
+
+
+## /services/{service}
 
 ### GET
 
 Returns a service instance
 
-> GET /services/{service}/
+> GET /services/{service} HTTP/1.1
 
     {
         "name": "Example Service",
         "id": "example-service",
         "description": "An explanation of what this service represents"
+        "url": "/services/example-service",
     }
     
 ### POST
 
 Update a service's description. Returns the updated object
 
-> POST /services/{service}/ description=System%20is%20now%20operational
+* **description**: Description of service
+
+> POST /services/{service} description=System%20is%20now%20operational
 
     {
         "name": "Example Service",
         "id": "example-service",
-        "description": "System% is now operational"
+        "description": "System% is now operational",
+        "url": "/services/example-service",
     }
 
 ### DELETE
 
 Delete a service, returns the service object deleted
 
-> DELETE /services/{service}/
+> DELETE /services/{service} HTTP/1.1
 
     {
         "name": "Example Service",
         "id": "example-service",
-        "description": "System% is now operational"
+        "description": "System% is now operational",
+        "url": "/services/example-service",
     }
 
-## /services/{service}/events/
+## /services/{service}/events
 
 ### GET
 
 Returns all events associated with a given service, ordered by reverse chronological order. 
 
-> GET /services/{service}/events/
+> GET /services/{service}/events HTTP/1.1
 
     {
         "data": [
             {
-                "status": {
-                    "image": "/static/images/status/tick-circle.png",       
-                    "description": "This service is up and running",            
-                    "severity": "1", 
-                    "name": "up"
-                }, 
                 "timestamp": "2010-05-22T01:52:23.104012", 
                 "message": "Problem fixed", 
-                "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GBAM"
+                "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GBAM",
+                "url": "/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GBAM",
+                "status": "/statuses/up"
             }, 
             {
-                "status": {
-                    "image": "/static/images/status/exclamation.png", 
-                    "description": "The service is currently         experiencing intermittent problems", 
-                    "severity": "10", 
-                    "name": "intermittent"
-                }, 
                 "timestamp": "2010-05-22T01:52:16.383246", 
                 "message": "Might be up", 
-                "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M"
+                "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
+                "url": "/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
+                "status": "/statuses/intermittent"
             }
         ]
     }
@@ -115,36 +133,43 @@ Returns all events associated with a given service, ordered by reverse chronolog
 
 #### Parameters
 
-* **status**: An valid system state. See /states
-* **message**: Optional. Will create a message at the same time
+* **status**: An valid system status. See /statuses
+* **message**: A message for the event
 
 Will return the newly created status
 
-> POST /services/{service}/events/ status=AVAILABLE&message=System%20is%20now%20operational
+> POST /services/{service}/events  HTTP/1.1 status=AVAILABLE&message=System%20is%20now%20operational
 
     {
-        "sid": "908903jkdjf92349asdf",
-        "start": "2010-03-11 20:00:00Z",
-        "end": "2010-03-11 20:50:34Z",
-        "duration": "00:50:34",
-        "status": "AVAILABLE"
+        "timestamp": "2010-05-22T01:52:16.383246", 
+        "message": "Might be up", 
+        "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
+        "url": "/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
+        "status": "/statuses/intermittent"
     }
     
-## /statuses/current/
+### PUT
 
+Not supported
+
+### DELETE
+
+Not supported
+    
+## /services/{service}/events/current
 
 ### GET
 
-Returns the current system status
+Returns the current service status
 
-> GET /services/{service}/events/current/
+> GET /services/{service}/events/current HTTP/1.1
 
     {
-        "sid": "908903jkdjf92349asdf",
-        "start": "2010-03-11 20:00:00Z",
-        "end": "2010-03-11 20:50:34Z",
-        "duration": "00:50:34",
-        "status": "AVAILABLE"
+        "timestamp": "2010-05-22T01:52:16.383246", 
+        "message": "Might be up", 
+        "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
+        "url": "/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
+        "status": "/statuses/intermittent"
     }
 
 ### POST / PUT
@@ -156,128 +181,88 @@ Not supported
 Not supported
 
 
-## /services/{service}/events/{sid}/
+## /services/{service}/events/{sid}
 
 Returns the status with the given sid
 
-## GET
-
-> GET /services/{service}/events/{sid}/
-    {
-        "sid": "908903jkdjf92349asdf",
-        "start": "2010-03-11 20:00:00Z",
-        "end": "2010-03-11 20:50:34Z",
-        "duration": "00:50:34",
-        "status": "AVAILABLE"
-    }
-    
-## POST
-
-Not supported
-
-
-## DELETE
-
-#### Parameters
-
-Deletes the given status
-
-> DELETE /services/{service}/events/{sid}/
-
-TODO What should I return here? StatusResponse?
-
-## /services/{service}/messages/
-
 ### GET
 
-    [
-        {
-            "sid": "j829kadjfa98j32adf",
-            "message": "The server is down due to matience",
-            "date": "2010-03-11 20:50:34Z"
-            "status": {
-                "sid": "908903jkdjf92349asdf",
-                "url": "http://status.example.com/status/908903jkdjf92349asdf"
-            }
-        }
-    ]
-    
-### POST
-
-#### Parameters
-* **message**: Text of a new message
-
-Returns the new message 
+> GET /services/{service}/events/{sid}
 
     {
-        "sid": "j829kadjfa98j32adf",
-        "message": "The server is down due to matience",
-        "date": "2010-03-11 20:50:34Z"
-        "status": {
-            "sid": "908903jkdjf92349asdf",
-            "url": "http://status.example.com/status/908903jkdjf92349asdf"
-        }
+        "timestamp": "2010-05-22T01:52:16.383246", 
+        "message": "Might be up", 
+        "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
+        "url": "/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
+        "status": "/statuses/intermittent"
     }
     
-### Delete
+### POST / PUT
 
 Not supported
 
-### PUT 
-
-Not supported
-
-## /services/{service}/messages/{sid}/
-
-### GET
-
-    {
-        "sid": "j829kadjfa98j32adf",
-        "message": "The server is down due to matience",
-        "date": "2010-03-11 20:50:34Z"
-        "status": {
-            "sid": "908903jkdjf92349asdf",
-            "url": "http://status.example.com/status/908903jkdjf92349asdf"
-        }
-    }
-    
-### POST
-
-Edit the body of a message
+### DELETE
 
 #### Parameters
-* **message**: Body of the new message
 
-TODO Should we be able to update the times as well?
+Deletes the given event. Returns the deleted event
 
-## /services/{service}/statuses/
+> DELETE /services/{service}/events/{sid} HTTP/1.1
+
+    {
+        "timestamp": "2010-05-22T01:52:16.383246", 
+        "message": "Might be up", 
+        "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
+        "url": "/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
+        "status": "/statuses/intermittent"
+    }
+
+
+## /statuses
 
 ### GET
 
 Returns the possible states
 
-> GET /services/{service}/statuses/
+> GET /statuses HTTP/1.1
 
-    [
-        {
-            "name": "AVAILABLE",
-            "description": "An explanation of what this state represents"
-        },
-        {
-            "name": "DOWN",
-            "description": "An explanation of what this state represents"
-        },
-        {
-            "name": "INTERMITTENT",
-            "description": "An explanation of what this state represents"
-        }
-    ]
+    {
+        "data": [
+            {
+                "name": "available",
+                "description": "An explanation of what this status represents",
+                "severity": 10,
+                "image": "/static/images/status/tick-circle.png",
+                "url": "/statuses/up",
+            },
+            {
+                "name": "down",
+                "description": "An explanation of what this status represents",
+                "severity": 1000,
+                "image": "/static/images/status/cross-circle.png",
+                "url": "/statuses/down",
+            },
+        ]
+    }
     
 ### POST
 
 #### Parameters
-* **text**: The type of the new status
+* **name**: The type of the new status
 * **description**: The explanation of the status
+* **severity**: The severity of the status
+* **image**: The filename of the image. No path information
+
+> POST /statuses HTTP/1.1
+name=down&description=A%20new%20status&severity=1000&image=cross-circle.png
+
+    {
+        "name": "down",
+        "description": "A new status",
+        "severity": 1000,
+        "image": "/static/images/status/cross-circle.png",
+        "url": "/statuses/down",
+    }
 
 ### DELETE
 
@@ -287,34 +272,51 @@ Not Supported
 
 Not Supported
 
-## /services/{service}/statuses/{name}/
+## /statuses/{name}
 
 ### GET
 
-return the state
+Return a status
 
     {
-        "name": "INTERMITTENT",
-        "description": "An explanation of what this state represents"
+        "name": "down",
+        "description": "A new status",
+        "severity": 1000,
+        "image": "/static/images/status/cross-circle.png",
+        "url": "/statuses/down",
     }
     
 ### POST
-* **description**: The new description of the task
+* **description**: The explanation of the status
+* **severity**: The severity of the status
+* **image**: The filename of the image. No path information
 
-Returns the newly updated state
+Returns the newly updated status
 
-> POST /services/{service}/statuses/{name}/ description=Newstuffhere
+> POST /statuses HTTP/1.1
+description=A%20new%20status&severity=1010&image=cross-circle.png
 
     {
-        "name": "INTERMITTENT",
-        "description": "Newstuffhere"
+        "name": "down",
+        "description": "A new status",
+        "severity": 1010,
+        "image": "/static/images/status/cross-circle.png",
+        "url": "/statuses/down",
     }
 
 ### DELETE
 
-> DELETE /services/{service}/statuses/{name}/
+Delete the given status
 
-TODO What should it return?
+> DELETE /statuses/{name}
+
+    {
+        "name": "down",
+        "description": "A new status",
+        "severity": 1010,
+        "image": "/static/images/status/cross-circle.png",
+        "url": "/statuses/down",
+    }
 
 ### PUT 
 

@@ -41,19 +41,20 @@ def api(role):
         def check_login(self, *args, **kwargs):
             try:
                 user = oauth.get_current_user()
+                admin = oauth.is_current_user_admin()
             except oauth.OAuthRequestError, e:
                 user = users.get_current_user()
-        
+                admin = users.is_current_user_admin()
+                
             if not user:
                 logging.debug("Unauthorized API access attempt")
                 self.error(403, "Authorization Failure")
-            elif role == "user" or (role == "admin" and     
-                                    users.is_current_user_admin()):
+            elif role == "user" or (role == "admin" and admin):
                 logging.debug("Role is %s so will allow handler", role)
                 handler_method(self, *args, **kwargs)
             else:
-                logging.debug("Unknown role: %s", role)
-                self.error(403, "Unknown Role")
+                logging.debug("Unknown api role: %s", role)
+                self.error(403, "Unknown api role: %s" % role)
 
         return check_login
     return wrapper

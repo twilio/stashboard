@@ -52,13 +52,13 @@ ROUTES = [
     #API
     ('/403.html', site.UnauthorizedHandler),
     ('/404.html', site.NotFoundHandler),
-    (r'/api/services', api.ServicesListHandler),
-    (r'/api/services/(.*)/events', api.EventsListHandler),
-    (r'/api/services/(.*)/events/current', api.CurrentEventHandler),
-    (r'/api/services/(.*)/events/(.*)', api.EventInstanceHandler),
-    (r'/api/services/(.*)', api.ServiceInstanceHandler),
-    (r'/api/statuses', api.StatusesListHandler),
-    (r'/api/statuses/(.*)', api.StatusInstanceHandler),
+    (r'/api/v1/services', api.ServicesListHandler),
+    (r'/api/v1/services/(.*)/events', api.EventsListHandler),
+    (r'/api/v1/services/(.*)/events/current', api.CurrentEventHandler),
+    (r'/api/v1/services/(.*)/events/(.*)', api.EventInstanceHandler),
+    (r'/api/v1/services/(.*)', api.ServiceInstanceHandler),
+    (r'/api/v1/statuses', api.StatusesListHandler),
+    (r'/api/v1/statuses/(.*)', api.StatusInstanceHandler),
     (r'/api/.*', api.NotFoundHandler),
     
     #SITE
