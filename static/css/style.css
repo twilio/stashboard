@@ -101,3 +101,21 @@ h3.date-range {color: #999;}
 #delete-service { float: right;}
 #delete-service-modal {display: none;}  
 
+#documentation p { margin: 10px 0px; }
+#documentation h2 { margin: 20px 0 10px 0; }
+#documentation h3 { margin: 10px 0px; font-size: 20px; }
+#documentation h4 { margin: 8px 0px; }
+#documentation h5 { margin: 5px 0px; }
+
+#documentation blockquote {
+    background: #F0F0F0;
+    margin: 15px 0;
+    padding: 10px;
+    width:auto;
+}
+
+#documentation blockquote p {
+    margin: 0;
+}
+
+
