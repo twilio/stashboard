@@ -85,12 +85,6 @@ class ServicesListHandler(restful.Controller):
             else:
                 s = Service(name=name, slug=slug, description=description)
                 s.put()
-                
-                low = Status.lowest_severity()
-                e = Event(service=s, status=low, 
-                    message="%s is alive!" % name)
-                e.put()
-                
                 self.json(s.rest())
         else:
             self.error(400, "Bad Data")
