@@ -1,7 +1,7 @@
-The REST API always returns a JSON object. A list resources is represented as a object with a "data" attribute
+The REST API always returns a JSON object. A list resources is represented as a object with a "resource-name" attribute
 
     {
-        "data": ["List", "of", "objects"]
+        "resource-name": ["List", "of", "objects"]
     }
     
 No authentication is needed to access resources via GET; however, all other methods require authentication
@@ -23,7 +23,7 @@ Returns a list of services
 > GET /services HTTP/1.1
 
     {
-        "data": [
+        "services": [
             {
                 "name": "Example Foo",
                 "id": "example-foo",
@@ -111,20 +111,32 @@ Returns all events associated with a given service, ordered by reverse chronolog
 > GET /services/{service}/events HTTP/1.1
 
     {
-        "data": [
+        "events": [
             {
                 "timestamp": "2010-05-22T01:52:23.104012", 
                 "message": "Problem fixed", 
                 "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GBAM",
                 "url": "/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GBAM",
-                "status": "/statuses/up"
+                "status": {
+                    "name": "down",
+                    "description": "An explanation of what this status represents",
+                    "severity": 1000,
+                    "image": "/static/images/status/cross-circle.png",
+                    "url": "/statuses/down",
+                },
             }, 
             {
                 "timestamp": "2010-05-22T01:52:16.383246", 
                 "message": "Might be up", 
                 "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
                 "url": "/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
-                "status": "/statuses/intermittent"
+                "status": {
+                    "name": "down",
+                    "description": "An explanation of what this status represents",
+                    "severity": 1000,
+                    "image": "/static/images/status/cross-circle.png",
+                    "url": "/statuses/down",
+                },
             }
         ]
     }
@@ -133,10 +145,10 @@ Returns all events associated with a given service, ordered by reverse chronolog
 
 #### Parameters
 
-* **status**: An valid system status. See /statuses
+* **status**: An valid system status identifier. See /statuses
 * **message**: A message for the event
 
-Will return the newly created status
+Will return the newly created event
 
 > POST /services/{service}/events  HTTP/1.1 status=AVAILABLE&message=System%20is%20now%20operational
 
@@ -145,7 +157,13 @@ Will return the newly created status
         "message": "Might be up", 
         "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
         "url": "/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
-        "status": "/statuses/intermittent"
+        "status": {
+            "name": "down",
+            "description": "An explanation of what this status represents",
+            "severity": 1000,
+            "image": "/static/images/status/cross-circle.png",
+            "url": "/statuses/down",
+        },
     }
     
 ### PUT
@@ -169,7 +187,13 @@ Returns the current service status
         "message": "Might be up", 
         "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
         "url": "/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
-        "status": "/statuses/intermittent"
+        "status": {
+            "name": "down",
+            "description": "An explanation of what this status represents",
+            "severity": 1000,
+            "image": "/static/images/status/cross-circle.png",
+            "url": "/statuses/down",
+        },
     }
 
 ### POST / PUT
@@ -194,7 +218,13 @@ Returns the status with the given sid
         "message": "Might be up", 
         "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
         "url": "/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
-        "status": "/statuses/intermittent"
+        "status": {
+            "name": "down",
+            "description": "An explanation of what this status represents",
+            "severity": 1000,
+            "image": "/static/images/status/cross-circle.png",
+            "url": "/statuses/down",
+        },
     }
     
 ### POST / PUT
@@ -214,7 +244,13 @@ Deletes the given event. Returns the deleted event
         "message": "Might be up", 
         "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
         "url": "/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
-        "status": "/statuses/intermittent"
+        "status": {
+            "name": "down",
+            "description": "An explanation of what this status represents",
+            "severity": 1000,
+            "image": "/static/images/status/cross-circle.png",
+            "url": "/statuses/down",
+        },    
     }
 
 
@@ -227,7 +263,7 @@ Returns the possible states
 > GET /statuses HTTP/1.1
 
     {
-        "data": [
+        "statuses": [
             {
                 "name": "available",
                 "description": "An explanation of what this status represents",
@@ -260,7 +296,7 @@ name=down&description=A%20new%20status&severity=1000&image=cross-circle.png
         "name": "down",
         "description": "A new status",
         "severity": 1000,
-        "image": "/static/images/status/cross-circle.png",
+        "image": "cross-circle",
         "url": "/statuses/down",
     }
 
@@ -321,3 +357,30 @@ Delete the given status
 ### PUT 
 
 Not supported
+
+## /status-images
+
+### GET
+
+Returns a list of status images.
+
+    {
+        "images": [
+            {
+                "name": "sample-image",
+                "url": "/status-images/sample-image.png",
+            },
+            {
+                "name": "sample-image",
+                "url": "/status-images/sample-image.png",
+            },
+        ]
+    }
+    
+### POST / PUT
+
+Not supported
+
+### DELETE
+
+Not supported 

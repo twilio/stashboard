@@ -36,7 +36,7 @@ src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></scr
       <div id="push"></div>
     </div>
     <div id="footer">
-      <ul>
+      <ul class="left">
         <li>
           {% if user %}
             <a href="{{ login_link }}">Logout</a>
@@ -46,6 +46,10 @@ src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></scr
         </li>
         <li>-</li>
         <li>Copyright (c)  {% now "Y" %}</li>
+      </ul>
+      <ul class="right">
+        <li>Icons by <a href="http://p.yusukekamiyamane.com/">Yusuke Kamiyamane</a></li>
+      </ul>
     </div>
   </body>
 </html>

@@ -91,10 +91,14 @@ h3.date-range {color: #999;}
 #footer, #push {height: 3em;}
 #footer {padding: 0 30px; width: 900px; margin: auto;}
 #footer ul {padding: 10px 0px;}
+#footer ul.left { float: left;}
+#footer ul.right { float: right;}
 #footer ul li {display: inline;}   
 
 .dialog label, .dialog textarea, .dialog input 
-    { margin: 10px; clear: right; display: block;}
+    { margin: 10px; clear: right;}
+    
+.dialog label {display: block;}
     
 .dialog textarea { width: 400px; height: 75px;}
 
@@ -117,5 +121,7 @@ h3.date-range {color: #999;}
 #documentation blockquote p {
     margin: 0;
 }
+
+
 
 

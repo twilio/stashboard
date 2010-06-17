@@ -3,6 +3,7 @@ import datetime
 from datetime import timedelta
 from datetime import date
 import config
+import urlparse
 
 class Service(db.Model):
     """A service to track
@@ -61,14 +62,17 @@ class Service(db.Model):
     def sid(self):
         return str(self.key())
         
-    def rest(self):
+    def resource_url(self):
+        return "/services/" + self.slug
+        
+    def rest(self, base_url):
         """ Return a Python object representing this model"""
 
         m = {}
         m["name"] = str(self.name)
         m["id"] = str(self.slug)
         m["description"] = str(self.description)
-        m["url"] = None
+        m["url"] = base_url + self.resource_url()
 
         return m
 
@@ -107,18 +111,27 @@ class Status(db.Model):
     image = db.StringProperty(required=True)
     severity = db.IntegerProperty(required=True)
     
+    def image_url(self):
+        return "/images/status/" + unicode(self.image) + ".png"
+        
     def sid(self):
         return str(self.key())
         
-    def rest(self):
+    def resource_url(self):
+        return "/statuses/" + self.name
+        
+    def rest(self, base_url):
         """ Return a Python object representing this model"""
 
         m = {}
         m["name"] = unicode(self.name)
         m["description"] = unicode(self.description)
         m["severity"] = str(self.severity)
+        m["url"] = base_url + self.resource_url()
         # This link shouldn't be hardcoded
-        m["image"] = "/static/images/status/" + unicode(self.image)
+        
+        o = urlparse.urlparse(base_url)
+        m["image"] = o.scheme + "://" +  o.netloc + self.image_url()
         
         return m
     
@@ -143,18 +156,19 @@ class Event(db.Model):
         
     def sid(self):
         return str(self.key())
+        
+    def resource_url(self):
+        return self.service.resource_url() + "/events/" + self.sid()
     
-    def rest(self):
+    def rest(self, base_url):
         """ Return a Python object representing this model"""
         
         m = {}
         m["sid"] = self.sid()
         m["timestamp"] = self.start.isoformat()
-        #Change this to the url of the status instead of the status itself
-        m["status"] = self.status.rest()
+        m["status"] = self.status.rest(base_url)
         m["message"] = str(self.message)
-        m["url"] = None
-        #m["service"] = self.service.sid()
+        m["url"] = base_url + self.resource_url()
         
         return m
         

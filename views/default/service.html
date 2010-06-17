@@ -15,7 +15,7 @@
                   'Delete Service': function(){
                     $.ajax({ 
                       type: "DELETE",
-                      url: "/api/services/{{ service.slug }}",
+                      url: "/api/v1/services/{{ service.slug }}",
                       dataType: 'json', 
                       success: function(data){
                         location.replace("/");  
@@ -34,7 +34,7 @@
           
           $.ajax({ 
             type: "POST",
-            url: "/api/services/{{ service.slug }}/events",
+            url: "/api/v1/services/{{ service.slug }}/events",
             data: {
               status: $("#statusValue").val(),
               message: $("#messageValue").val(),
@@ -68,7 +68,7 @@
                 var row = '<tr><td>' + time + '</td>';
                 row += '<td class="status highlight"><img src="' + data.status.image + '" alt=""/></td>';
                 row += '<td>' + data.message + '</td>';
-                row += '<td class="delete"><a class="delete-event"  href="/api/services/{{ service.slug }}/events/' +                           data.sid + '"> <img src="/images/status/minus-circle.png" alt="Delete"/></a></td>';
+                row += '<td class="delete"><a class="delete-event" href="' +                           data.url + '"> <img src="/images/status/minus-circle.png" alt="Delete"/></a></td>';
                 row += '</tr>';
                 $(this).prepend(row);
               },
@@ -156,14 +156,14 @@
             <tr>
                 <td>{{ event.start|date:"N j, fA"  }}</td>
                 <td class="status highlight">
-            <img src="/images/status/{{ event.status.image}}"
+            <img src="{{ event.status.image_url }}"
                     alt="{{ event.name }}"/>
                 </td>
                 <td>{{ event.message }}</td>
                 
                 {% if user_is_admin %}
                   <td class="delete"><a class="delete-event" 
-                    href="/api/services/{{ service.slug }}/events/{{ event.sid }}">
+                    href="/api/v1{{ event.resource_url }}">
                     <img src="/images/status/minus-circle.png"
                             alt="Delete"/>
                   </a></td>

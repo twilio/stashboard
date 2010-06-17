@@ -68,6 +68,23 @@ def default_template_data():
         greeting = users.create_logout_url("/")
     else:
         greeting = users.create_login_url("/")
+        
+    status_images = [
+        "clock",
+        "bug",
+        "broom",
+        "cross-circle",
+        "exclamation",
+        "flag",
+        "heart",
+        "hard-hat",
+        "information",
+        "lock",
+        "plug",
+        "question",
+        "traffic-cone",
+        "wrench",
+    ]
     
     data = {
         "user": user,

@@ -15,7 +15,7 @@
     
       <tr>
           <td class="icon">
-            <img src="/images/status/{{ status.image}}"
+            <img src="{{ status.image_url }}"
               alt="{{ status.name }}"/>
           </td>
                 
@@ -40,11 +40,16 @@
       <label  for="status-name">Name</label>
       <input type="text" id="status-name"name="status-name">
       
-      <label for="status-image">Image</label>
-      <input type="text" id="status-image" name="status-image">
-      
       <label for="status-severity">Severity</label>
       <input type="text" id="status-severity" name="status-severity">
+      
+      <label for="status-image">Image</label>
+      <input type="radio" name="status-image" value="tick-circle" checked>
+      <img src="/static/images/status/tick-circle.png" />
+      <input type="radio" name="status-image" value="cross-circle">
+      <img src="/static/images/status/cross-circle.png" />
+      <input type="radio" name="status-image" value="exclamation">
+      <img src="/static/images/status/exclamation.png" />
       
       <label for="status-description">Description</label>
       <textarea

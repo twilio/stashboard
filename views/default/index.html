@@ -37,7 +37,7 @@
                 'Create Service': function(){
                   $.ajax({ 
                     type: "POST",
-                    url: "/api/services",
+                    url: "/api/v1/services",
                     data: { 
                       name: $("#service-name").val(), 
                       description: $("#service-description").val()
@@ -76,7 +76,7 @@
         });
         
         $("#add-status-modal").dialog({
-              height: 300,
+              height: 500,
               width: 450,
               resizable: false,
               modal: true,
@@ -85,11 +85,11 @@
                 'Create Status': function(){
                   $.ajax({ 
                     type: "POST",
-                    url: "/api/statuses/",
+                    url: "/api/v1/statuses",
                     data: { 
                       name: $("#status-name").val(), 
                       description: $("#status-description").val(),
-                      image: $("#status-image").val(),
+                      image: $("input[name=status-image]:checked").val(),
                       severity: $("#status-severity").val()
                     },
                     dataType: 'json', 
@@ -161,12 +161,12 @@
             {% for service in services %}
               <tr>
                   <td>
-                    <a href="services/{{service.slug}}/">{{ service.name }}
+                    <a href="services/{{service.slug}}">{{ service.name }}
                   </td>
                 
                   <td class="status highlight">
                     <a href="services/{{ service.slug }}">
-                    <img src="/images/status/{{ service.current_event.status.image}}"
+                    <img src="{{ service.current_event.status.image_url}}"
                       alt="{{ service.current_event.name }}"/>
                     </a>
                   </td>
@@ -175,11 +175,11 @@
                     <td class="status">
                       {% if date %}
                         <a href="services/{{ service.slug }}/{{ date.year}}/{{ date.month }}/{{ date.day }}">
-                          <img src="/images/status/{{ info_status.image}}"
+                          <img src="{{ default_status.image_url}}"
                                       alt="{{ info_status.name }}"/>
                           </a>
                       {% else %}
-                        <img src="/images/status/{{ default_status.image}}"
+                        <img src="{{ default_status.image_url}}"
                                       alt="{{ default_status.name }}"/>
                       {% endif %}
                     </td>

@@ -128,6 +128,12 @@ def methods_via_query_allowed(handler_method):
     return redirect_if_needed
     
 class Controller(webapp.RequestHandler):
+    def base_url(self, host, version):
+        return "http://" + host + "/api/" + version
+        
+    def valid_version(self, version):
+        return version == "v1"
+    
     def error(self, code, message=None):
         self.response.set_status(code)
         
