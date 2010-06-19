@@ -144,9 +144,9 @@ class ServiceHandler(restful.Controller):
         service = Service.get_by_slug(service_slug)
         
         if not service:
-            self.render({}, '404.html')
+            self.render({}, "404.html")
             return
-            
+        
         show_admin = False
             
         try: 
@@ -168,19 +168,8 @@ class ServiceHandler(restful.Controller):
             self.render({},'404.html')
             return
             
-        if start_date and end_date:
-            events = service.events.filter("start > ", start_date) \
-                .filter("start <", end_date).order("-start")
-        else:
-            events = service.events.order("-start")
-            
         td = default_template_data()
-        td["service"] = service
-        td["past"] = get_past_days(5)
-        td["events"] = events
-        td["start_date"] = start_date
-        td["end_date"] = end_date
-        td["statuses"] = Status.all().order('severity')
+        td["service"] = service_slug
 
         self.render(td, 'service.html')
         

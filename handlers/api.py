@@ -199,19 +199,19 @@ class EventsListHandler(restful.Controller):
         host = self.request.headers.get('host', 'nohost')
         
         if (self.valid_version(version)):
-            status_name = self.request.get("status", default_value=None)
+            status_slug = self.request.get("status", default_value=None)
             message = self.request.get("message", default_value=None)
 
-            if status_name and message:
+            if status_slug and message:
                 service = Service.get_by_slug(service_slug)
                 if service:
-                    status = Status.get_by_name(status_name)
+                    status = Status.get_by_slug(status_slug)
                     if status:
                         e = Event(status=status, service=service, message=message)
                         e.put()
                         self.json(e.rest(self.base_url(host, version)))
                     else:
-                        self.error(404, "Status %s not found" % status_name)
+                        self.error(404, "Status %s not found" % status_slug)
                 else:
                     self.error(404, "Service %s not found" % service_slug)
             else:
@@ -313,24 +313,25 @@ class StatusesListHandler(restful.Controller):
         if (self.valid_version(version)):
             name = self.request.get('name', default_value=None)
             description = self.request.get('description', default_value=None)
-            severity = self.request.get('severity', default_value=None)
+            severity = int(self.request.get('severity', default_value=None))
             image = self.request.get('image', default_value=None)
             host = self.request.headers.get('host', 'nohost')
 
             if name and description and severity and image:
-                status = Status.get_by_name(name)
-                severity = int(severity)
+                slug = slugify.slugify(name)
+                status = Status.get_by_slug(slug)
 
                 # Update existing resource
                 if status:
                     status.description = description
                     status.severity = severity
                     status.image = image
+                    status.name = name
                     status.put()
                     self.json(status.rest(self.base_url(host, version)))
                 # Create new service
                 else:
-                    status = Status(name=name, description=description, 
+                    status = Status(name=name, slug=slug, description=description, 
                         severity=severity, image=image)
                     status.put()
                     self.json(status.rest(self.base_url(host, version)))
@@ -342,17 +343,17 @@ class StatusesListHandler(restful.Controller):
 
 
 class StatusInstanceHandler(restful.Controller):
-    def get(self, version, status_name):
+    def get(self, version, status_slug):
         logging.debug("CurrentStatusHandler#get")
         host = self.request.headers.get('host', 'nohost')
         
         if (self.valid_version(version)):
-            status = Status.get_by_name(status_name)
+            status = Status.get_by_slug(status_slug)
 
             if (status):
                 self.json(status.rest(self.base_url(host, version))) 
             else:
-                self.error(404, "No status %s for Service %s" % status_name)
+                self.error(404, "No status %s for Service %s" % status_slug)
         else:
             self.error(404, "API Version %s not supported" % version)
         
@@ -360,19 +361,19 @@ class StatusInstanceHandler(restful.Controller):
 
 
     @authorized.api("admin")
-    def post(self, version, status_name):
+    def post(self, version, status_slug):
         description = self.request.get('description', default_value=None)
         host = self.request.headers.get('host', 'nohost')
         
         if (self.valid_version(version)):
             if description:
-                status = Status.get_by_name(status_name)
+                status = Status.get_by_slug(status_slug)
                 if status:
                     status.description = description
                     status.put()
                     self.json(status.rest(self.base_url(host, version)))
                 else:
-                    self.error(404, "Status %s not found" % status_name)
+                    self.error(404, "Status %s not found" % status_slug)
             else:
                 self.error(400, "Description is required" % service_slug)
         else:

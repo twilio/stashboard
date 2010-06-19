@@ -1,84 +1,163 @@
 {% extends "base.html" %}
 
-{% block js %}
+{% block js_end %}
     <script type="text/javascript">
       $(document).ready(function(){
-
-        $(".button").button();
         
-        
-        $("#delete-service").click(function(event){
-          $("#delete-service-modal").dialog({
-                resizable: false,
-                modal: true,
-                buttons: {
-                  'Delete Service': function(){
-                    $.ajax({ 
-                      type: "DELETE",
-                      url: "/api/v1/services/{{ service.slug }}",
-                      dataType: 'json', 
-                      success: function(data){
-                        location.replace("/");  
-                      }
-                    });
-                  },
-                  'Cancel': function(){
-                    $(this).dialog('close');
-                  }
-                }
-          });
-        });
-        
-        $("#add-event").click(function(event){
-          event.preventDefault();
+        var createRow = function(data) {
+          var d = new Date(data.timestamp);
+          console.log(d);
           
-          $.ajax({ 
-            type: "POST",
-            url: "/api/v1/services/{{ service.slug }}/events",
-            data: {
-              status: $("#statusValue").val(),
-              message: $("#messageValue").val(),
-            },
-            dataType: "json",
-            context: $(".event-log").children('tbody'), 
-            success: function(data){
-                var d = new Date(data.timestamp);
-                
-                var time = $.datepicker.formatDate("MM d, ", d);
-                var hour;
-                var period; 
-                
-                if (d.getHours() < 12) {
-                    if (d.getHours() == 0) {
-                        hour = 12;
-                    } else {
-                        hour = d.getHours();
-                    }
-                    period = "AM";
-                } else if (d.getHours() == 12){
-                    hour = d.getHours();
-                    period = "PM";
-                } else {
-                    hour = d.getHours() - 12;
-                    period = "PM";
-                }
-                
-                time += hour + ":" + d.getMinutes() + period;
-                
-                var row = '<tr><td>' + time + '</td>';
-                row += '<td class="status highlight"><img src="' + data.status.image + '" alt=""/></td>';
-                row += '<td>' + data.message + '</td>';
-                row += '<td class="delete"><a class="delete-event" href="' +                           data.url + '"> <img src="/images/status/minus-circle.png" alt="Delete"/></a></td>';
-                row += '</tr>';
-                $(this).prepend(row);
+          var time = $.datepicker.formatDate("MM d, ", d);
+          var hour;
+          var period; 
+          
+          if (d.getHours() < 12) {
+              if (d.getHours() == 0) {
+                  hour = 12;
+              } else {
+                  hour = d.getHours();
+              }
+              period = "AM";
+          } else if (d.getHours() == 12){
+              hour = d.getHours();
+              period = "PM";
+          } else {
+              hour = d.getHours() - 12;
+              period = "PM";
+          }
+          
+          time += hour + ":" + d.getMinutes() + period;
+          
+          var tr = $('<tr />');
+          
+          $('<td />', {text: time}).appendTo(tr);
+          
+          $('<td />', {"class": "status highlight"}).append(
+            $('<img />', {
+              src: data.status.image, 
+              alt: data.status.name
+            })
+          ).appendTo(tr);
+          
+          $('<td />', {text: data.message}).appendTo(tr);
+
+          {% if user_is_admin %}
+          
+            $('<td />', {"class": "delete"}).append(
+              $('<a />', {href: data.url}).append(
+                $('<img />', {
+                  src: "/images/status/minus-circle.png",
+                  alt: "Delete"
+                  })
+              )
+            ).appendTo(tr);
+            
+          {% endif %}
+          
+          return tr;
+        };
+        
+        $.ajax({
+          type: "GET",
+          url: "/api/v1/services/{{ service }}",
+          dataType: "json",
+          success: function(service){
+            
+            $("h2").text(service.name);
+            
+            $.ajax({
+              type: "GET",
+              url: "/api/v1/statuses",
+              dataType: "json",
+              context: $("#statusValue"),
+              success: function(data){
+
+                var statuses = data.statuses;
+
+                for (var i=0; i < statuses.length; i++) {
+                  $("<option />", {
+                    "name": "severity",
+                    val: statuses[i].slug,
+                    text: statuses[i].name
+                  }).appendTo($(this));
+                };
+
               },
-            error: function(){
-              },
+              error: function(){
+
+              }
             });
+
+            $.ajax({ 
+              type: "GET",
+              url: "/api/v1/services/" + service.id + "/events",
+              dataType: "json",
+              context: $(".event-log").children('tbody'), 
+              success: function(data){
+
+                var events = data.events;
+                for (var i=0; i < events.length; i++) {
+                  var tr = createRow(events[i]);
+                  $(this).append(tr);  
+                };
+
+              },
+              error: function(){
+
+              }
+            });
+            
+            $("#delete-service").click(function(event){
+              $("#delete-service-modal").dialog({
+                    resizable: false,
+                    modal: true,
+                    buttons: {
+                      'Delete Service': function(){
+                        $.ajax({ 
+                          type: "DELETE",
+                          url: "/api/v1/services/" + service.id,
+                          dataType: 'json', 
+                          success: function(data){
+                            location.replace("/");  
+                          }
+                        });
+                      },
+                      'Cancel': function(){
+                        $(this).dialog('close');
+                      }
+                    }
+              });
+            });
+
+            $("#add-event").click(function(event){
+              event.preventDefault();
+
+              $.ajax({ 
+                type: "POST",
+                url: "/api/v1/services/" + service.id + "/events",
+                data: {
+                  status: $("#statusValue").val(),
+                  message: $("#messageValue").val(),
+                },
+                dataType: "json",
+                context: $(".event-log").children('tbody'), 
+                success: function(data){
+                    var tr = createRow(data);
+                    $(this).prepend(tr);
+                  },
+                error: function(){
+                  },
+                });
+            });
+            
+          },
+          error: function(){
+            
+          }
         });
         
-        
-        $(".delete-event").live('click', function(event){
+        $("td.delete a").live('click', function(event){
           event.preventDefault();
           $.ajax({ 
             type: "DELETE",
@@ -91,7 +170,7 @@
                   });
                 },
             error: function(){
-                  alert("CRAP");
+                
                 },
             });
         });
@@ -109,9 +188,7 @@
           </a>
         {% endif %}
         
-        <h2>
-          {{ service.name }}
-        </h2>
+        <h2></h2>
         
         <h3 class="date-range">
           {% if start_date %}
@@ -127,10 +204,6 @@
         <div id="submit">
             <label id="statusLabel" for="status">Status:</label>
             <select id="statusValue" class="update-status" name="severity">
-              {% for status in statuses %}
-                <option   name="severity" value="{{ status.name }}">
-                  {{ status.name|capfirst }}</option>
-              {% endfor %}
             </select>
             <label id="messageLabel" for="message">Message:</label>
             <textarea id="messageValue" class="update-message" name="message"></textarea>
@@ -152,31 +225,15 @@
               {% endif %}
             </tr>
           </thead>
-          {% for event in events %}
-            <tr>
-                <td>{{ event.start|date:"N j, fA"  }}</td>
-                <td class="status highlight">
-            <img src="{{ event.status.image_url }}"
-                    alt="{{ event.name }}"/>
-                </td>
-                <td>{{ event.message }}</td>
-                
-                {% if user_is_admin %}
-                  <td class="delete"><a class="delete-event" 
-                    href="/api/v1{{ event.resource_url }}">
-                    <img src="/images/status/minus-circle.png"
-                            alt="Delete"/>
-                  </a></td>
-                {% endif %}
-            </tr>
-          {% endfor %}
+          <tbody id="events-tbody">
+          </tbody>
         </table>
       </div>
       
       {% if user_is_admin %}
       
       <div id="delete-service-modal" title="Delete New Service">
-        <p>Are you sure you want to delete the {{ service.name }} service?</p>
+        <p>Are you sure you want to delete this service?</p>
       </div>
 
       {% endif %}

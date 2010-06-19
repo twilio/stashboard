@@ -80,15 +80,16 @@ class Status(db.Model):
     """A possible system status
 
         Properties:
-        name        -- string: The name of this status
+        name        -- string: The friendly name of this status
+        slug        -- stirng: The identifier for the status
         description -- string: The state this status represents
         image       -- string: Image in /static/images/status
         severity    -- int: The serverity of this status
 
     """
     @staticmethod
-    def get_by_name(status_name):
-        return Status.all().filter('name = ', status_name).get()
+    def get_by_slug(status_slug):
+        return Status.all().filter('slug = ', status_slug).get()
         
     @staticmethod
     def get_info():
@@ -98,6 +99,7 @@ class Status(db.Model):
         info = {}
         info["name"] = "Information Available"
         info["image"] = "information.png"
+        info["slug"] = "information-available"
         info["description"] = "There is information available"
         info["severity"] = -1
         return info
@@ -107,15 +109,13 @@ class Status(db.Model):
         return Status.all().order('severity').get()
         
     name = db.StringProperty(required=True)
+    slug = db.StringProperty(required=True)
     description = db.StringProperty(required=True)
     image = db.StringProperty(required=True)
     severity = db.IntegerProperty(required=True)
     
     def image_url(self):
         return "/images/status/" + unicode(self.image) + ".png"
-        
-    def sid(self):
-        return str(self.key())
         
     def resource_url(self):
         return "/statuses/" + self.name
@@ -124,8 +124,9 @@ class Status(db.Model):
         """ Return a Python object representing this model"""
 
         m = {}
-        m["name"] = unicode(self.name)
-        m["description"] = unicode(self.description)
+        m["name"] = str(self.name)
+        m["slug"] = str(self.slug)
+        m["description"] = str(self.description)
         m["severity"] = str(self.severity)
         m["url"] = base_url + self.resource_url()
         # This link shouldn't be hardcoded
@@ -143,7 +144,6 @@ class Event(db.Model):
         return Event.all().filter('service =', service).order('-start').get()
     
     start = db.DateTimeProperty(required=True, auto_now_add=True)
-    end = db.DateTimeProperty()
     status = db.ReferenceProperty(Status, required=True)
     message = db.TextProperty(required=True)
     service = db.ReferenceProperty(Service, required=True, 
