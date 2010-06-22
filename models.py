@@ -165,7 +165,10 @@ class Event(db.Model):
         
         m = {}
         m["sid"] = self.sid()
-        m["timestamp"] = self.start.isoformat()
+
+        start_time = self.start.replace(microsecond=0)
+        m["timestamp"] = start_time.isoformat()
+        
         m["status"] = self.status.rest(base_url)
         m["message"] = str(self.message)
         m["url"] = base_url + self.resource_url()

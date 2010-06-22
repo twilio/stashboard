@@ -6,7 +6,6 @@
         
         var createRow = function(data) {
           var d = new Date(data.timestamp);
-          console.log(d);
           
           var time = $.datepicker.formatDate("MM d, ", d);
           var hour;
@@ -27,8 +26,12 @@
               period = "PM";
           }
           
-          time += hour + ":" + d.getMinutes() + period;
-          
+          if (d.getMinutes() < 10) {
+            time += hour + ":0" + d.getMinutes() + period; 
+          } else {
+            time += hour + ":" + d.getMinutes() + period;
+          }
+
           var tr = $('<tr />');
           
           $('<td />', {text: time}).appendTo(tr);
