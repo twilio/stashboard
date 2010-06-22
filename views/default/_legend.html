@@ -1,35 +1,16 @@
 <div>
   <table class="legend">
+    {% if user_is_admin %}
     <thead>
-      {% if user_is_admin %}
       <tr>
         <th></th>
         <th>Description</th>
         <th>Severity  </th>
       </tr>
-      {% endif %}
-
     </thead>
-    <tbody>
-    {% for status in all_statuses %}
+    {% endif %}
     
-      <tr>
-          <td class="icon">
-            <img src="{{ status.image_url }}"
-              alt="{{ status.name }}"/>
-          </td>
-                
-          <td>
-            {{ status.description }}
-          </td>
-          
-          {% if user_is_admin %}
-          <td>
-            {{ status.severity }}
-          </td>
-          {% endif %}
-      </tr>
-    {% endfor %}
+    <tbody id="legend-body">
     </tbody>
   </table>
   
@@ -56,4 +37,101 @@
         id="status-description" name="status-description"></textarea>
     </div>
   {% endif %}
+  
+  <script type="text/javascript">
+  
+  var createStatusRow = function(data){
+    var tr = $("<tr />");
+    
+    $("<td />", {"class": "icon"}).append(
+      $("<img />", {
+        src: data.image,
+        alt: data.name
+      })
+    ).appendTo(tr);
+    
+    $("<td />", {text: data.description}).appendTo(tr);
+    
+    {% if user_is_admin %}
+    $("<td />", {text: data.severity}).appendTo(tr);
+    {% endif %}
+    
+    $("#legend-body").append(tr);
+  }
+  
+  $(document).ready(function(){
+    
+    $.ajax({ 
+      type: "GET",
+      url: "/api/v1/statuses",
+      dataType: 'json', 
+      success: function(data){ 
+        
+        var statuses = data.statuses;
+        
+        for (var i=0; i < statuses.length; i++) {
+          createStatusRow(statuses[i]);
+        };
+        
+        },
+      error: function(){ 
+        
+        },
+      });
+    
+    $("#add-status-modal").dialog({
+          height: 500,
+          width: 450,
+          resizable: false,
+          modal: true,
+          autoOpen: false,
+          buttons: {
+            'Create Status': function(){
+              $.ajax({ 
+                type: "POST",
+                url: "/api/v1/statuses",
+                data: { 
+                  name: $("#status-name").val(), 
+                  description: $("#status-description").val(),
+                  image: $("input[name=status-image]:checked").val(),
+                  severity: $("#status-severity").val()
+                },
+                dataType: 'json', 
+                context: $(".legend").children('tbody'), 
+                success: function(data){ 
+                  $("#add-status-modal").dialog('close');
+                  createStatusRow(data);
+                },
+                error: function(){ 
+                  $("#add-status-modal").dialog('close');
+                },
+              });
+                
+            },
+            'Cancel': function(){
+              $(this).dialog('close');
+            }
+          }
+    });
+    
+    $(".delete-status").live('click', function(event){
+      event.preventDefault();
+      $.ajax({ 
+        type: "DELETE",
+        data: {},
+        url: $(this).attr("href"), 
+        context: $(this).parent().parent(), 
+        success: function(){
+              $(this).fadeOut('fast', function(){
+                $(this).remove();
+              });
+            },
+        error: function(){
+              alert("CRAP");
+            },
+        });
+    });
+    
+  });
+  </script>
 </div>

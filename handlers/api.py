@@ -61,7 +61,7 @@ class ServicesListHandler(restful.Controller):
         
         if (self.valid_version(version)):
             
-            query = Service.all()
+            query = Service.all().order('name')
             data = []
 
             for s in query:
@@ -172,9 +172,28 @@ class EventsListHandler(restful.Controller):
             service = Service.get_by_slug(service_slug)
 
             if service:
+                after = self.request.get('after', default_value=None)
+                before = self.request.get('before', default_value=None)
+                
                 query = Event.all()
                 query.filter('service =', service).order('-start')
-
+                
+                if after:
+                    try:
+                        aft = datetime.datetime.strptime(after, "%Y-%m-%d")
+                        query.filter("start > ", aft)
+                    except:
+                        self.error(400, "Invalid Date: %s" % after)
+                        pass
+                
+                if before:
+                    try:
+                        bef = datetime.datetime.strptime(before, "%Y-%m-%d")
+                        query.filter("start <", bef)
+                    except:
+                        self.error(400, "Invalid Date: %s" % before)
+                        return
+                        
                 if query:
                     data = []
 
