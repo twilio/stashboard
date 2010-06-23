@@ -61,8 +61,6 @@
             dataType: 'json', 
             success: function(results){ 
               
-              console.log("calendar");
-              
               for (var i=0; i < results.days.length; i++) {
                 var day = results.days[i];
                 var d = new Date(day.date);
@@ -73,7 +71,7 @@
                   url += (d.getMonth() + 1) + "/" + d.getDate();
                   
                   td.html($("<a />", {href: url}).append(
-                    $("<img />",{src: "/images/status/question.png"})));
+                    $("<img />",{src: "/images/status/information.png"})));
                     
                 } else {
                   td.html($("<img />",{src: day.summary.image}));
@@ -86,8 +84,6 @@
             },
           });
           
-          console.log("end of this");
-            
         }
 
       };
@@ -175,7 +171,7 @@
 
 {% block content %}
 
-      <div id="services" class="frame">
+      <div id="webservices" class="frame">
         
           <table id="service-list">
             <thead>

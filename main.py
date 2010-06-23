@@ -68,7 +68,7 @@ ROUTES = [
     (r'/services/(.+)/(.+)/(.+)', site.ServiceHandler),
     (r'/services/(.+)/(.+)', site.ServiceHandler),
     (r'/services/(.+)', site.ServiceHandler),
-    (r'/documentation', site.DocumentationHandler),
+    (r'/documentation/(.+)', site.DocumentationHandler),
     (r'/profile', site.ProfileHandler),
     (r'/profile/verify', site.VerifyAccessHandler),
     

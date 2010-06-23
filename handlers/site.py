@@ -177,9 +177,24 @@ class ServiceHandler(restful.Controller):
         
 class DocumentationHandler(restful.Controller):
     
-    def get(self):
+    def get(self, page):
         td = default_template_data()
-        self.render(td, 'documentation.html')
+        
+        if page == "overview":
+            td["overview_selected"] = True
+            self.render(td, 'overview.html')
+        elif page == "authentication":
+            td["auth_selected"] = True
+            self.render(td, 'authentication.html')
+        elif page == "rest":
+            td["rest_selected"] = True
+            self.render(td, 'restapi.html')
+        elif page == "examples":
+            td["example_selected"] = True
+            self.render(td, 'examples.html')
+        else:
+            self.render({},'404.html')
+            
         
             
 class VerifyAccessHandler(restful.Controller):

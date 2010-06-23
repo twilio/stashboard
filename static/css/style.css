@@ -51,18 +51,18 @@ h3.date-range {color: #999;}
 
 
 /* wordpress entries styling - main content column */
-#services table { width: 100%; border-spacing:10; font-size: 1.1em;}
-#services th {text-align: left;font-size: 20px;padding: 10px;border-bottom: 1px solid rgb(228, 228, 228);border-right: 1px solid rgb(228, 228, 228);}
-#services tr {font-size: 16px;}
-#services td {padding: 10px;border-bottom: 1px solid rgb(228, 228, 228);border-right: 1px solid rgb(228, 228, 228);}
-#services .today {background: rgb(228, 228, 228);}
-#services .highlight {background: rgb(247, 247, 247);}
-#services .status, #services .date, #services .today, .delete {text-align: center;}
-#services table a {text-decoration: underline;}
+#webservices table { width: 100%; border-spacing:10; font-size: 1.1em;}
+#webservices th {text-align: left;font-size: 20px;padding: 10px;border-bottom: 1px solid rgb(228, 228, 228);border-right: 1px solid rgb(228, 228, 228);}
+#webservices tr {font-size: 16px;}
+#webservices td {padding: 10px;border-bottom: 1px solid rgb(228, 228, 228);border-right: 1px solid rgb(228, 228, 228);}
+#webservices .today {background: rgb(228, 228, 228);}
+#webservices .highlight {background: rgb(247, 247, 247);}
+#webservices .status, #services .date, #services .today, .delete {text-align: center;}
+#webservices table a {text-decoration: underline;}
 
-#services .event-log th {font-size: 16px;text-align: center;}
-#services .event-log td {fonst-size: 14px;}
-#services .event-log td:first-child {text-align: center;}
+#webservices .event-log th {font-size: 16px;text-align: center;}
+#webservices .event-log td {fonst-size: 14px;}
+#webservices .event-log td:first-child {text-align: center;}
 .status-header {width: 10%;}
 .time-header {width: 20%;}
 .delete-header {width: 8%;}
@@ -107,13 +107,63 @@ h3.date-range {color: #999;}
 
 #documentation p { margin: 10px 0px; }
 #documentation h2 { margin: 20px 0 10px 0; }
-#documentation h3 { margin: 10px 0px; font-size: 20px; }
-#documentation h4 { margin: 8px 0px; }
-#documentation h5 { margin: 5px 0px; }
+#documentation h3 { margin: 10px 0px; font-size: 20px; color:#555555;}
+#documentation h4 { margin: 10px 0px; font-size: 18px; color: #4476B5;}
+#documentation h5 { margin: 10px 0px; font-size: 16px;}
 
-#documentation blockquote {
+#documentation table {
+    font-size: 14px;
+    margin: 10px 0 0 0 ;
+}
+
+#documentation table td, #documentation table th {
+    padding: 10px;
+    border: 1px solid #555555;
+}
+
+#documentation table td {
+}
+
+#documentation table th {
+    background: #ccc;
+}
+
+#documentation table caption {font-style: italic; text-align: right;}
+
+
+#documentation nav ul {
+    height: 50px; background: #4476b5;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    broder-radius: 10px;
+    margin-bottom: 20px;
+
+}
+
+#documentation nav li {
+    float: left;
+    height: 50px;
+    margin: 0 20px;
+    line-height: 50px;
+}
+
+#documentation nav li a {
+    display:block;
+    font-size:15px;
+    font-weight:bold;
+    text-decoration:none;
+    color: #F3FBEC;
+}
+
+#documentation nav .selected {
+    background:url("../images/sub-nav-selected-arrow.png") no-repeat scroll center bottom transparent;
+}
+
+
+
+#documentation blockquote, pre {
     background: #F0F0F0;
-    margin: 15px 0;
+    margin: 10px 0;
     padding: 10px;
     width:auto;
 }

@@ -1,15 +1,24 @@
-<!DOCTYPE>
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
+    <meta charset="utf-8" />
     <title>Is My Web Service Up?</title>
     <link rel="stylesheet" href="/static/css/reset.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="/static/css/style.css" type="text/css" media="screen" />    
     <link rel="stylesheet" href="/static/css/jqueryui.css" type="text/css" media="screen" />    
-    <!-- <script type="text/javascript"      src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script type="text/javascript"      src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
     <script type="text/javascript"
-src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></script> -->
-    <script type="text/javascript" src="/static/js/local-jquery.js"></script>
-    <script type="text/javascript" src="/static/js/local-jquery-ui.js"></script>
+src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></script>
+  <!--[if lt IE 9]>
+  <script>
+    var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+      "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+      "progress,section,time,video").split(',');
+    for (var i = 0; i < e.length; i++) {
+      document.createElement(e[i]);
+    }
+  </script>
+  <![endif]-->
     <script type="text/javascript">
     //Global Script
     $(document).ready(function(){
@@ -23,7 +32,7 @@ src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></scr
     <div id="wrapper">
       <div id="header">
         <a href="/"><h1 id="logo">Status Dashboard</h1></a>
-        <a id="rest-docs" href="/documentation" class="button">
+        <a id="rest-docs" href="/documentation/overview" class="button">
           REST API Documentation
         </a>
       </div>

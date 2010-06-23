@@ -1,26 +1,54 @@
-The REST API always returns a JSON object. A list resources is represented as a object with a "resource-name" attribute
+## REST API Basics
+
+The REST API always returns a JSON object. A list resource is represented as a object with a "resource-name" attribute
 
     {
         "resource-name": ["List", "of", "objects"]
     }
     
-No authentication is needed to access resources via GET; however, all other methods require authentication
+### Authentication
     
-## Base URL
-
-All URLs referenced in this document have the following base:
-
-    http[s]://ismywebservicedown.appspot.com/api/v1
+No authentication is needed to access resources via HTTP GET; however, all other methods require authentication. Authentication via OAuth is covered in the ["Authentication section"](/documentation/authentication)
     
-This includes urls included in the sample JSON responses
+### Base URL
 
-## /services
+All URLs referenced in this document, including sample API return objects, have the following base URL:
 
-### GET
+    http[s]://status.your.domain.com
+    
+## Services
 
-Returns a list of services
+The services REST resource represents all web services currently tracked via Stashboard. The resources also allows for the creation of new, trackable web services.
 
-> GET /services HTTP/1.1
+### Resource URL
+
+> /api/v1/services
+
+### Resource Properties
+
+-------------------------------------------------------------
+
+Property       Description
+---------       ---------------------------------------------
+id              The unique identifier by which to identify 
+                the service
+                
+name            The name of the service, defined by the user
+
+description     The description of the web service
+
+url             The URL of the specific service resource
+-------------------------------------------------------------
+
+### HTTP Methods
+
+#### GET
+
+Returns a list of all current services tracked by Stashboard
+
+##### Example
+
+> GET /api/v1/services HTTP/1.1
 
     {
         "services": [
@@ -28,26 +56,32 @@ Returns a list of services
                 "name": "Example Foo",
                 "id": "example-foo",
                 "description": "An explanation of this service"
-                "url": "/services/example-foo",
+                "url": "/api/v1/services/example-foo",
             },
             {
                 "name": "Example Bar",
                 "id": "example-bar",
                 "description": "An explanation of this service"
-                "url": "/services/example-bar",
+                "url": "/api/v1/services/example-bar",
             }
         ]
     }
     
-### POST
+#### POST
 
 Create a new service (or updates an existing server) and returns the new service object. 
 
-#### Parameters
+-------------------------------------------------------------
 
-* **name**: Name of the service
-* **description**: Description of service
-* **defaultStatus**: Id of the default status for the service. Defaults to the status with the lowest severity rating
+Param          Optional    Description
+-----           ---------   --------------------------------
+name            Required    Name of the service
+
+description     Required    Description of service
+-------------------------------------------------------------
+Table: Service POST parameters
+
+##### Example
 
 > POST /services HTTP/1.1
 name=New%20Service&description=A%20great%20service
@@ -67,6 +101,8 @@ name=New%20Service&description=A%20great%20service
 
 Returns a service instance
 
+#### Example
+
 > GET /services/{service} HTTP/1.1
 
     {
@@ -82,6 +118,8 @@ Update a service's description. Returns the updated object
 
 * **description**: Description of service
 
+#### Example
+
 > POST /services/{service} description=System%20is%20now%20operational
 
     {
@@ -94,6 +132,8 @@ Update a service's description. Returns the updated object
 ### DELETE
 
 Delete a service, returns the service object deleted
+
+#### Example
 
 > DELETE /services/{service} HTTP/1.1
 
@@ -109,6 +149,8 @@ Delete a service, returns the service object deleted
 ### GET
 
 Returns all events associated with a given service, ordered by reverse chronological order. 
+
+#### Example
 
 > GET /services/{service}/events HTTP/1.1
 
@@ -152,6 +194,8 @@ Returns all events associated with a given service, ordered by reverse chronolog
 
 Will return the newly created event
 
+#### Example
+
 > POST /services/{service}/events  HTTP/1.1 status=AVAILABLE&message=System%20is%20now%20operational
 
     {
@@ -181,6 +225,8 @@ Not supported
 ### GET
 
 Returns the current service status
+
+#### Example
 
 > GET /services/{service}/events/current HTTP/1.1
 
@@ -252,6 +298,8 @@ Returns the status with the given sid
 
 ### GET
 
+#### Example
+
 > GET /services/{service}/events/{sid}
 
     {
@@ -274,9 +322,9 @@ Not supported
 
 ### DELETE
 
-#### Parameters
-
 Deletes the given event. Returns the deleted event
+
+#### Example
 
 > DELETE /services/{service}/events/{sid} HTTP/1.1
 
@@ -300,6 +348,8 @@ Deletes the given event. Returns the deleted event
 ### GET
 
 Returns the possible states
+
+#### Example
 
 > GET /statuses HTTP/1.1
 
@@ -330,6 +380,8 @@ Returns the possible states
 * **severity**: The severity of the status
 * **image**: The filename of the image. No path information
 
+#### Example
+
 > POST /statuses HTTP/1.1
 name=down&description=A%20new%20status&severity=1000&image=cross-circle.png
 
@@ -355,6 +407,8 @@ Not Supported
 
 Return a status
 
+#### Example
+
     {
         "name": "down",
         "description": "A new status",
@@ -370,6 +424,8 @@ Return a status
 
 Returns the newly updated status
 
+#### Example
+
 > POST /statuses HTTP/1.1
 description=A%20new%20status&severity=1010&image=cross-circle.png
 
@@ -384,6 +440,8 @@ description=A%20new%20status&severity=1010&image=cross-circle.png
 ### DELETE
 
 Delete the given status
+
+#### Example
 
 > DELETE /statuses/{name}
 
@@ -404,6 +462,8 @@ Not supported
 ### GET
 
 Returns a list of status images.
+
+#### Example
 
     {
         "images": [
