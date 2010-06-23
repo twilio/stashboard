@@ -47,6 +47,7 @@ Create a new service (or updates an existing server) and returns the new service
 
 * **name**: Name of the service
 * **description**: Description of service
+* **defaultStatus**: Id of the default status for the service. Defaults to the status with the lowest severity rating
 
 > POST /services HTTP/1.1
 name=New%20Service&description=A%20great%20service
@@ -56,6 +57,7 @@ name=New%20Service&description=A%20great%20service
         "id": "new-service",
         "description": "A great service"
         "url": "/services/new-service",
+        "defaultStatus": {}
     }
 
 
@@ -204,6 +206,45 @@ Not supported
 
 Not supported
 
+## /services/{service}/calendar
+
+### GET
+
+Supports query parameters start and end, which are dates
+
+returns 
+
+    {
+        calendar: [
+            {
+                date: "June 21, 2010",
+                events: [],
+                summary: status
+            },
+            {
+                date: "June 20, 2010",
+                events: [],
+                summary: status
+            },
+            {
+                date: "June 19, 2010",
+                events: [],
+                summary: status
+            },
+            {
+                date: "June 18, 2010",
+                events: [],
+                summary: status
+            },
+            {
+                date: "June 17, 2010",
+                events: [],
+                summary: status
+            },
+        ]
+    }
+    
+Where summary is the overall status of the system for that day
 
 ## /services/{service}/events/{sid}
 
@@ -226,7 +267,7 @@ Returns the status with the given sid
             "url": "/statuses/down",
         },
     }
-    
+
 ### POST / PUT
 
 Not supported

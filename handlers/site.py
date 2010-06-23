@@ -170,6 +170,8 @@ class ServiceHandler(restful.Controller):
             
         td = default_template_data()
         td["service"] = service_slug
+        td["start_date"] = start_date
+        td["end_date"] = end_date
 
         self.render(td, 'service.html')
         

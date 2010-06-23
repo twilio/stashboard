@@ -1,5 +1,7 @@
 from google.appengine.ext import db
 import datetime
+from wsgiref.handlers import format_date_time
+from time import mktime
 from datetime import timedelta
 from datetime import date
 import config
@@ -21,7 +23,7 @@ class Service(db.Model):
     def current_event(self):
         return self.events.order('-start').get()
         
-    def critical_incident(self, day):
+    def events_for_day(self, day):
         """ Return the largest seveirty (of events) for a given day. If no 
         events occured, return the lowest severity rating.
         
@@ -32,29 +34,12 @@ class Service(db.Model):
         
         next_day = day + timedelta(days=1)
         
-        events = self.events.filter('start >', day) \
+        return self.events.filter('start >', day) \
             .filter('start <', next_day).fetch(40)
             
-        if events:
-            levels = map(lambda x: x.status.severity, events)
-            lowest = Status.lowest_severity()
-            return max(levels) > lowest.severity
-        else:
-            return False 
-        
-        
-    def past_five_days(self):
-        days = []
-        day = date.today()
-        for i in range(5):
-            day = day - timedelta(days=1)
-            if self.critical_incident(day):
-                days.append(day)
-            else:
-                days.append(None)
-            
-        return days
-
+    def compare(self, other_status):
+        return 0
+    
     slug = db.StringProperty(required=True)
     name = db.StringProperty(required=True)
     description = db.StringProperty(required=True)
@@ -118,16 +103,16 @@ class Status(db.Model):
         return "/images/status/" + unicode(self.image) + ".png"
         
     def resource_url(self):
-        return "/statuses/" + self.name
+        return "/statuses/" + str(self.slug)
         
     def rest(self, base_url):
         """ Return a Python object representing this model"""
 
         m = {}
         m["name"] = str(self.name)
-        m["slug"] = str(self.slug)
+        m["id"] = str(self.slug)
         m["description"] = str(self.description)
-        m["severity"] = str(self.severity)
+        m["severity"] = int(self.severity)
         m["url"] = base_url + self.resource_url()
         # This link shouldn't be hardcoded
         
@@ -166,8 +151,8 @@ class Event(db.Model):
         m = {}
         m["sid"] = self.sid()
 
-        start_time = self.start.replace(microsecond=0)
-        m["timestamp"] = start_time.isoformat()
+        stamp = mktime(self.start.timetuple())
+        m["timestamp"] = format_date_time(stamp)
         
         m["status"] = self.status.rest(base_url)
         m["message"] = str(self.message)

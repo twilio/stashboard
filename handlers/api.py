@@ -29,6 +29,7 @@ clients, like a Flex app or a desktop program.
 __author__ = 'Kyle Conroy'
 
 import datetime
+from datetime import timedelta
 import string
 import re
 import os
@@ -37,6 +38,9 @@ import urllib
 import logging
 import jsonpickle
 import status_images
+
+from wsgiref.handlers import format_date_time
+from time import mktime
 
 from google.appengine.ext import webapp
 from google.appengine.api import users
@@ -176,16 +180,16 @@ class EventsListHandler(restful.Controller):
                 before = self.request.get('before', default_value=None)
                 
                 query = Event.all()
-                query.filter('service =', service).order('-start')
-                
+                query.filter('service =', service)
+                        
                 if after:
                     try:
                         aft = datetime.datetime.strptime(after, "%Y-%m-%d")
                         query.filter("start > ", aft)
                     except:
                         self.error(400, "Invalid Date: %s" % after)
-                        pass
-                
+                        return
+
                 if before:
                     try:
                         bef = datetime.datetime.strptime(before, "%Y-%m-%d")
@@ -193,6 +197,8 @@ class EventsListHandler(restful.Controller):
                     except:
                         self.error(400, "Invalid Date: %s" % before)
                         return
+                        
+                query.order('-start')
                         
                 if query:
                     data = []
@@ -260,6 +266,61 @@ class CurrentEventHandler(restful.Controller):
                 self.error(404, "Service %s not found" % service_slug)
         else:
             self.error(404, "Version %s not supported" % version)
+            
+            
+class EventCalendarHandler(restful.Controller):
+    def get(self, version, service_slug):
+        logging.debug("EventCalenderHandler#get")
+        host = self.request.headers.get('host', 'nohost')
+
+        if (self.valid_version(version)):
+
+            service = Service.get_by_slug(service_slug)
+            status = Status.lowest_severity()
+
+            if service and status:
+                today = datetime.datetime.now()
+                start = self.request.get('start', default_value=today.strftime("%Y-%m-%d"))
+                days = int(self.request.get('days', default_value="10"))
+                
+                if start and days:
+                    try:
+                        aft = datetime.datetime.strptime(start, "%Y-%m-%d")
+                    except:
+                        self.error(400, "Invalid Date: %s" % start)
+                        return
+                        
+                calendar = []
+                        
+                for i in range(days):
+                    events = []
+                    summary = status
+                    issue = False
+                    
+                    for e in service.events_for_day(aft):
+                        events.append(e.rest(self.base_url(host, version)))
+                        
+                        if e.status.severity > summary.severity:
+                            summary = e.status
+                            issue = True
+                            
+                    stamp = mktime(aft.timetuple())
+                    
+                    calendar.append({
+                        "events": events,
+                        "date": format_date_time(stamp),
+                        "summary": summary.rest(self.base_url(host, version)),
+                        "informationAvailable": issue,
+                    })
+                    
+                    aft = aft - timedelta(days=1)
+
+                self.json({"days": calendar})
+                 
+            else:
+                self.error(404, "Service %s not found" % service_slug)
+        else:
+            self.error(404, "Version %s not supported" % version)            
     
 class EventInstanceHandler(restful.Controller):
     def get(self, version, service_slug, sid):

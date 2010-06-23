@@ -3,6 +3,8 @@
 {% block js_end %}
     <script type="text/javascript">
       var createServiceRow = function(data, fetchStatuses){
+        informationImage = "/images/status/question-white.png";
+        
         var tr = $('<tr />', {id: data.id});
         
         $('<td />').append(
@@ -14,7 +16,7 @@
         
         $('<td />', {"class": "status highlight"}).append(
           $("<img />", {
-            src: "/images/status/question-white.png",
+            src: informationImage,
             alt: "Unknown Status"
           })
         ).appendTo(tr);
@@ -22,7 +24,7 @@
         for (var i=0; i < 5; i++) {
           $("<td />", {"class": "status"}).append(
             $("<img />", {
-              src: "/images/status/question-white.png",
+              src: informationImage,
               alt: "Unknown Status"
             })
           ).appendTo(tr);
@@ -39,16 +41,55 @@
             url: "/api/v1/services/" + data.id + "/events/current",
             dataType: 'json', 
             success: function(evt){ 
-              
               $("#" + data.id + " td.highlight img")
                 .attr("src", evt.status.image);
               },
             error: function(){ 
 
               },
-            });
+          });
           
+          var currentDate = new Date();
+          currentDate = new Date(currentDate.getTime() -  86400000);
+          var before = $.datepicker.formatDate("yy-m-d", currentDate);
+          var url = "/api/v1/services/" + data.id + "/events/calendar";
+          url += "?start=" + before + "&days=" + 5;
+          
+          $.ajax({ 
+            type: "GET",
+            url: url,
+            dataType: 'json', 
+            success: function(results){ 
+              
+              console.log("calendar");
+              
+              for (var i=0; i < results.days.length; i++) {
+                var day = results.days[i];
+                var d = new Date(day.date);
+                var td = $("#" + data.id).children("td").eq(i+2);
+                
+                if (results.days[i].informationAvailable) {
+                  url = "/services/" + data.id + "/" + d.getFullYear() + "/"
+                  url += (d.getMonth() + 1) + "/" + d.getDate();
+                  
+                  td.html($("<a />", {href: url}).append(
+                    $("<img />",{src: "/images/status/question.png"})));
+                    
+                } else {
+                  td.html($("<img />",{src: day.summary.image}));
+                }
+              }
+              
+            },
+            error: function(){ 
+
+            },
+          });
+          
+          console.log("end of this");
+            
         }
+
       };
     
       $(document).ready(function(){

@@ -61,6 +61,7 @@
           return tr;
         };
         
+        
         $.ajax({
           type: "GET",
           url: "/api/v1/services/{{ service }}",
@@ -68,6 +69,8 @@
           success: function(service){
             
             $("h2").text(service.name);
+            
+            {% if user_is_admin %}
             
             $.ajax({
               type: "GET",
@@ -81,7 +84,7 @@
                 for (var i=0; i < statuses.length; i++) {
                   $("<option />", {
                     "name": "severity",
-                    val: statuses[i].slug,
+                    val: statuses[i].id,
                     text: statuses[i].name
                   }).appendTo($(this));
                 };
@@ -91,6 +94,8 @@
 
               }
             });
+            
+            {% endif %}
 
             $.ajax({ 
               type: "GET",
