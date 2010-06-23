@@ -16,29 +16,13 @@ All URLs referenced in this document, including sample API return objects, have 
 
     http[s]://status.your.domain.com
     
-## Services
+## Services List Resource
 
-The services REST resource represents all web services currently tracked via Stashboard. The resources also allows for the creation of new, trackable web services.
+The Services List resource represents all web services currently tracked via Stashboard. The resources also allows for the creation of new, trackable web services.
 
 ### Resource URL
 
 > /api/v1/services
-
-### Resource Properties
-
--------------------------------------------------------------
-
-Property       Description
----------       ---------------------------------------------
-id              The unique identifier by which to identify 
-                the service
-                
-name            The name of the service, defined by the user
-
-description     The description of the web service
-
-url             The URL of the specific service resource
--------------------------------------------------------------
 
 ### HTTP Methods
 
@@ -69,7 +53,7 @@ Returns a list of all current services tracked by Stashboard
     
 #### POST
 
-Create a new service (or updates an existing server) and returns the new service object. 
+Creates a new service (or updates an existing service) and returns the new service object. 
 
 -------------------------------------------------------------
 
@@ -79,7 +63,7 @@ name            Required    Name of the service
 
 description     Required    Description of service
 -------------------------------------------------------------
-Table: Service POST parameters
+Table: Services List POST parameters
 
 ##### Example
 
@@ -91,17 +75,39 @@ name=New%20Service&description=A%20great%20service
         "id": "new-service",
         "description": "A great service"
         "url": "/services/new-service",
-        "defaultStatus": {}
     }
 
+## Service Instance Resource
 
-## /services/{service}
+The Service Instance resources represents an individual 
 
-### GET
+### Resource Url
+
+> /api/v1/services/{service}
+
+### Resource Properties
+
+-------------------------------------------------------------
+
+Property       Description
+---------       ---------------------------------------------
+id              The unique identifier by which to identify 
+                the service
+                
+name            The name of the service, defined by the user
+
+description     The description of the web service
+
+url             The URL of the specific service resource
+-------------------------------------------------------------
+
+### HTTP Methods
+
+#### GET
 
 Returns a service instance
 
-#### Example
+##### Example
 
 > GET /services/{service} HTTP/1.1
 
@@ -109,23 +115,29 @@ Returns a service instance
         "name": "Example Service",
         "id": "example-service",
         "description": "An explanation of what this service represents"
-        "url": "/services/example-service",
+        "url": "/api/v1/services/example-service",
     }
     
-### POST
+#### POST
 
 Update a service's description. Returns the updated object
 
-* **description**: Description of service
+-------------------------------------------------------------
 
-#### Example
+Param          Optional    Description
+-----           ---------   --------------------------------
+description     Required    The description of the service
+-------------------------------------------------------------
+Table: Service Instance POST parameters
+
+##### Example
 
 > POST /services/{service} description=System%20is%20now%20operational
 
     {
         "name": "Example Service",
         "id": "example-service",
-        "description": "System% is now operational",
+        "description": "System is now operational",
         "url": "/services/example-service",
     }
 
