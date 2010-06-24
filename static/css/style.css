@@ -57,7 +57,7 @@ h3.date-range {color: #999;}
 #webservices td {padding: 10px;border-bottom: 1px solid rgb(228, 228, 228);border-right: 1px solid rgb(228, 228, 228);}
 #webservices .today {background: rgb(228, 228, 228);}
 #webservices .highlight {background: rgb(247, 247, 247);}
-#webservices .status, #services .date, #services .today, .delete {text-align: center;}
+#webservices .status, #webservices .date, #webservices .today, .delete {text-align: center;}
 #webservices table a {text-decoration: underline;}
 
 #webservices .event-log th {font-size: 16px;text-align: center;}
@@ -103,16 +103,22 @@ h3.date-range {color: #999;}
 .dialog textarea { width: 400px; height: 75px;}
 
 #delete-service { float: right;}
-#delete-service-modal {display: none;}  
+#delete-service-modal {display: none;}
+
+#documentation { 
+    font-size: 14px;
+}  
+
+#documentation a { color: #4476B5; text-decoration: underline;}
 
 #documentation p { margin: 10px 0px; }
 #documentation h2 { margin: 20px 0 10px 0; }
-#documentation h3 { margin: 10px 0px; font-size: 20px; color:#555555;}
-#documentation h4 { margin: 10px 0px; font-size: 18px; color: #4476B5;}
+#documentation h3 { margin: 15px 0px 10px 0; font-size: 24px; color:#555555;}
+#documentation h4 { margin: 10px 0px; font-size: 22px; color: #4476B5;}
 #documentation h5 { margin: 10px 0px; font-size: 16px;}
 
 #documentation table {
-    font-size: 14px;
+    font-size: 12px;
 }
 
 #documentation table td, #documentation table th {

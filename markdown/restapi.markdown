@@ -18,17 +18,34 @@ All URLs referenced in this document, including sample API return objects, have 
     
 ## Services List Resource
 
-The Services List resource represents all web services currently tracked via Stashboard. The resources also allows for the creation of new, trackable web services.
+The Services List resource represents all web services currently tracked via StashBoard. The resources also allows for the creation of new, trackable web services.
 
 ### Resource URL
 
 > /api/v1/services
 
+### Resource Properties
+
+-------------------------------------------------------------
+
+Property       Description
+---------       ---------------------------------------------
+id              The unique identifier by which to identify 
+                the service
+                
+name            The name of the service, defined by the user
+
+description     The description of the web service
+
+url             The URL of the specific service resource
+-------------------------------------------------------------
+Table: Service resource properties
+
 ### HTTP Methods
 
 #### GET
 
-Returns a list of all current services tracked by Stashboard
+Returns a list of all current services tracked by StashBoard
 
 ##### Example
 
@@ -67,49 +84,33 @@ Table: Services List POST parameters
 
 ##### Example
 
-> POST /services HTTP/1.1
+> POST /api/v1/services HTTP/1.1
 name=New%20Service&description=A%20great%20service
 
     {
         "name": "New Service",
         "id": "new-service",
         "description": "A great service"
-        "url": "/services/new-service",
+        "url": "/api/v1/services/new-service",
     }
 
 ## Service Instance Resource
 
-The Service Instance resources represents an individual 
+The Service Instance resources represents an individual web service tracked by StashBoard
 
 ### Resource Url
 
 > /api/v1/services/{service}
 
-### Resource Properties
-
--------------------------------------------------------------
-
-Property       Description
----------       ---------------------------------------------
-id              The unique identifier by which to identify 
-                the service
-                
-name            The name of the service, defined by the user
-
-description     The description of the web service
-
-url             The URL of the specific service resource
--------------------------------------------------------------
-
 ### HTTP Methods
 
 #### GET
 
-Returns a service instance
+Returns a service object
 
 ##### Example
 
-> GET /services/{service} HTTP/1.1
+> GET /api/v1/services/{service} HTTP/1.1
 
     {
         "name": "Example Service",
@@ -120,7 +121,7 @@ Returns a service instance
     
 #### POST
 
-Update a service's description. Returns the updated object
+Updates a service's description and returns the updated service object.
 
 -------------------------------------------------------------
 
@@ -132,39 +133,69 @@ Table: Service Instance POST parameters
 
 ##### Example
 
-> POST /services/{service} description=System%20is%20now%20operational
+> POST /api/v1/services/{service} description=System%20is%20now%20operational
 
     {
         "name": "Example Service",
         "id": "example-service",
         "description": "System is now operational",
-        "url": "/services/example-service",
+        "url": "/api/v1/services/example-service",
     }
 
 ### DELETE
 
-Delete a service, returns the service object deleted
+Deletes a service and returns the deleted service object
 
 #### Example
 
-> DELETE /services/{service} HTTP/1.1
+> DELETE /api/v1/services/{service} HTTP/1.1
 
     {
         "name": "Example Service",
         "id": "example-service",
-        "description": "System% is now operational",
-        "url": "/services/example-service",
+        "description": "System is now operational",
+        "url": "/api/v1/services/example-service",
     }
 
-## /services/{service}/events
 
-### GET
+## Events List Resource
 
-Returns all events associated with a given service, ordered by reverse chronological order. 
+The Events List resource represents all event associated with a given service
 
-#### Example
+### Resource URL
 
-> GET /services/{service}/events HTTP/1.1
+> /api/v1/services/{service}/events
+
+### Properties
+
+-------------------------------------------------------------
+
+Property       Description
+---------       ---------------------------------------------
+sid             The unique identifier by which to identify 
+                the event
+                
+message         The message associated with this event
+
+timestamp       The time at which this event occurred, given
+                in RFC 1132 format.
+
+url             The URL of the specific event resource
+
+status          The status of this event, as described by the 
+                Statuses resource
+-------------------------------------------------------------
+Table: Event resource properties
+
+### HTTP Methods
+
+#### GET
+
+Returns all events associated with a given service in reverse chronological order. 
+
+##### Example
+
+> GET /api/v1/services/{service}/events HTTP/1.1
 
     {
         "events": [
@@ -172,159 +203,133 @@ Returns all events associated with a given service, ordered by reverse chronolog
                 "timestamp": "2010-05-22T01:52:23.104012", 
                 "message": "Problem fixed", 
                 "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GBAM",
-                "url": "/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GBAM",
+                "url": "/api/v1/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd2...
                 "status": {
                     "name": "down",
                     "description": "An explanation of what this status represents",
                     "severity": 1000,
                     "image": "/static/images/status/cross-circle.png",
-                    "url": "/statuses/down",
+                    "url": "/api/v1/statuses/down",
                 },
             }, 
             {
                 "timestamp": "2010-05-22T01:52:16.383246", 
                 "message": "Might be up", 
                 "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
-                "url": "/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
+                "url": "/api/v1/services/example-service/events/ahJpc215d2Vic...
                 "status": {
                     "name": "down",
                     "description": "An explanation of what this status represents",
                     "severity": 1000,
                     "image": "/static/images/status/cross-circle.png",
-                    "url": "/statuses/down",
+                    "url": "/api/v1/statuses/down",
                 },
             }
         ]
     }
 
-### POST
 
-#### Parameters
 
-* **status**: An valid system status identifier. See /statuses
-* **message**: A message for the event
+#### POST
 
-Will return the newly created event
+Creates a new event for the given service and returns the newly created event object
 
-#### Example
+-------------------------------------------------------------
 
-> POST /services/{service}/events  HTTP/1.1 status=AVAILABLE&message=System%20is%20now%20operational
+Param      Optional    Description
+-----       ---------   --------------------------------
+status      Required    The system status for the event.
+                        This must be a valid system 
+                        status identifier found in the 
+                        Statuses List resource
+
+message     Required    The message for the event
+-------------------------------------------------------------
+Table: Events List POST parameters
+
+##### Example
+
+> POST /api/v1/services/{service}/events  HTTP/1.1 status=AVAILABLE&message=System%20is%20now%20operational
 
     {
         "timestamp": "2010-05-22T01:52:16.383246", 
         "message": "Might be up", 
         "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
-        "url": "/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
+        "url": "/api/v1/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
         "status": {
             "name": "down",
             "description": "An explanation of what this status represents",
             "severity": 1000,
             "image": "/static/images/status/cross-circle.png",
-            "url": "/statuses/down",
+            "url": "/api/v1/statuses/down",
         },
     }
     
-### PUT
+#### PUT
 
 Not supported
 
-### DELETE
+#### DELETE
 
 Not supported
+
+### URL Filtering
     
-## /services/{service}/events/current
+The Events List resource also supports filtering events via dates. To filter events, place on of the following options into the query string for a GET request
+
+-------------------------------------------------------------
+
+Option     Description
+-----       --------------------------------
+before      Only show events before this 
+            date. Must be in the format 
+            YYYY-MM-DD
+            
+after       Only show events after this 
+            date. Must be in the format 
+            YYYY-MM-DD
+-------------------------------------------------------------
+Table: Events List URL Filtering Options
+
+##### Example
+
+> GET /api/v1/services/{service}/events?before=2010-06-10 HTTP/1.1
+
+would return all events before June 6, 2010. 
+
+Similarly, both "before" and "after" can be used to create date ranges
+
+> GET /api/v1/services/{service}/events?before=2010-06-17&after=2010-06-01 HTTP/1.1
+
+would return all events between June 6, 2010 and June 17, 2010  
+  
+## Current Service Event
+
+The Current Service Event resource simply returns the current event for a given service.
+
+### Resource Url
+
+> /api/v1/services/{service}/events/current
 
 ### GET
 
-Returns the current service status
+Returns the current event for a given service.
 
 #### Example
 
-> GET /services/{service}/events/current HTTP/1.1
+> GET /api/v1/services/{service}/events/current HTTP/1.1
 
     {
         "timestamp": "2010-05-22T01:52:16.383246", 
         "message": "Might be up", 
         "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
-        "url": "/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
+        "url": "/api/v1/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
         "status": {
             "name": "down",
             "description": "An explanation of what this status represents",
             "severity": 1000,
             "image": "/static/images/status/cross-circle.png",
-            "url": "/statuses/down",
-        },
-    }
-
-### POST / PUT
-
-Not supported
-
-### DELETE
-
-Not supported
-
-## /services/{service}/calendar
-
-### GET
-
-Supports query parameters start and end, which are dates
-
-returns 
-
-    {
-        calendar: [
-            {
-                date: "June 21, 2010",
-                events: [],
-                summary: status
-            },
-            {
-                date: "June 20, 2010",
-                events: [],
-                summary: status
-            },
-            {
-                date: "June 19, 2010",
-                events: [],
-                summary: status
-            },
-            {
-                date: "June 18, 2010",
-                events: [],
-                summary: status
-            },
-            {
-                date: "June 17, 2010",
-                events: [],
-                summary: status
-            },
-        ]
-    }
-    
-Where summary is the overall status of the system for that day
-
-## /services/{service}/events/{sid}
-
-Returns the status with the given sid
-
-### GET
-
-#### Example
-
-> GET /services/{service}/events/{sid}
-
-    {
-        "timestamp": "2010-05-22T01:52:16.383246", 
-        "message": "Might be up", 
-        "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
-        "url": "/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
-        "status": {
-            "name": "down",
-            "description": "An explanation of what this status represents",
-            "severity": 1000,
-            "image": "/static/images/status/cross-circle.png",
-            "url": "/statuses/down",
+            "url": "/api/v1/statuses/down",
         },
     }
 
@@ -334,9 +339,49 @@ Not supported
 
 ### DELETE
 
-Deletes the given event. Returns the deleted event
+Not supported
 
-#### Example
+## Event Instance Resource
+
+The Event Instance resource represents an individual event for a given service.
+
+### Resource URL
+
+> /services/{service}/events/{sid}
+
+### HTTP Methods
+
+#### GET
+
+Returns a service event with the given event sid. The event's status object is also returned as well.
+
+##### Example
+
+> GET /api/v1/services/{service}/events/{sid} HTTP/1.1
+
+    {
+        "timestamp": "2010-05-22T01:52:16.383246", 
+        "message": "Might be up", 
+        "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
+        "url": "/api/v1/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
+        "status": {
+            "name": "down",
+            "description": "An explanation of what this status represents",
+            "severity": 1000,
+            "image": "/static/images/status/cross-circle.png",
+            "url": "/api/v1/statuses/down",
+        },
+    }
+
+#### POST / PUT
+
+Not supported
+
+#### DELETE
+
+Deletes the given event and returns the deleted event
+
+##### Example
 
 > DELETE /services/{service}/events/{sid} HTTP/1.1
 
@@ -354,91 +399,251 @@ Deletes the given event. Returns the deleted event
         },    
     }
 
+## Service Calendar Resource
 
-## /statuses
+The Service Calendar resource represents the status of the service over a given date range. The returned object contains a list of date objects, detailed below.
 
-### GET
+### Resource URL
 
-Returns the possible states
+> api/v1/services/{service}/calendar
 
-#### Example
+### Resource Properties
 
-> GET /statuses HTTP/1.1
+-------------------------------------------------------------
+
+Property                   Description
+--------------------        ---------------------------------------------
+day                         The day this object represents, given
+                            in RFC 1132 format.
+                
+events                      A list of all the days events in reverse 
+                            chronological order
+                
+summary                     The overall status for the given day. See the 
+                            Statuses resource
+                
+informationAvailable        A boolean value which is true when 
+                            outstanding events occur.
+
+-------------------------------------------------------------
+Table: Calendar day object properties
+
+### HTTP Methods
+
+#### GET
+
+Return a list of day objects. Two options are available to affect the number and type of results returned. 
+
+-------------------------------------------------------------
+
+Option  Default         Description
+-----    -----------     --------------------------------
+start    Current         First day returned in the list. 
+         Date            Must be in the format YYYY-MM-DD
+            
+days     10              The number of days to return 
+                         prior to the start date 
+                         (specified above)
+-------------------------------------------------------------
+Table: Calendar Resource Query options
+
+##### Example
+
+> GET /api/v1/services/{service}/events/calendar?start=2010-6-22&days=5
+
+    { "days": [
+        {
+            "date": "Tue, 22 Jun 2010 00:00:00 GMT", 
+            "informationAvailable": false, 
+            "events": [
+                {
+                    "status": {
+                        "description": "This web service is up", 
+                        "url": "/api/v1/statuses/up", 
+                        "image": "/images/status/tick-circle.png",
+                        "name": "Up", 
+                        "id": "up", 
+                        "severity": 3
+                    }, 
+                    "timestamp": "Tue, 22 Jun 2010 18:50:48 GMT", 
+                    "message": "This service is currently running", 
+                    "url": "/api/v1/services/example-service/events/ahJpc215d2Vic
+                    "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GAcM"}
+                ], 
+            "summary": {
+                "description": "This web service is up", 
+                "url": "/api/v1/statuses/up", 
+                "image": "/images/status/tick-circle.png", 
+                "name": "Up", 
+                "id": "up", 
+                "severity": 3
+            }
+        },         
+        
+        ........
+        
+        ]
+    }
+    
+#### POST / PUT
+
+Not supported
+
+#### DELETE
+
+Not supported
+
+## Status List Resource
+
+The Status List resource represents all possible systems statuses.
+
+### Resource URL
+
+> api/v1/statuses
+
+### Resource Properties
+
+-------------------------------------------------------------
+
+Property       Description
+---------       ---------------------------------------------
+id              The unique identifier by which to identify 
+                the status
+                
+name            The name of the status, defined by the user
+
+description     The description of the status
+
+url             The URL of the specific status resource
+
+severity        The severity of this status. Larger values
+                are more severe.
+                
+image           The URL of the image for this status
+-------------------------------------------------------------
+Table: Status resource properties
+
+### HTTP Methods
+
+#### GET
+
+Returns all possible service statuses
+
+##### Example
+
+> GET api/v1/statuses HTTP/1.1
 
     {
         "statuses": [
             {
-                "name": "available",
+                "name": "Available",
+                "id": "available",
                 "description": "An explanation of what this status represents",
                 "severity": 10,
                 "image": "/static/images/status/tick-circle.png",
-                "url": "/statuses/up",
+                "url": "api/v1/statuses/up",
             },
             {
-                "name": "down",
+                "name": "Down",
+                "id": "down",
                 "description": "An explanation of what this status represents",
                 "severity": 1000,
                 "image": "/static/images/status/cross-circle.png",
-                "url": "/statuses/down",
+                "url": "api/v1/statuses/down",
             },
         ]
     }
     
-### POST
+#### POST
 
-#### Parameters
-* **name**: The type of the new status
-* **description**: The explanation of the status
-* **severity**: The severity of the status
-* **image**: The filename of the image. No path information
+Creates a new service status and returns this newly created status
 
-#### Example
+-------------------------------------------------------------
 
-> POST /statuses HTTP/1.1
-name=down&description=A%20new%20status&severity=1000&image=cross-circle.png
+Param          Optional    Description
+-----           ---------   --------------------------------
+name            Required    The name of the status
+
+description     Required    The description of the status
+
+severity        Required    The severity of the status.
+                            Must be a positive integer
+                            greater than zero
+
+image           Required    The filename of the image, with
+                            no extension. See the 
+                            status-images resource
+-------------------------------------------------------------
+Table: Status Instance POST parameters
+
+##### Example
+
+> POST /api/v1/statuses HTTP/1.1
+name=Down&description=A%20new%20status&severity=1000&image=cross-circle.png
 
     {
-        "name": "down",
+        "name": "Down",
+        "id": "down"
         "description": "A new status",
         "severity": 1000,
         "image": "cross-circle",
-        "url": "/statuses/down",
+        "url": "/api/v1/statuses/down",
     }
 
-### DELETE
+#### PUT
 
 Not Supported
 
-### PUT
+#### DELETE
 
 Not Supported
 
-## /statuses/{name}
+## Status Instance Resource
+
+The Status Instance resource represents a single service status
+
+### Resource Url
+
+> /api/v1/statuses/{name}
 
 ### GET
 
-Return a status
+Returns a status object
 
 #### Example
 
     {
-        "name": "down",
+        "name": "Down",
+        "id": "down",
         "description": "A new status",
         "severity": 1000,
         "image": "/static/images/status/cross-circle.png",
-        "url": "/statuses/down",
+        "url": "/api/v1/statuses/down",
     }
     
 ### POST
-* **description**: The explanation of the status
-* **severity**: The severity of the status
-* **image**: The filename of the image. No path information
+
+-------------------------------------------------------------
+
+Param          Optional    Description
+-----           ---------   --------------------------------
+description     Optional    The description of the status
+
+severity        Optional    The severity of the status.
+                            Must be a positive integer
+                            greater than zero
+
+image           Optional    The filename of the image, with
+                            no extension. See the 
+                            status-images resource
+-------------------------------------------------------------
+Table: Status Instance POST parameters
 
 Returns the newly updated status
 
 #### Example
 
-> POST /statuses HTTP/1.1
+> POST /api/v1/statuses HTTP/1.1
 description=A%20new%20status&severity=1010&image=cross-circle.png
 
     {
@@ -446,36 +651,44 @@ description=A%20new%20status&severity=1010&image=cross-circle.png
         "description": "A new status",
         "severity": 1010,
         "image": "/static/images/status/cross-circle.png",
-        "url": "/statuses/down",
+        "url": "/api/v1/statuses/down",
     }
 
 ### DELETE
 
-Delete the given status
+Delete the given status and return the deleted status
 
 #### Example
 
-> DELETE /statuses/{name}
+> DELETE /api/v1/statuses/{name}
 
     {
         "name": "down",
         "description": "A new status",
         "severity": 1010,
         "image": "/static/images/status/cross-circle.png",
-        "url": "/statuses/down",
+        "url": "/api/v1/statuses/down",
     }
 
 ### PUT 
 
 Not supported
 
-## /status-images
+## Status Images Resource
+
+The Status Images resource is a read-only resource which lists the icons available to use for statuses
+
+### Resource Url
+
+> /api/v1/status-images
 
 ### GET
 
 Returns a list of status images.
 
 #### Example
+
+> GET /api/v1/status-images
 
     {
         "images": [

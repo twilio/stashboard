@@ -44,9 +44,16 @@ from handlers import site, api
 # Log a message each time this module get loaded.
 logging.info('Loading %s, app version = %s',
              __name__, os.getenv('CURRENT_VERSION_ID'))
+           
+if (config.SITE["rich_client"]):  
+    serviceHandler = site.ServiceHandler
+    rootHandler = site.RootHandler
+else:
+    rootHandler = site.BasicRootHandler
+    serviceHandler = site.BasicServiceHandler
 
 ROUTES = [
-    ('/*$', site.RootHandler),
+    ('/*$', rootHandler),
     #('/*[^/]', site.) redirect pages without slashed to pages with slashes
     
     #API
@@ -64,13 +71,13 @@ ROUTES = [
     (r'/api/.*', api.NotFoundHandler),
     
     #SITE
-    (r'/services/(.+)/(.+)/(.+)/(.+)', site.ServiceHandler),
-    (r'/services/(.+)/(.+)/(.+)', site.ServiceHandler),
-    (r'/services/(.+)/(.+)', site.ServiceHandler),
-    (r'/services/(.+)', site.ServiceHandler),
+    (r'/services/(.+)/(.+)/(.+)/(.+)', serviceHandler),
+    (r'/services/(.+)/(.+)/(.+)', serviceHandler),
+    (r'/services/(.+)/(.+)', serviceHandler),
+    (r'/services/(.+)', serviceHandler),
+    (r'/documentation/credentials', site.ProfileHandler),
+    (r'/documentation/verify', site.VerifyAccessHandler),
     (r'/documentation/(.+)', site.DocumentationHandler),
-    (r'/profile', site.ProfileHandler),
-    (r'/profile/verify', site.VerifyAccessHandler),
     
     ('/.*$', site.NotFoundHandler),
     

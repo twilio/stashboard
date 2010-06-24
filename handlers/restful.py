@@ -159,8 +159,12 @@ class Controller(webapp.RequestHandler):
     def head(self, *params):
         pass
         
-    def render(self, templateparams, templatefile):
-        path = os.path.join(config.SITE["template_path"], templatefile)
+    def render(self, templateparams, *args):
+        path = config.SITE["template_path"]
+
+        for p in args:
+            path = os.path.join(path, p)
+            
         self.response.out.write(template.render(path, templateparams))
         
     def json(self, data):
