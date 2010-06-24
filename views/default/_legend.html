@@ -18,20 +18,24 @@
     <a id="add-status" class="button" href="#">Add New Status</a>
     
     <div id="add-status-modal" class="dialog" title="Add New Status">
-      <label  for="status-name">Name</label>
+      <label class="side-label" for="status-name">Name</label>
       <input type="text" id="status-name"name="status-name">
       
-      <label for="status-severity">Severity</label>
+      <label class="side-label" for="status-severity">Severity</label>
       <input type="text" id="status-severity" name="status-severity">
       
       <label for="status-image">Image</label>
-      <input type="radio" name="status-image" value="tick-circle" checked>
-      <img src="/static/images/status/tick-circle.png" />
-      <input type="radio" name="status-image" value="cross-circle">
-      <img src="/static/images/status/cross-circle.png" />
-      <input type="radio" name="status-image" value="exclamation">
-      <img src="/static/images/status/exclamation.png" />
-      
+      {% for image_row in common_statuses %}
+        <div>
+        {% for image in image_row %}
+        
+        <input type="radio" name="status-image" value="{{ image }}" {% if forloop.first %}checked{%endif%}>
+        <img src="/static/images/status/{{ image }}.png" />
+        {% endfor %}
+        </div>
+        
+      {% endfor %}
+
       <label for="status-description">Description</label>
       <textarea
         id="status-description" name="status-description"></textarea>
@@ -80,8 +84,8 @@
       });
     
     $("#add-status-modal").dialog({
-          height: 500,
-          width: 450,
+          height: 515,
+          width: 460,
           resizable: false,
           modal: true,
           autoOpen: false,

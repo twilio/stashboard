@@ -49,7 +49,6 @@ h3.date-range {color: #999;}
 .legend {border: solid 5px rgb(228, 228, 228); width: 100%; margin: 20px 0;}
 .legend tr td:first-child {width: 16px;}
 
-
 /* wordpress entries styling - main content column */
 #webservices table { width: 100%; border-spacing:10; font-size: 1.1em;}
 #webservices th {text-align: left;font-size: 20px;padding: 10px;border-bottom: 1px solid rgb(228, 228, 228);border-right: 1px solid rgb(228, 228, 228);}
@@ -101,6 +100,8 @@ h3.date-range {color: #999;}
 .dialog label {display: block;}
     
 .dialog textarea { width: 400px; height: 75px;}
+
+
 
 #delete-service { float: right;}
 #delete-service-modal {display: none;}

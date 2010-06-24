@@ -371,7 +371,7 @@ class StatusesListHandler(restful.Controller):
         host = self.request.headers.get('host', 'nohost')
         
         if (self.valid_version(version)):
-            query = Status.all()
+            query = Status.all().order('severity')
 
             if (query):
                 data = []

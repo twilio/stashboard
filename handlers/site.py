@@ -70,26 +70,33 @@ def default_template_data():
         greeting = users.create_login_url("/")
         
     status_images = [
-        "clock",
-        "bug",
-        "broom",
-        "cross-circle",
-        "exclamation",
-        "flag",
-        "heart",
-        "hard-hat",
-        "information",
-        "lock",
-        "plug",
-        "question",
-        "traffic-cone",
-        "wrench",
+        [
+            "clock",
+            "bug",
+            "broom",
+            "cross-circle",
+            "exclamation",
+        ],
+        [
+            "flag",
+            "heart",
+            "hard-hat",
+            "information",
+            "lock",
+        ],
+        [
+            "plug",
+            "question",
+            "traffic-cone",
+            "wrench",
+        ],
     ]
     
     data = {
         "user": user,
         "user_is_admin": users.is_current_user_admin(),
         "login_link": greeting, 
+        'common_statuses': status_images,
     }
     
     return data
