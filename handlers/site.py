@@ -310,8 +310,12 @@ class ProfileHandler(restful.Controller):
     
     def get(self):
         
+        consumer_key = 'anonymous'
+        consumer_secret = 'anonymous'
+        
         td = default_template_data()
         td["logged_in"] = False
+        td["consumer_key"] = consumer_key
         
         user = users.get_current_user()
         
@@ -328,9 +332,6 @@ class ProfileHandler(restful.Controller):
             else:
             
                 host = self.request.headers.get('host', 'nohost')
-
-                consumer_key = 'anonymous'
-                consumer_secret = 'anonymous'
             
                 callback = 'http://%s/documentation/verify' % host
 
