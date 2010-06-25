@@ -455,7 +455,7 @@ class StatusInstanceHandler(restful.Controller):
                 else:
                     self.error(404, "Status %s not found" % status_slug)
             else:
-                self.error(400, "Description is required" % service_slug)
+                self.error(400, "Description is required" % description)
         else:
             self.error(404, "API Version %s not supported" % version)
             
