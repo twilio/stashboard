@@ -104,7 +104,7 @@ class ServicesListHandler(restful.Controller):
                     s.put()
                     self.json(s.rest(self.base_url(host, version)))
             else:
-                self.error(400, "Bad Data")
+                self.error(400, "Bad Data: Name: %s, Description: %s" % (name, description))
         else:
             self.error(404, "API Version %s not supported" % version)
 
