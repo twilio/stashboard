@@ -35,7 +35,6 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 
 import logging
 import wsgiref.handlers
-from firepython.middleware import FirePythonWSGI
 from google.appengine.ext import webapp
 from google.appengine.api import users
 
@@ -54,6 +53,7 @@ else:
 
 ROUTES = [
     ('/*$', rootHandler),
+    ('/debug', site.DebugHandler),
     #('/*[^/]', site.) redirect pages without slashed to pages with slashes
     
     #API

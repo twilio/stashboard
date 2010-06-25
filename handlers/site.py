@@ -48,7 +48,6 @@ import cgi
 import urllib
 import logging
 import urlparse
-
 from google.appengine.ext import webapp
 from google.appengine.ext import db
 from google.appengine.api import users
@@ -59,6 +58,7 @@ from handlers import restful
 from utils import authorized
 from utils import sanitizer
 from models import Status, Service, Event, Profile, AuthRequest
+
 import config
 
 def default_template_data():
@@ -177,6 +177,14 @@ class ServiceHandler(restful.Controller):
 
         self.render(td, 'service.html')
         
+class DebugHandler(restful.Controller):
+    
+    @authorized.force_ssl()
+    def get(self):
+        logging.debug("DebugHandler %s", self.request.scheme)
+        td = default_template_data()
+        self.render(td,'base.html')
+
         
 class BasicRootHandler(restful.Controller):
     def get(self):
@@ -262,9 +270,6 @@ class DocumentationHandler(restful.Controller):
         elif page == "examples":
             td["example_selected"] = True
             self.render(td, 'examples.html')
-        elif page == "credentials":
-            td["credentials_selected"] = True
-            self.render(td, 'credentials.html')
         else:
             self.render({},'404.html')
             
@@ -272,6 +277,7 @@ class DocumentationHandler(restful.Controller):
             
 class VerifyAccessHandler(restful.Controller):
     
+    @authorized.force_ssl()
     @authorized.role("admin")
     def get(self):
         oauth_token = self.request.get('oauth_token', default_value=None)
@@ -315,6 +321,7 @@ class VerifyAccessHandler(restful.Controller):
             
 class ProfileHandler(restful.Controller):
     
+    @authorized.force_ssl()
     def get(self):
         
         consumer_key = 'anonymous'
@@ -322,6 +329,7 @@ class ProfileHandler(restful.Controller):
         
         td = default_template_data()
         td["logged_in"] = False
+        td["credentials_selected"] = True
         td["consumer_key"] = consumer_key
         
         user = users.get_current_user()

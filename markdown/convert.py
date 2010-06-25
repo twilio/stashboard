@@ -12,6 +12,6 @@ def convert(name, filename):
     f.close()
 
 if __name__ == '__main__':
-    files = ["authentication", "examples", "restapi", "overview"]
+    files = ["examples", "restapi", "overview"]
     for f in files:
         convert(f, os.path.abspath("%s.markdown" % f))

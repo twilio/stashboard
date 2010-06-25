@@ -12,6 +12,8 @@ The StashBoard REST API is broken down into three resources: Services, Events, a
 
 Services are the basic unit of StashBoard. A service is any web service that can be consumed, and more importantly, can fail. Using StashBoard, you can easily inform your users of the current service status. To handle system status, StashBoard uses the concept of events.
 
+Read more about creating and modifying services in the [Status Resource section](/documentation/rest#status-list-resource) of the REST API documentation.
+
 #### Events
 
 A service has a list of events, listed in reverse chronological order, which represent the state of that service. To track the state of a web service, an administrator creates events for a given service.
@@ -22,11 +24,15 @@ Read more about creating and modifying events in the [Events Resource section](/
 
 #### Statuses
 
-A status represents the state of a web service. Instead of being directly attached to services, a status is attached to a service event (described above). Therefore, the current system status is simply the status attached to the most recent event. Read more about creating and modifying statuses in the [Status Resource section](/documentation/rest#status-list-resource) of the REST API documentation.
+A status represents the state of a web service. Instead of being directly attached to services, a status is attached to a service event (described above). Therefore, the current system status is simply the status attached to the most recent event. 
+
+Read more about creating and modifying statuses in the [Status Resource section](/documentation/rest#status-list-resource) of the REST API documentation.
 
 ### Authentication
 
-To access information through the REST API, no authentication is required. However, to change any information via the REST API (POST/PUT/DELETE), authentication is required. 
+To access information through the REST API, no authentication is required. However, to change any information via the REST API (POST/PUT/DELETE), authentication and SSL are required.
 
-StashBoard uses OAuth for authentication purposes. To authenticate your account and obtain your API keys, head over to the [API Credentials section](/documentation/credentials).
+StashBoard uses OAuth for authentication purposes. To authenticate your account and obtain your API keys, head over to the [API Credentials section](/documentation/credentials). 
+
+
 

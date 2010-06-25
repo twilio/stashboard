@@ -18,6 +18,8 @@
     $request = OAuthRequest::from_consumer_and_token(
       $consumer, $token, $method, $url, $data);
     $request->sign_request($sign, $consumer, $token);
+    
+    echo $request->get_normalized_http_url();
 
     $ch = curl_init($request->get_normalized_http_url());
     

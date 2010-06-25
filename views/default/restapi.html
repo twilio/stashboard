@@ -913,6 +913,12 @@
 	  ><td align="left"
 	  >The severity of this status. Larger values are more severe.</td
 	  ></tr
+	><tr class="even"
+	><td align="left"
+	  >image</td
+	  ><td align="left"
+	  >The URL of the image for this status</td
+	  ></tr
 	></tbody
       ></table
     ></div
@@ -936,14 +942,16 @@
 	  >{
     &quot;statuses&quot;: [
         {
-            &quot;name&quot;: &quot;available&quot;,
+            &quot;name&quot;: &quot;Available&quot;,
+            &quot;id&quot;: &quot;available&quot;,
             &quot;description&quot;: &quot;An explanation of what this status represents&quot;,
             &quot;severity&quot;: 10,
             &quot;image&quot;: &quot;/static/images/status/tick-circle.png&quot;,
             &quot;url&quot;: &quot;api/v1/statuses/up&quot;,
         },
         {
-            &quot;name&quot;: &quot;down&quot;,
+            &quot;name&quot;: &quot;Down&quot;,
+            &quot;id&quot;: &quot;down&quot;,
             &quot;description&quot;: &quot;An explanation of what this status represents&quot;,
             &quot;severity&quot;: 1000,
             &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,

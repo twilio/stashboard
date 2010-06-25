@@ -77,8 +77,7 @@ class ServicesListHandler(restful.Controller):
             
         else:
             self.error(404, "API Version %s not supported" % version)
-
-
+            
     @authorized.api("admin")
     def post(self, version):
         logging.debug("ServicesListHandler#post")
@@ -125,7 +124,6 @@ class ServiceInstanceHandler(restful.Controller):
             self.error(404, "API Version %s not supported" % version)
         
 
-
     @authorized.api("admin")
     def post(self, version, service_slug):
         logging.debug("ServiceInstanceHandler#post")
@@ -144,8 +142,6 @@ class ServiceInstanceHandler(restful.Controller):
         else:
             self.error(404, "API Version %s not supported" % version)
         
-
-            
     @authorized.api("admin")
     def delete(self, version, service_slug):
         logging.debug("ServiceInstanceHandler#delete slug=%s" % service_slug)
@@ -216,7 +212,6 @@ class EventsListHandler(restful.Controller):
         else:
             self.error(404, "API Version %s not supported" % version)
         
-
 
     @authorized.api("admin")
     def post(self, version, service_slug):
@@ -342,7 +337,6 @@ class EventInstanceHandler(restful.Controller):
             self.error(404, "API Version %s not supported" % version)
         
 
-            
     @authorized.api("admin")
     def delete(self, version, service_slug, sid):
         logging.debug("EventInstanceHandler#delete sid=%s" % sid)
@@ -385,7 +379,6 @@ class StatusesListHandler(restful.Controller):
         else:
             self.error(404, "API Version %s not supported" % version)
         
-
 
     @authorized.api("admin")
     def post(self, version):
@@ -437,8 +430,6 @@ class StatusInstanceHandler(restful.Controller):
         else:
             self.error(404, "API Version %s not supported" % version)
         
-
-
 
     @authorized.api("admin")
     def post(self, version, status_slug):
