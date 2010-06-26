@@ -19,8 +19,6 @@
       $consumer, $token, $method, $url, $data);
     $request->sign_request($sign, $consumer, $token);
     
-    echo $request->get_normalized_http_url();
-
     $ch = curl_init($request->get_normalized_http_url());
     
     if ($method == "POST") {
@@ -28,6 +26,7 @@
       curl_setopt($ch, CURLOPT_POSTFIELDS , $request->to_postdata());
     }
     
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION ,1);
     curl_setopt($ch, CURLOPT_HEADER ,0);  // DO NOT RETURN HTTP HEADERS

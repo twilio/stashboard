@@ -33,23 +33,28 @@ from google.appengine.api import oauth
 
 import logging
 import os
-import re
 
-def force_ssl():
+def force_ssl(only_admin = False):
     """
     A decorator to enforce the use of SSL when accessing certain resources
     """
     def wrapper(handler_method):
         def check_ssl(self, *args, **kwargs):
-            host = self.request.headers.get('host', 'nohost')
-            # Might want to match local dev in a better way
-            if re.match(r'localhost:(\d+)', host):
+            
+            user = users.get_current_user()
+            admin = users.is_current_user_admin()
+            
+            if os.environ.get('SERVER_SOFTWARE', '').startswith('Dev'):
                 
                 handler_method(self, *args, **kwargs)
                 
             elif self.request.scheme == "https":
                 
                 handler_method(self, *args, **kwargs)
+                
+            elif only_admin and not admin:
+
+                handler_method(self, *args, **kwargs) 
                 
             else:
                 
@@ -69,7 +74,7 @@ def api(role):
             host = self.request.headers.get('host', 'nohost')
             
             if self.request.scheme != "https":
-                if not re.match(r'localhost:(\d+)', host):
+                if not os.environ.get('SERVER_SOFTWARE', '').startswith('Dev'):
                     self.error(403, "SSL is required for POST / PUT / DELETE requests")
                     return
 

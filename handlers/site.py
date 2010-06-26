@@ -56,7 +56,6 @@ from google.appengine.api import oauth
 import oauth2 as oauth
 from handlers import restful
 from utils import authorized
-from utils import sanitizer
 from models import Status, Service, Event, Profile, AuthRequest
 
 import config
@@ -68,6 +67,8 @@ def default_template_data():
         greeting = users.create_logout_url("/")
     else:
         greeting = users.create_login_url("/")
+        
+    
         
     status_images = [
         [
@@ -125,6 +126,8 @@ class UnauthorizedHandler(webapp.RequestHandler):
         #self.render(template_data, 'unathorized.html')
 
 class RootHandler(restful.Controller):
+    
+    @authorized.force_ssl(only_admin=True)
     def get(self):
         user = users.get_current_user()
         logging.debug("RootHandler#get")
@@ -139,6 +142,7 @@ class RootHandler(restful.Controller):
         
 class ServiceHandler(restful.Controller):
         
+    @authorized.force_ssl(only_admin=True)
     def get(self, service_slug, year=None, month=None, day=None):
         user = users.get_current_user()
         logging.debug("ServiceHandler#get")

@@ -86,8 +86,6 @@ ROUTES = [
 
 def main():
     application = webapp.WSGIApplication(ROUTES, debug=config.DEBUG)
-    if users.is_current_user_admin():
-        application = FirePythonWSGI(application)
     wsgiref.handlers.CGIHandler().run(application)
 
 if __name__ == "__main__":

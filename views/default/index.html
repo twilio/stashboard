@@ -46,7 +46,7 @@
               },
             error: function(){ 
 
-              },
+              }
           });
           
           var currentDate = new Date();
@@ -67,7 +67,7 @@
                 var td = $("#" + data.id).children("td").eq(i+2);
                 
                 if (results.days[i].informationAvailable) {
-                  url = "/services/" + data.id + "/" + d.getFullYear() + "/"
+                  url = "/services/" + data.id + "/" + d.getFullYear() + "/";
                   url += (d.getMonth() + 1) + "/" + d.getDate();
                   
                   td.html($("<a />", {href: url}).append(
@@ -100,12 +100,12 @@
             
             for (var i=0; i < services.length; i++) {
               createServiceRow(services[i], true);
-            };
+            }
             
             },
           error: function(){ 
             
-            },
+            }
           });
         
         $("#statusBox").click(function(){
@@ -130,7 +130,7 @@
         
         $("#add-status").click(function(){
           $("#add-status-modal").dialog('open');
-        })
+        });
         
         $("#add-service-modal").dialog({
               height: 310,
@@ -151,11 +151,11 @@
                     context: $("#service-list"), 
                     success: function(data){ 
                       $("#add-service-modal").dialog('close');
-                      createServiceRow(data, false);
+                        createServiceRow(data, false);
                       },
                     error: function(){ 
                       $("#add-service-modal").dialog('close');
-                      },
+                      }
                     });
                     
                 },
