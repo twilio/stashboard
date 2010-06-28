@@ -68,6 +68,7 @@ ROUTES = [
     (r'/api/(.+)/statuses', api.StatusesListHandler),
     (r'/api/(.+)/statuses/(.+)', api.StatusInstanceHandler),
     (r'/api/(.+)/status-images', api.ImagesListHandler),
+    (r'/api/(.+)/levels', api.LevelsListHandler),
     (r'/api/.*', api.NotFoundHandler),
     
     #SITE

@@ -49,7 +49,7 @@ from google.appengine.ext import db
 from handlers import restful
 from utils import authorized
 from utils import slugify
-from models import Status, Event, Service
+from models import Status, Event, Service, Level
 import config
 
 class NotFoundHandler(restful.Controller):
@@ -372,8 +372,9 @@ class StatusesListHandler(restful.Controller):
         if (self.valid_version(version)):
             name = self.request.get('name', default_value=None)
             description = self.request.get('description', default_value=None)
-            severity = int(self.request.get('severity', default_value=None))
             image = self.request.get('image', default_value=None)
+            level = self.request.get('level', default_value=None)
+            severity = Level.get_severity(level)
 
             if name and description and severity and image:
                 slug = slugify.slugify(name)
@@ -452,5 +453,17 @@ class ImagesListHandler(restful.Controller):
             else:
                 self.error(404, "No images")
         else:
+            self.error(404, "API Version %s not supported" % version)
+            
+class LevelsListHandler(restful.Controller):
+    def get(self, version):
+        logging.debug("LevelsListHandler#get")
+        
+        if (self.valid_version(version)):
+            
+            self.json({"levels": Level.all()})
+            
+        else:
+            
             self.error(404, "API Version %s not supported" % version)
 

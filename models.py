@@ -7,6 +7,42 @@ from datetime import date
 import config
 import urlparse
 
+class Level(object):
+    """
+    A fake db.Model object, just in case we want to actually store things
+    in the future
+    """
+    levels = {
+        "INFO": 10,
+        "NORMAL": 20,
+        "WARNING": 30,
+        "ERROR": 40,
+        "CRITICAL": 50,
+    }
+    
+    @staticmethod
+    def all():
+        llist = []
+        for k in Level.levels.keys():
+            llist.append((k, Level.levels[k]))
+        
+        return map(lambda x: x[0], sorted(llist, key=lambda x: x[1]))
+        
+    @staticmethod
+    def get_severity(level):
+        try:
+            return Level.levels[level]
+        except:
+            return False
+            
+    @staticmethod
+    def get_level(severity):
+        for k in Level.levels.keys():
+            if Level.level[k] == severity:
+                return k
+        return False
+     
+
 class Service(db.Model):
     """A service to track
 
@@ -121,7 +157,7 @@ class Status(db.Model):
         info["image"] = "information.png"
         info["slug"] = "information-available"
         info["description"] = "There is information available"
-        info["severity"] = -1
+        info["level"] = "INFO"
         return info
         
     @staticmethod
@@ -147,7 +183,7 @@ class Status(db.Model):
         m["name"] = str(self.name)
         m["id"] = str(self.slug)
         m["description"] = str(self.description)
-        m["severity"] = int(self.severity)
+        m["level"] = Level.get_level(int(self.severity))
         m["url"] = base_url + self.resource_url()
         # This link shouldn't be hardcoded
         
