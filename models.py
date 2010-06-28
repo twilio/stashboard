@@ -210,11 +210,7 @@ class Status(db.Model):
     
 
 class Event(db.Model):
-    
-    @staticmethod
-    def current(service):
-        return Event.all().filter('service =', service).order('-start').get()
-    
+
     info = db.BooleanProperty(required=True)
     start = db.DateTimeProperty(required=True, auto_now_add=True)
     status = db.ReferenceProperty(Status, required=True)
