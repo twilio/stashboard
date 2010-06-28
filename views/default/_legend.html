@@ -1,11 +1,12 @@
 <div>
+  <h4> Legend </h4>
   <table class="legend">
     {% if user_is_admin %}
     <thead>
       <tr>
         <th></th>
         <th>Description</th>
-        <th>Severity  </th>
+        <th>Level</th>
       </tr>
     </thead>
     {% endif %}
@@ -21,15 +22,16 @@
       <label class="side-label" for="status-name">Name</label>
       <input type="text" id="status-name"name="status-name">
       
-      <label class="side-label" for="status-severity">Severity</label>
-      <input type="text" id="status-severity" name="status-severity">
+      <label class="side-label" for="status-level">Level</label>
+      <select id="statusLevel" class="status-level" name="level">
+      </select>
       
       <label for="status-image">Image</label>
       {% for image_row in common_statuses %}
         <div>
         {% for image in image_row %}
         
-        <input type="radio" name="status-image" value="{{ image }}" {% if forloop.first %}checked{%endif%}>
+        <input type="radio" name="status-image" value="{{ image }}">
         <img src="/static/images/status/{{ image }}.png" />
         {% endfor %}
         </div>
@@ -57,7 +59,7 @@
     $("<td />", {text: data.description}).appendTo(tr);
     
     {% if user_is_admin %}
-    $("<td />", {text: data.severity}).appendTo(tr);
+    $("<td />", {text: data.level}).appendTo(tr);
     {% endif %}
     
     $("#legend-body").append(tr);
@@ -71,16 +73,46 @@
       dataType: 'json', 
       success: function(data){ 
         
-        var statuses = data.statuses;
+          if (data){
+            var statuses = data.statuses;
         
-        for (var i=0; i < statuses.length; i++) {
-          createStatusRow(statuses[i]);
-        };
+            for (var i=0; i < statuses.length; i++) {
+              createStatusRow(statuses[i]);
+            }
+        
+          }
         
         },
       error: function(){ 
         
         },
+      });
+      
+      $.ajax({
+        type: "GET",
+        url: "/api/v1/levels",
+        dataType: "json",
+        context: $("#statusLevel"),
+        success: function(data){
+          
+          if (data){
+
+            var levels = data.levels;
+
+            for (var i=0; i < levels.length; i++) {
+              $("<option />", {
+                "name": "level",
+                val: levels[i],
+                text: levels[i]
+              }).appendTo($(this));
+            };
+          
+          }
+
+        },
+        error: function(){
+
+        }
       });
     
     $("#add-status-modal").dialog({
@@ -98,7 +130,7 @@
                   name: $("#status-name").val(), 
                   description: $("#status-description").val(),
                   image: $("input[name=status-image]:checked").val(),
-                  severity: $("#status-severity").val()
+                  level: $("#statusLevel").val()
                 },
                 dataType: 'json', 
                 context: $(".legend").children('tbody'), 

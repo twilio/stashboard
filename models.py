@@ -13,12 +13,18 @@ class Level(object):
     in the future
     """
     levels = {
-        "INFO": 10,
-        "NORMAL": 20,
+        "NORMAL": 10,
+        "INFO": 20,
         "WARNING": 30,
         "ERROR": 40,
         "CRITICAL": 50,
     }
+    
+    normal  = "NORMAL"
+    info    = "INFO"
+    warning = "WARNING"
+    critial = "CRITICAL"
+    error   = "ERROR"
     
     @staticmethod
     def all():
@@ -38,7 +44,7 @@ class Level(object):
     @staticmethod
     def get_level(severity):
         for k in Level.levels.keys():
-            if Level.level[k] == severity:
+            if Level.levels[k] == severity:
                 return k
         return False
      
@@ -57,13 +63,13 @@ class Service(db.Model):
         return Service.all().filter('slug = ', service_slug).get()
         
     def current_event(self):
-        return self.events.order('-start').get()
-        
+        return self.events.filter('info =', False).order('-start').get()
+
     #Specialty function for front page
     def last_five_days(self):
         
         
-        lowest = Status.lowest_severity()
+        lowest = Status.default()
         severity = lowest.severity
         
         yesterday = date.today() - timedelta(days=1)
@@ -129,6 +135,12 @@ class Service(db.Model):
         m["id"] = str(self.slug)
         m["description"] = str(self.description)
         m["url"] = base_url + self.resource_url()
+        
+        event = self.current_event()
+        if event:
+            m["current-event"] = event.rest(base_url)
+        else:
+            m["current-event"] = None
 
         return m
 
@@ -161,8 +173,12 @@ class Status(db.Model):
         return info
         
     @staticmethod
-    def lowest_severity():
-        return Status.all().order('severity').get()
+    def default():
+        """
+        Return the first status with a NORMAL level.
+        """
+        normal = Level.get_severity(Level.normal)
+        return Status.all().filter('severity == ', normal).get()
         
     name = db.StringProperty(required=True)
     slug = db.StringProperty(required=True)
@@ -199,6 +215,7 @@ class Event(db.Model):
     def current(service):
         return Event.all().filter('service =', service).order('-start').get()
     
+    info = db.BooleanProperty(required=True)
     start = db.DateTimeProperty(required=True, auto_now_add=True)
     status = db.ReferenceProperty(Status, required=True)
     message = db.TextProperty(required=True)

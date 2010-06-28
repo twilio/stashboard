@@ -37,6 +37,8 @@ name            The name of the service, defined by the user
 
 description     The description of the web service
 
+current-event   The current event for the service
+
 url             The URL of the specific service resource
 -------------------------------------------------------------
 Table: Service resource properties
@@ -58,12 +60,14 @@ Returns a list of all current services tracked by StashBoard
                 "id": "example-foo",
                 "description": "An explanation of this service"
                 "url": "/api/v1/services/example-foo",
+                "current-event": null,
             },
             {
                 "name": "Example Bar",
                 "id": "example-bar",
                 "description": "An explanation of this service"
                 "url": "/api/v1/services/example-bar",
+                "current-event": null,
             }
         ]
     }
@@ -92,6 +96,7 @@ name=New%20Service&description=A%20great%20service
         "id": "new-service",
         "description": "A great service"
         "url": "/api/v1/services/new-service",
+        "current-event": null,
     }
 
 ## Service Instance Resource
@@ -127,7 +132,9 @@ Updates a service's description and returns the updated service object.
 
 Param          Optional    Description
 -----           ---------   --------------------------------
-description     Required    The description of the service
+name            Required    Name of the service
+
+description     Required    Description of service
 -------------------------------------------------------------
 Table: Service Instance POST parameters
 
@@ -140,6 +147,7 @@ Table: Service Instance POST parameters
         "id": "example-service",
         "description": "System is now operational",
         "url": "/api/v1/services/example-service",
+        "current-event": null,
     }
 
 ### DELETE
@@ -616,7 +624,7 @@ Returns a status object
         "name": "Down",
         "id": "down",
         "description": "A new status",
-        "severity": 1000,
+        "level": "NORMAL",
         "image": "/static/images/status/cross-circle.png",
         "url": "/api/v1/statuses/down",
     }
@@ -627,11 +635,13 @@ Returns a status object
 
 Param          Optional    Description
 -----           ---------   --------------------------------
+name            Optional    The name of the status
+
 description     Optional    The description of the status
 
-severity        Optional    The severity of the status.
-                            Must be a positive integer
-                            greater than zero
+level           Optional    The level of the status. Must be
+                            a string value listed in the
+                            levels resource (see below)
 
 image           Optional    The filename of the image, with
                             no extension. See the 
@@ -647,9 +657,10 @@ Returns the newly updated status
 description=A%20new%20status&severity=1010&image=cross-circle.png
 
     {
-        "name": "down",
+        "name": "Down",
+        "id": "down",
         "description": "A new status",
-        "severity": 1010,
+        "level": "NORMAL",
         "image": "/static/images/status/cross-circle.png",
         "url": "/api/v1/statuses/down",
     }
@@ -663,14 +674,49 @@ Delete the given status and return the deleted status
 > DELETE /api/v1/statuses/{name}
 
     {
-        "name": "down",
+        "name": "Down",
+        "id": "down",
         "description": "A new status",
-        "severity": 1010,
+        "level": "NORMAL",
         "image": "/static/images/status/cross-circle.png",
         "url": "/api/v1/statuses/down",
     }
 
 ### PUT 
+
+Not supported
+
+## Status Levels Resource
+
+The Status Levels resource is a read-only resource which lists the possible levels for a status. 
+
+### Resource Url
+
+> /api/v1/levels
+
+### GET
+
+Returns a list of possible status levels in increasing severity
+
+#### Example
+
+> GET /api/v1/levels
+
+    {
+        "levels": [
+            "INFO", 
+            "NORMAL", 
+            "WARNING", 
+            "ERROR", 
+            "CRITICAL",
+        ]
+    }
+    
+### POST / PUT
+
+Not supported
+
+### DELETE
 
 Not supported
 

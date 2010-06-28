@@ -72,14 +72,14 @@ def default_template_data():
         
     status_images = [
         [
-            "clock",
-            "bug",
-            "broom",
+            "tick-circle",
             "cross-circle",
             "exclamation",
+            "wrench",
+            "flag",
         ],
         [
-            "flag",
+            "clock",
             "heart",
             "hard-hat",
             "information",
@@ -89,7 +89,8 @@ def default_template_data():
             "plug",
             "question",
             "traffic-cone",
-            "wrench",
+            "bug",
+            "broom",
         ],
     ]
     

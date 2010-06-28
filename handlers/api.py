@@ -122,14 +122,21 @@ class ServiceInstanceHandler(restful.Controller):
     @authorized.api("admin")
     def post(self, version, service_slug):
         logging.debug("ServiceInstanceHandler#post")
-        description = self.request.get('description')
+        name = self.request.get('name', default_value=None)
+        description = self.request.get('description', default_value=None)
         
         if (self.valid_version(version)):
             service = Service.get_by_slug(service_slug)
-
             if service:
-                service.description = description
-                service.put()
+                if description:
+                    service.description = description
+                
+                if name:
+                    service.name = name
+                
+                if name or description:
+                    service.put()
+                    
                 self.json(service.rest(self.base_url(version)))   
             else:
                 self.error(404, "Service %s does not exist" % service_slug)
@@ -218,7 +225,10 @@ class EventsListHandler(restful.Controller):
                 if service:
                     status = Status.get_by_slug(status_slug)
                     if status:
-                        e = Event(status=status, service=service, message=message)
+                        info = status.severity == Level.get_severity(Level.info)
+                        logging.error("%s: %s" % (Level.info, Level.get_severity(Level.info)))
+                        e = Event(status=status, service=service, \
+                                message=message, info=info)
                         e.put()
                         self.json(e.rest(self.base_url(version)))
                     else:
@@ -241,7 +251,7 @@ class CurrentEventHandler(restful.Controller):
             service = Service.get_by_slug(service_slug)
         
             if (service):
-                event = Event.current(service)
+                event = service.current_event()
         
                 if (event):
                     self.json(event.rest(self.base_url(version))) 
@@ -260,47 +270,42 @@ class EventCalendarHandler(restful.Controller):
         if (self.valid_version(version)):
 
             service = Service.get_by_slug(service_slug)
-            status = Status.lowest_severity()
+            status = Status.default()
 
-            if service and status:
-                today = datetime.datetime.now()
-                start = self.request.get('start', default_value=today.strftime("%Y-%m-%d"))
-                days = int(self.request.get('days', default_value="10"))
+            if service:
+                if status:
+                    today = datetime.datetime.now()
+                    start = self.request.get('start', default_value=today.strftime("%Y-%m-%d"))
+                    days = int(self.request.get('days', default_value="10"))
                 
-                if start and days:
-                    try:
-                        aft = datetime.datetime.strptime(start, "%Y-%m-%d")
-                    except:
-                        self.error(400, "Invalid Date: %s" % start)
-                        return
+                    if start and days:
+                        try:
+                            aft = datetime.datetime.strptime(start, "%Y-%m-%d")
+                        except:
+                            self.error(400, "Invalid Date: %s" % start)
+                            return
                         
-                calendar = []
+                    calendar = []
                         
-                for i in range(days):
-                    events = []
-                    summary = status
-                    issue = False
-                    
-                    for e in service.events_for_day(aft):
-                        events.append(e.rest(self.base_url(version)))
-                        
-                        if e.status.severity > summary.severity:
-                            summary = e.status
-                            issue = True
-                            
-                    stamp = mktime(aft.timetuple())
-                    
-                    calendar.append({
-                        "events": events,
-                        "date": format_date_time(stamp),
-                        "summary": summary.rest(self.base_url(version)),
-                        "informationAvailable": issue,
-                    })
-                    
-                    aft = aft - timedelta(days=1)
+                    for i in range(days):
+                        summary = status
 
-                self.json({"days": calendar})
-                 
+                        for e in service.events_for_day(aft):
+                            if e.status.severity > summary.severity:
+                                summary = e.status
+                            
+                        stamp = mktime(aft.timetuple())
+                    
+                        calendar.append({
+                            "date": format_date_time(stamp),
+                            "summary": summary.rest(self.base_url(version)),
+                        })
+                    
+                        aft = aft - timedelta(days=1)
+
+                    self.json({"days": calendar})
+                else:
+                    self.error(404, "No status with level %s, please make one" % Level.normal)
             else:
                 self.error(404, "Service %s not found" % service_slug)
         else:
@@ -418,19 +423,35 @@ class StatusInstanceHandler(restful.Controller):
 
     @authorized.api("admin")
     def post(self, version, status_slug):
-        description = self.request.get('description', default_value=None)
+
         
         if (self.valid_version(version)):
-            if description:
-                status = Status.get_by_slug(status_slug)
-                if status:
+            status = Status.get_by_slug(status_slug)
+            if status:
+                name = self.request.get('name', default_value=None)
+                image = self.request.get('image', default_value=None)
+                description = self.request.get('description', default_value=None)
+                level = self.request.get('level', default_value=None)
+                severity = Level.get_severity(level)
+                
+                if description:
                     status.description = description
+                    
+                if image:
+                    status.image = image
+                    
+                if name:
+                    status.name = name
+                    
+                if severity:
+                    status.severity = severity
+                
+                if description or name or image or severity:
                     status.put()
-                    self.json(status.rest(self.base_url(version)))
-                else:
-                    self.error(404, "Status %s not found" % status_slug)
+                    
+                self.json(status.rest(self.base_url(version)))
             else:
-                self.error(400, "Description is required" % description)
+                self.error(404, "Status %s not found" % status_slug)
         else:
             self.error(404, "API Version %s not supported" % version)
             
