@@ -6,17 +6,6 @@
     <link rel="stylesheet" href="/static/css/reset.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="/static/css/style.css" type="text/css" media="screen" />    
     <link rel="stylesheet" href="/static/css/jqueryui.css" type="text/css" media="screen" />    
-    <script type="text/javascript"      src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-    <script type="text/javascript"
-    src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></script>
-
-    <script type="text/javascript">
-    //Global Script
-    $(document).ready(function(){
-      $(".button").button();
-    });
-    </script>
-    
   <!--[if lt IE 9]>
   <script>
     var e = ("abbr,article,aside,audio,canvas,datalist,details," +
@@ -34,9 +23,6 @@
     <div id="wrapper">
       <div id="header">
         <a href="/"><h1 id="logo">Status Dashboard</h1></a>
-        <a id="rest-docs" href="/documentation/overview" class="button">
-          REST API Documentation
-        </a>
       </div>
       <div id="content">
         {% block content %}
@@ -54,6 +40,12 @@
             <a href="{{ login_link }}">Login</a>
           {% endif %}
         </li>
+	<li>-</li>
+	<li>
+	  <a href="/documentation/overview">
+	    API Documentation
+	  </a>
+	</li>
         <li>-</li>
         <li>Copyright (c)  {% now "Y" %}</li>
       </ul>

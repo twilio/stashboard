@@ -34,9 +34,6 @@ src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></sc
     <div id="wrapper">
       <div id="header">
         <a href="/"><h1 id="logo">Status Dashboard</h1></a>
-        <a id="rest-docs" href="/documentation/overview" class="button">
-          REST API Documentation
-        </a>
       </div>
       <div id="content">
         {% block content %}
@@ -54,6 +51,12 @@ src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></sc
             <a href="{{ login_link }}">Login</a>
           {% endif %}
         </li>
+	<li>-</li>
+	<li>
+	  <a href="/documentation/overview">
+            API Documentation
+          </a>
+	</li>
         <li>-</li>
         <li>Copyright (c)  {% now "Y" %}</li>
       </ul>

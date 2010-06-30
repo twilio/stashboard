@@ -82,6 +82,12 @@
 	  ></tr
 	><tr class="even"
 	><td align="left"
+	  >current-event</td
+	  ><td align="left"
+	  >The current event for the service</td
+	  ></tr
+	><tr class="odd"
+	><td align="left"
 	  >url</td
 	  ><td align="left"
 	  >The URL of the specific service resource</td
@@ -113,12 +119,27 @@
             &quot;id&quot;: &quot;example-foo&quot;,
             &quot;description&quot;: &quot;An explanation of this service&quot;
             &quot;url&quot;: &quot;/api/v1/services/example-foo&quot;,
+            &quot;current-event&quot;: {
+        'message': 'What an event!',
+                'sid': 'ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M',
+                'status': {
+            'description': 'Hey, dude',
+                    'id': 'up',
+                    'image': '/images/status/tick-circle.png',
+                    'level': 'NORMAL',
+                    'name': 'Up',
+                    'url': '/statuses/up'
+        },
+                'timestamp': 'Mon, 28 Jun 2010 22:17:06 GMT',
+                'url': '/services/twilio/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M'},
+
         },
         {
             &quot;name&quot;: &quot;Example Bar&quot;,
             &quot;id&quot;: &quot;example-bar&quot;,
             &quot;description&quot;: &quot;An explanation of this service&quot;
             &quot;url&quot;: &quot;/api/v1/services/example-bar&quot;,
+            &quot;current-event&quot;: null,
         }
     ]
 }
@@ -180,6 +201,7 @@
     &quot;id&quot;: &quot;new-service&quot;,
     &quot;description&quot;: &quot;A great service&quot;
     &quot;url&quot;: &quot;/api/v1/services/new-service&quot;,
+    &quot;current-event&quot;: null,
 }
 </code
 	  ></pre
@@ -222,6 +244,7 @@
     &quot;id&quot;: &quot;example-service&quot;,
     &quot;description&quot;: &quot;An explanation of what this service represents&quot;
     &quot;url&quot;: &quot;/api/v1/services/example-service&quot;,
+&quot;current-event&quot;: null,
 }
 </code
 	  ></pre
@@ -251,11 +274,19 @@
 	><tbody
 	><tr class="odd"
 	  ><td align="left"
+	    >name</td
+	    ><td align="left"
+	    >Optional</td
+	    ><td align="left"
+	    >Name of the service</td
+	    ></tr
+	  ><tr class="even"
+	  ><td align="left"
 	    >description</td
 	    ><td align="left"
-	    >Required</td
+	    >Optional</td
 	    ><td align="left"
-	    >The description of the service</td
+	    >Description of service</td
 	    ></tr
 	  ></tbody
 	></table
@@ -273,6 +304,7 @@
     &quot;id&quot;: &quot;example-service&quot;,
     &quot;description&quot;: &quot;System is now operational&quot;,
     &quot;url&quot;: &quot;/api/v1/services/example-service&quot;,
+    &quot;current-event&quot;: null,
 }
 </code
 	  ></pre
@@ -298,6 +330,7 @@
     &quot;id&quot;: &quot;example-service&quot;,
     &quot;description&quot;: &quot;System is now operational&quot;,
     &quot;url&quot;: &quot;/api/v1/services/example-service&quot;,
+&quot;current-event&quot;: null,
 }
 </code
 	></pre
@@ -387,27 +420,29 @@
 	  >{
     &quot;events&quot;: [
         {
-            &quot;timestamp&quot;: &quot;2010-05-22T01:52:23.104012&quot;, 
+            &quot;timestamp&quot;: &quot;Mon, 28 Jun 2010 22:17:06 GMT&quot;,
             &quot;message&quot;: &quot;Problem fixed&quot;, 
             &quot;sid&quot;: &quot;ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GBAM&quot;,
             &quot;url&quot;: &quot;/api/v1/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd2...
             &quot;status&quot;: {
-                &quot;name&quot;: &quot;down&quot;,
+                &quot;id&quot;: &quot;down&quot;,
+        &quot;name&quot;: &quot;Down&quot;,
                 &quot;description&quot;: &quot;An explanation of what this status represents&quot;,
-                &quot;severity&quot;: 1000,
+                &quot;level&quot;: ERROR,
                 &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
                 &quot;url&quot;: &quot;/api/v1/statuses/down&quot;,
             },
         }, 
         {
-            &quot;timestamp&quot;: &quot;2010-05-22T01:52:16.383246&quot;, 
+            &quot;timestamp&quot;: &quot;Mon, 28 Jun 2010 22:18:06 GMT&quot;,
             &quot;message&quot;: &quot;Might be up&quot;, 
             &quot;sid&quot;: &quot;ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M&quot;,
             &quot;url&quot;: &quot;/api/v1/services/example-service/events/ahJpc215d2Vic...
             &quot;status&quot;: {
-                &quot;name&quot;: &quot;down&quot;,
+        &quot;id&quot;: &quot;down&quot;,
+                &quot;name&quot;: &quot;Down&quot;,
                 &quot;description&quot;: &quot;An explanation of what this status represents&quot;,
-                &quot;severity&quot;: 1000,
+                &quot;level&quot;: ERROR,
                 &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
                 &quot;url&quot;: &quot;/api/v1/statuses/down&quot;,
             },
@@ -468,14 +503,15 @@
 	><pre
 	><code
 	  >{
-    &quot;timestamp&quot;: &quot;2010-05-22T01:52:16.383246&quot;, 
+    &quot;timestamp&quot;: Mon, 28 Jun 2010 22:18:06 GMT&quot;
     &quot;message&quot;: &quot;Might be up&quot;, 
     &quot;sid&quot;: &quot;ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M&quot;,
     &quot;url&quot;: &quot;/api/v1/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M&quot;,
     &quot;status&quot;: {
-        &quot;name&quot;: &quot;down&quot;,
+        &quot;id&quot;: &quot;down&quot;,
+    &quot;name&quot;: &quot;Down&quot;,
         &quot;description&quot;: &quot;An explanation of what this status represents&quot;,
-        &quot;severity&quot;: 1000,
+    &quot;level&quot;: &quot;ERROR&quot;,
         &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
         &quot;url&quot;: &quot;/api/v1/statuses/down&quot;,
     },
@@ -578,14 +614,15 @@
       ><pre
       ><code
 	>{
-    &quot;timestamp&quot;: &quot;2010-05-22T01:52:16.383246&quot;, 
+    &quot;timestamp&quot;: &quot;Mon, 28 Jun 2010 22:17:06 GMT&quot;,
     &quot;message&quot;: &quot;Might be up&quot;, 
     &quot;sid&quot;: &quot;ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M&quot;,
     &quot;url&quot;: &quot;/api/v1/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M&quot;,
     &quot;status&quot;: {
-        &quot;name&quot;: &quot;down&quot;,
+        &quot;id&quot;: &quot;down&quot;,
+    &quot;name&quot;: &quot;Down&quot;,
         &quot;description&quot;: &quot;An explanation of what this status represents&quot;,
-        &quot;severity&quot;: 1000,
+    &quot;level&quot;: &quot;ERROR&quot;,
         &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
         &quot;url&quot;: &quot;/api/v1/statuses/down&quot;,
     },
@@ -638,14 +675,15 @@
 	><pre
 	><code
 	  >{
-    &quot;timestamp&quot;: &quot;2010-05-22T01:52:16.383246&quot;, 
+    &quot;timestamp&quot;: &quot;Mon, 28 Jun 2010 22:17:06 GMT&quot;,
     &quot;message&quot;: &quot;Might be up&quot;, 
     &quot;sid&quot;: &quot;ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M&quot;,
     &quot;url&quot;: &quot;/api/v1/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M&quot;,
     &quot;status&quot;: {
-        &quot;name&quot;: &quot;down&quot;,
+        &quot;id&quot;: &quot;down&quot;,
+    &quot;name&quot;: &quot;Down&quot;,
         &quot;description&quot;: &quot;An explanation of what this status represents&quot;,
-        &quot;severity&quot;: 1000,
+    &quot;level&quot;: &quot;ERROR&quot;,
         &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
         &quot;url&quot;: &quot;/api/v1/statuses/down&quot;,
     },
@@ -675,14 +713,15 @@
 	><pre
 	><code
 	  >{
-    &quot;timestamp&quot;: &quot;2010-05-22T01:52:16.383246&quot;, 
+    &quot;timestamp&quot;: &quot;Mon, 28 Jun 2010 22:17:06 GMT&quot;,
     &quot;message&quot;: &quot;Might be up&quot;, 
     &quot;sid&quot;: &quot;ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M&quot;,
     &quot;url&quot;: &quot;/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M&quot;,
     &quot;status&quot;: {
-        &quot;name&quot;: &quot;down&quot;,
+        &quot;id&quot;: &quot;down&quot;,
+    &quot;name&quot;: &quot;Down&quot;,
         &quot;description&quot;: &quot;An explanation of what this status represents&quot;,
-        &quot;severity&quot;: 1000,
+    &quot;level&quot;: &quot;ERROR&quot;,
         &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
         &quot;url&quot;: &quot;/statuses/down&quot;,
     },    
@@ -731,21 +770,9 @@
 	  ></tr
 	><tr class="even"
 	><td align="left"
-	  >events</td
-	  ><td align="left"
-	  >A list of all the days events in reverse chronological order</td
-	  ></tr
-	><tr class="odd"
-	><td align="left"
 	  >summary</td
 	  ><td align="left"
 	  >The overall status for the given day. See the Statuses resource</td
-	  ></tr
-	><tr class="even"
-	><td align="left"
-	  >informationAvailable</td
-	  ><td align="left"
-	  >A boolean value which is true when outstanding events occur.</td
 	  ></tr
 	></tbody
       ></table
@@ -805,29 +832,13 @@
 	  >{ &quot;days&quot;: [
     {
         &quot;date&quot;: &quot;Tue, 22 Jun 2010 00:00:00 GMT&quot;, 
-        &quot;informationAvailable&quot;: false, 
-        &quot;events&quot;: [
-            {
-                &quot;status&quot;: {
-                    &quot;description&quot;: &quot;This web service is up&quot;, 
-                    &quot;url&quot;: &quot;/api/v1/statuses/up&quot;, 
-                    &quot;image&quot;: &quot;/images/status/tick-circle.png&quot;,
-                    &quot;name&quot;: &quot;Up&quot;, 
-                    &quot;id&quot;: &quot;up&quot;, 
-                    &quot;severity&quot;: 3
-                }, 
-                &quot;timestamp&quot;: &quot;Tue, 22 Jun 2010 18:50:48 GMT&quot;, 
-                &quot;message&quot;: &quot;This service is currently running&quot;, 
-                &quot;url&quot;: &quot;/api/v1/services/example-service/events/ahJpc215d2Vic
-                &quot;sid&quot;: &quot;ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GAcM&quot;}
-            ], 
         &quot;summary&quot;: {
             &quot;description&quot;: &quot;This web service is up&quot;, 
             &quot;url&quot;: &quot;/api/v1/statuses/up&quot;, 
             &quot;image&quot;: &quot;/images/status/tick-circle.png&quot;, 
             &quot;name&quot;: &quot;Up&quot;, 
             &quot;id&quot;: &quot;up&quot;, 
-            &quot;severity&quot;: 3
+    &quot;level&quot;: &quot;NORMAL&quot;,
         }
     },         
 
@@ -909,9 +920,9 @@
 	  ></tr
 	><tr class="odd"
 	><td align="left"
-	  >severity</td
+	  >level The listed i</td
 	  ><td align="left"
-	  >The severity of this status. Larger values are more severe.</td
+	  >level of this status. Can be any value n the Levels List resource</td
 	  ></tr
 	><tr class="even"
 	><td align="left"
@@ -945,7 +956,7 @@
             &quot;name&quot;: &quot;Available&quot;,
             &quot;id&quot;: &quot;available&quot;,
             &quot;description&quot;: &quot;An explanation of what this status represents&quot;,
-            &quot;severity&quot;: 10,
+    &quot;level&quot;: &quot;NORMAL&quot;,
             &quot;image&quot;: &quot;/static/images/status/tick-circle.png&quot;,
             &quot;url&quot;: &quot;api/v1/statuses/up&quot;,
         },
@@ -953,7 +964,7 @@
             &quot;name&quot;: &quot;Down&quot;,
             &quot;id&quot;: &quot;down&quot;,
             &quot;description&quot;: &quot;An explanation of what this status represents&quot;,
-            &quot;severity&quot;: 1000,
+    &quot;level&quot;: &quot;ERROR&quot;,
             &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
             &quot;url&quot;: &quot;api/v1/statuses/down&quot;,
         },
@@ -1003,11 +1014,11 @@
 	    ></tr
 	  ><tr class="odd"
 	  ><td align="left"
-	    >severity</td
+	    >level</td
 	    ><td align="left"
-	    >Required</td
+	    >Required Must be a va Levels resou</td
 	    ><td align="left"
-	    >The severity of the status. Must be a positive integer greater than zero</td
+	    >The level of the status. lues listed in the rce</td
 	    ></tr
 	  ><tr class="even"
 	  ><td align="left"
@@ -1032,7 +1043,7 @@
     &quot;name&quot;: &quot;Down&quot;,
     &quot;id&quot;: &quot;down&quot;
     &quot;description&quot;: &quot;A new status&quot;,
-    &quot;severity&quot;: 1000,
+&quot;level&quot;: &quot;ERROR&quot;,
     &quot;image&quot;: &quot;cross-circle&quot;,
     &quot;url&quot;: &quot;/api/v1/statuses/down&quot;,
 }
@@ -1081,7 +1092,7 @@
     &quot;name&quot;: &quot;Down&quot;,
     &quot;id&quot;: &quot;down&quot;,
     &quot;description&quot;: &quot;A new status&quot;,
-    &quot;severity&quot;: 1000,
+    &quot;level&quot;: &quot;ERROR&quot;,
     &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
     &quot;url&quot;: &quot;/api/v1/statuses/down&quot;,
 }
@@ -1111,21 +1122,29 @@
       ><tbody
       ><tr class="odd"
 	><td align="left"
+	  >name</td
+	  ><td align="left"
+	  >Optional</td
+	  ><td align="left"
+	  >The name of the status</td
+	  ></tr
+	><tr class="even"
+	><td align="left"
 	  >description</td
 	  ><td align="left"
 	  >Optional</td
 	  ><td align="left"
 	  >The description of the status</td
 	  ></tr
-	><tr class="even"
+	><tr class="odd"
 	><td align="left"
-	  >severity</td
+	  >level</td
 	  ><td align="left"
 	  >Optional</td
 	  ><td align="left"
-	  >The severity of the status. Must be a positive integer greater than zero</td
+	  >The level of the status. Must be a string value listed in the Levels resource (see below)</td
 	  ></tr
-	><tr class="odd"
+	><tr class="even"
 	><td align="left"
 	  >image</td
 	  ><td align="left"
@@ -1147,9 +1166,10 @@
       ><pre
       ><code
 	>{
-    &quot;name&quot;: &quot;down&quot;,
+    &quot;name&quot;: &quot;Down&quot;,
+    &quot;id&quot;: &quot;down&quot;,
     &quot;description&quot;: &quot;A new status&quot;,
-    &quot;severity&quot;: 1010,
+    &quot;level&quot;: &quot;ERROR&quot;,
     &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
     &quot;url&quot;: &quot;/api/v1/statuses/down&quot;,
 }
@@ -1172,9 +1192,10 @@
       ><pre
       ><code
 	>{
-    &quot;name&quot;: &quot;down&quot;,
+    &quot;name&quot;: &quot;Down&quot;,
+    &quot;id&quot;: &quot;down&quot;,
     &quot;description&quot;: &quot;A new status&quot;,
-    &quot;severity&quot;: 1010,
+    &quot;level&quot;: &quot;ERROR&quot;,
     &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
     &quot;url&quot;: &quot;/api/v1/statuses/down&quot;,
 }
@@ -1189,12 +1210,65 @@
     >Not supported</p
     ></div
   ></div
+><div id="status-levels-resource"
+><h2
+  >Status Levels Resource</h2
+  ><p
+  >The Status Levels resource is a read-only resource which lists the possible levels for a status.</p
+  ><div id="resource-url-8"
+  ><h3
+    >Resource Url</h3
+    ><blockquote
+    ><p
+      >/api/v1/levels</p
+      ></blockquote
+    ></div
+  ><div id="get-8"
+  ><h3
+    >GET</h3
+    ><p
+    >Returns a list of possible status levels in increasing severity</p
+    ><div id="example-17"
+    ><h4
+      >Example</h4
+      ><blockquote
+      ><p
+	>GET /api/v1/levels</p
+	></blockquote
+      ><pre
+      ><code
+	>{
+    &quot;levels&quot;: [
+        &quot;INFO&quot;, 
+        &quot;NORMAL&quot;, 
+        &quot;WARNING&quot;, 
+        &quot;ERROR&quot;, 
+        &quot;CRITICAL&quot;,
+    ]
+}
+</code
+	></pre
+      ></div
+    ></div
+  ><div id="post-put-3"
+  ><h3
+    >POST / PUT</h3
+    ><p
+    >Not supported</p
+    ></div
+  ><div id="delete-7"
+  ><h3
+    >DELETE</h3
+    ><p
+    >Not supported</p
+    ></div
+  ></div
 ><div id="status-images-resource"
 ><h2
   >Status Images Resource</h2
   ><p
   >The Status Images resource is a read-only resource which lists the icons available to use for statuses</p
-  ><div id="resource-url-8"
+  ><div id="resource-url-9"
   ><h3
     >Resource Url</h3
     ><blockquote
@@ -1202,12 +1276,12 @@
       >/api/v1/status-images</p
       ></blockquote
     ></div
-  ><div id="get-8"
+  ><div id="get-9"
   ><h3
     >GET</h3
     ><p
     >Returns a list of status images.</p
-    ><div id="example-17"
+    ><div id="example-18"
     ><h4
       >Example</h4
       ><blockquote
@@ -1232,13 +1306,13 @@
 	></pre
       ></div
     ></div
-  ><div id="post-put-3"
+  ><div id="post-put-4"
   ><h3
     >POST / PUT</h3
     ><p
     >Not supported</p
     ></div
-  ><div id="delete-7"
+  ><div id="delete-8"
   ><h3
     >DELETE</h3
     ><p

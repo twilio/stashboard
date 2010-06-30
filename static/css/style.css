@@ -31,6 +31,7 @@ h3.date-range {color: #999;}
 }
 
 .frame { padding: 20px;}
+.dialog { display: none; }
 
 #sidebar { float: right; margin: 20px; width: 250px; }
 
@@ -46,8 +47,10 @@ h3.date-range {color: #999;}
 
 #add-service { margin-top: 20px;}
 
-.legend {border: solid 5px rgb(228, 228, 228); width: 100%; margin: 20px 0;}
-.legend tr td:first-child {width: 16px;}
+.legend h4 { color: #999; font-size: 18px; margin: 20px 0 5px 0;}
+.legend table {border: solid 5px rgb(228, 228, 228); width: 100%; margin: 0 0 20px 0;}
+.legend table tr td:first-child {width: 16px;}
+
 
 /* wordpress entries styling - main content column */
 #webservices table { width: 100%; border-spacing:10; font-size: 1.1em;}
@@ -92,7 +95,7 @@ h3.date-range {color: #999;}
 #footer ul {padding: 10px 0px;}
 #footer ul.left { float: left;}
 #footer ul.right { float: right;}
-#footer ul li {display: inline;}   
+#footer ul li {display: inline;}
 
 .dialog label, .dialog textarea, .dialog input 
     { margin: 10px; clear: right;}

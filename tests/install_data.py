@@ -35,7 +35,7 @@ def create_statuses():
 
 def create_events():
     for service in Service.all():
-        low = Status.lowest_severity()
+        low = Status.default()
         day = datetime.today() - timedelta(days=2)
         e = Event(service=service, status=low, 
             message="This service is operating fine", start=day)

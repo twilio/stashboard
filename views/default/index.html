@@ -66,7 +66,7 @@
                 var d = new Date(day.date);
                 var td = $("#" + data.id).children("td").eq(i+2);
                 
-                if (results.days[i].informationAvailable) {
+                if (day.summary.level != "NORMAL") {
                   url = "/services/" + data.id + "/" + d.getFullYear() + "/";
                   url += (d.getMonth() + 1) + "/" + d.getDate();
                   
