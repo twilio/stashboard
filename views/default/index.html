@@ -5,6 +5,18 @@
       var createServiceRow = function(data, fetchStatuses){
         informationImage = "/images/status/question-white.png";
         
+        var currentNow = new Date();
+        var d = new Date(currentNow.getTime() - 86400000);
+        var thead = $("#service-list thead tr");
+        
+        for (var i=0; i < 5; i++) {
+          $("<th />", {
+            "class": "date",
+            text: (d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear()
+          }).appendTo(thead);
+          var d = new Date(d.getTime() - 86400000);
+        }
+                
         var tr = $('<tr />', {id: data.id});
         
         $('<td />').append(
@@ -49,8 +61,8 @@
               }
           });
           
-          var currentDate = new Date();
-          currentDate = new Date(currentDate.getTime() -  86400000);
+          
+          currentDate = new Date(currentNow.getTime() -  86400000);
           var before = $.datepicker.formatDate("yy-m-d", currentDate);
           var url = "/api/v1/services/" + data.id + "/events/calendar";
           url += "?start=" + before + "&days=" + 5;
@@ -67,8 +79,8 @@
                 var td = $("#" + data.id).children("td").eq(i+2);
                 
                 if (day.summary.level != "NORMAL") {
-                  url = "/services/" + data.id + "/" + d.getFullYear() + "/";
-                  url += (d.getMonth() + 1) + "/" + d.getDate();
+                  url = "/services/" + data.id + "/" + d.getUTCFullYear() + "/";
+                  url += (d.getUTCMonth() + 1) + "/" + d.getUTCDate();
                   
                   td.html($("<a />", {href: url}).append(
                     $("<img />",{src: "/images/status/information.png"})));
@@ -178,11 +190,6 @@
               <tr>
                 <th>Service</th>
                 <th class="today">Today</th>
-              
-                {% for day in past %}
-                  <th class="date">{{ day|date:"N j" }}</th>
-                {% endfor %}
-
             </thead>
 
             <tbody id="services-body">

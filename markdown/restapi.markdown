@@ -61,16 +61,16 @@ Returns a list of all current services tracked by StashBoard
                 "description": "An explanation of this service"
                 "url": "/api/v1/services/example-foo",
                 "current-event": {
-		    'message': 'What an event!',
+                    'message': 'What an event!',
                     'sid': 'ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M',
                     'status': {
-		        'description': 'Hey, dude',
+                        'description': 'Hey, dude',
                         'id': 'up',
                         'image': '/images/status/tick-circle.png',
                         'level': 'NORMAL',
                         'name': 'Up',
                         'url': '/statuses/up'
-			},
+            },
                     'timestamp': 'Mon, 28 Jun 2010 22:17:06 GMT',
                     'url': '/services/twilio/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M'},
 
@@ -135,7 +135,7 @@ Returns a service object
         "id": "example-service",
         "description": "An explanation of what this service represents"
         "url": "/api/v1/services/example-service",
-	"current-event": null,
+        "current-event": null,
     }
     
 #### POST
@@ -177,7 +177,7 @@ Deletes a service and returns the deleted service object
         "id": "example-service",
         "description": "System is now operational",
         "url": "/api/v1/services/example-service",
-	"current-event": null,
+        "current-event": null,
     }
 
 
@@ -226,12 +226,12 @@ Returns all events associated with a given service in reverse chronological orde
                 "timestamp": "Mon, 28 Jun 2010 22:17:06 GMT",
                 "message": "Problem fixed", 
                 "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GBAM",
-                "url": "/api/v1/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd2...
+                "url": "/api/v1/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd2",
                 "status": {
                     "id": "down",
-		    "name": "Down",
+                    "name": "Down",
                     "description": "An explanation of what this status represents",
-                    "level": ERROR,
+                    "level": "ERROR",
                     "image": "/static/images/status/cross-circle.png",
                     "url": "/api/v1/statuses/down",
                 },
@@ -240,12 +240,12 @@ Returns all events associated with a given service in reverse chronological orde
                 "timestamp": "Mon, 28 Jun 2010 22:18:06 GMT",
                 "message": "Might be up", 
                 "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
-                "url": "/api/v1/services/example-service/events/ahJpc215d2Vic...
+                "url": "/api/v1/services/example-service/events/ahJpc215d2Vic..."
                 "status": {
-		    "id": "down",
+                    "id": "down",
                     "name": "Down",
                     "description": "An explanation of what this status represents",
-                    "level": ERROR,
+                    "level": "ERROR",
                     "image": "/static/images/status/cross-circle.png",
                     "url": "/api/v1/statuses/down",
                 },
@@ -277,15 +277,15 @@ Table: Events List POST parameters
 > POST /api/v1/services/{service}/events  HTTP/1.1 status=AVAILABLE&message=System%20is%20now%20operational
 
     {
-        "timestamp": Mon, 28 Jun 2010 22:18:06 GMT"
+        "timestamp": "Mon, 28 Jun 2010 22:18:06 GMT"
         "message": "Might be up", 
         "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
         "url": "/api/v1/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
         "status": {
             "id": "down",
-	    "name": "Down",
+            "name": "Down",
             "description": "An explanation of what this status represents",
-	    "level": "ERROR",
+            "level": "ERROR",
             "image": "/static/images/status/cross-circle.png",
             "url": "/api/v1/statuses/down",
         },
@@ -352,9 +352,9 @@ Returns the current event for a given service.
         "url": "/api/v1/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
         "status": {
             "id": "down",
-	    "name": "Down",
+            "name": "Down",
             "description": "An explanation of what this status represents",
-	    "level": "ERROR",
+            "level": "ERROR",
             "image": "/static/images/status/cross-circle.png",
             "url": "/api/v1/statuses/down",
         },
@@ -393,9 +393,9 @@ Returns a service event with the given event sid. The event's status object is a
         "url": "/api/v1/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
         "status": {
             "id": "down",
-	    "name": "Down",
+            "name": "Down",
             "description": "An explanation of what this status represents",
-	    "level": "ERROR",
+            "level": "ERROR",
             "image": "/static/images/status/cross-circle.png",
             "url": "/api/v1/statuses/down",
         },
@@ -420,9 +420,9 @@ Deletes the given event and returns the deleted event
         "url": "/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
         "status": {
             "id": "down",
-	    "name": "Down",
+            "name": "Down",
             "description": "An explanation of what this status represents",
- 	    "level": "ERROR",
+            "level": "ERROR",
             "image": "/static/images/status/cross-circle.png",
             "url": "/statuses/down",
         },    
@@ -483,7 +483,7 @@ Table: Calendar Resource Query options
                 "image": "/images/status/tick-circle.png", 
                 "name": "Up", 
                 "id": "up", 
-		"level": "NORMAL",
+                "level": "NORMAL",
             }
         },         
         
@@ -523,8 +523,8 @@ description     The description of the status
 
 url             The URL of the specific status resource
 
-level		The level of this status. Can be any value
-		listed in the Levels List resource
+level           The level of this status. Can be any value
+                listed in the Levels List resource
                 
 image           The URL of the image for this status
 -------------------------------------------------------------
@@ -546,7 +546,7 @@ Returns all possible service statuses
                 "name": "Available",
                 "id": "available",
                 "description": "An explanation of what this status represents",
-		"level": "NORMAL",
+                "level": "NORMAL",
                 "image": "/static/images/status/tick-circle.png",
                 "url": "api/v1/statuses/up",
             },
@@ -554,7 +554,7 @@ Returns all possible service statuses
                 "name": "Down",
                 "id": "down",
                 "description": "An explanation of what this status represents",
-		"level": "ERROR",
+                "level": "ERROR",
                 "image": "/static/images/status/cross-circle.png",
                 "url": "api/v1/statuses/down",
             },
@@ -592,7 +592,7 @@ name=Down&description=A%20new%20status&severity=1000&image=cross-circle.png
         "name": "Down",
         "id": "down"
         "description": "A new status",
-	"level": "ERROR",
+        "level": "ERROR",
         "image": "cross-circle",
         "url": "/api/v1/statuses/down",
     }

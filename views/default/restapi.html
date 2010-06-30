@@ -120,10 +120,10 @@
             &quot;description&quot;: &quot;An explanation of this service&quot;
             &quot;url&quot;: &quot;/api/v1/services/example-foo&quot;,
             &quot;current-event&quot;: {
-        'message': 'What an event!',
+                'message': 'What an event!',
                 'sid': 'ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M',
                 'status': {
-            'description': 'Hey, dude',
+                    'description': 'Hey, dude',
                     'id': 'up',
                     'image': '/images/status/tick-circle.png',
                     'level': 'NORMAL',
@@ -244,7 +244,7 @@
     &quot;id&quot;: &quot;example-service&quot;,
     &quot;description&quot;: &quot;An explanation of what this service represents&quot;
     &quot;url&quot;: &quot;/api/v1/services/example-service&quot;,
-&quot;current-event&quot;: null,
+    &quot;current-event&quot;: null,
 }
 </code
 	  ></pre
@@ -330,7 +330,7 @@
     &quot;id&quot;: &quot;example-service&quot;,
     &quot;description&quot;: &quot;System is now operational&quot;,
     &quot;url&quot;: &quot;/api/v1/services/example-service&quot;,
-&quot;current-event&quot;: null,
+    &quot;current-event&quot;: null,
 }
 </code
 	></pre
@@ -423,12 +423,12 @@
             &quot;timestamp&quot;: &quot;Mon, 28 Jun 2010 22:17:06 GMT&quot;,
             &quot;message&quot;: &quot;Problem fixed&quot;, 
             &quot;sid&quot;: &quot;ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GBAM&quot;,
-            &quot;url&quot;: &quot;/api/v1/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd2...
+            &quot;url&quot;: &quot;/api/v1/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd2&quot;,
             &quot;status&quot;: {
                 &quot;id&quot;: &quot;down&quot;,
-        &quot;name&quot;: &quot;Down&quot;,
+                &quot;name&quot;: &quot;Down&quot;,
                 &quot;description&quot;: &quot;An explanation of what this status represents&quot;,
-                &quot;level&quot;: ERROR,
+                &quot;level&quot;: &quot;ERROR&quot;,
                 &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
                 &quot;url&quot;: &quot;/api/v1/statuses/down&quot;,
             },
@@ -437,12 +437,12 @@
             &quot;timestamp&quot;: &quot;Mon, 28 Jun 2010 22:18:06 GMT&quot;,
             &quot;message&quot;: &quot;Might be up&quot;, 
             &quot;sid&quot;: &quot;ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M&quot;,
-            &quot;url&quot;: &quot;/api/v1/services/example-service/events/ahJpc215d2Vic...
+            &quot;url&quot;: &quot;/api/v1/services/example-service/events/ahJpc215d2Vic...&quot;
             &quot;status&quot;: {
-        &quot;id&quot;: &quot;down&quot;,
+                &quot;id&quot;: &quot;down&quot;,
                 &quot;name&quot;: &quot;Down&quot;,
                 &quot;description&quot;: &quot;An explanation of what this status represents&quot;,
-                &quot;level&quot;: ERROR,
+                &quot;level&quot;: &quot;ERROR&quot;,
                 &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
                 &quot;url&quot;: &quot;/api/v1/statuses/down&quot;,
             },
@@ -503,15 +503,15 @@
 	><pre
 	><code
 	  >{
-    &quot;timestamp&quot;: Mon, 28 Jun 2010 22:18:06 GMT&quot;
+    &quot;timestamp&quot;: &quot;Mon, 28 Jun 2010 22:18:06 GMT&quot;
     &quot;message&quot;: &quot;Might be up&quot;, 
     &quot;sid&quot;: &quot;ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M&quot;,
     &quot;url&quot;: &quot;/api/v1/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M&quot;,
     &quot;status&quot;: {
         &quot;id&quot;: &quot;down&quot;,
-    &quot;name&quot;: &quot;Down&quot;,
+        &quot;name&quot;: &quot;Down&quot;,
         &quot;description&quot;: &quot;An explanation of what this status represents&quot;,
-    &quot;level&quot;: &quot;ERROR&quot;,
+        &quot;level&quot;: &quot;ERROR&quot;,
         &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
         &quot;url&quot;: &quot;/api/v1/statuses/down&quot;,
     },
@@ -620,9 +620,9 @@
     &quot;url&quot;: &quot;/api/v1/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M&quot;,
     &quot;status&quot;: {
         &quot;id&quot;: &quot;down&quot;,
-    &quot;name&quot;: &quot;Down&quot;,
+        &quot;name&quot;: &quot;Down&quot;,
         &quot;description&quot;: &quot;An explanation of what this status represents&quot;,
-    &quot;level&quot;: &quot;ERROR&quot;,
+        &quot;level&quot;: &quot;ERROR&quot;,
         &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
         &quot;url&quot;: &quot;/api/v1/statuses/down&quot;,
     },
@@ -681,9 +681,9 @@
     &quot;url&quot;: &quot;/api/v1/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M&quot;,
     &quot;status&quot;: {
         &quot;id&quot;: &quot;down&quot;,
-    &quot;name&quot;: &quot;Down&quot;,
+        &quot;name&quot;: &quot;Down&quot;,
         &quot;description&quot;: &quot;An explanation of what this status represents&quot;,
-    &quot;level&quot;: &quot;ERROR&quot;,
+        &quot;level&quot;: &quot;ERROR&quot;,
         &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
         &quot;url&quot;: &quot;/api/v1/statuses/down&quot;,
     },
@@ -719,9 +719,9 @@
     &quot;url&quot;: &quot;/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M&quot;,
     &quot;status&quot;: {
         &quot;id&quot;: &quot;down&quot;,
-    &quot;name&quot;: &quot;Down&quot;,
+        &quot;name&quot;: &quot;Down&quot;,
         &quot;description&quot;: &quot;An explanation of what this status represents&quot;,
-    &quot;level&quot;: &quot;ERROR&quot;,
+        &quot;level&quot;: &quot;ERROR&quot;,
         &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
         &quot;url&quot;: &quot;/statuses/down&quot;,
     },    
@@ -838,7 +838,7 @@
             &quot;image&quot;: &quot;/images/status/tick-circle.png&quot;, 
             &quot;name&quot;: &quot;Up&quot;, 
             &quot;id&quot;: &quot;up&quot;, 
-    &quot;level&quot;: &quot;NORMAL&quot;,
+            &quot;level&quot;: &quot;NORMAL&quot;,
         }
     },         
 
@@ -920,9 +920,9 @@
 	  ></tr
 	><tr class="odd"
 	><td align="left"
-	  >level The listed i</td
+	  >level</td
 	  ><td align="left"
-	  >level of this status. Can be any value n the Levels List resource</td
+	  >The level of this status. Can be any value listed in the Levels List resource</td
 	  ></tr
 	><tr class="even"
 	><td align="left"
@@ -956,7 +956,7 @@
             &quot;name&quot;: &quot;Available&quot;,
             &quot;id&quot;: &quot;available&quot;,
             &quot;description&quot;: &quot;An explanation of what this status represents&quot;,
-    &quot;level&quot;: &quot;NORMAL&quot;,
+            &quot;level&quot;: &quot;NORMAL&quot;,
             &quot;image&quot;: &quot;/static/images/status/tick-circle.png&quot;,
             &quot;url&quot;: &quot;api/v1/statuses/up&quot;,
         },
@@ -964,7 +964,7 @@
             &quot;name&quot;: &quot;Down&quot;,
             &quot;id&quot;: &quot;down&quot;,
             &quot;description&quot;: &quot;An explanation of what this status represents&quot;,
-    &quot;level&quot;: &quot;ERROR&quot;,
+            &quot;level&quot;: &quot;ERROR&quot;,
             &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
             &quot;url&quot;: &quot;api/v1/statuses/down&quot;,
         },
@@ -1043,7 +1043,7 @@
     &quot;name&quot;: &quot;Down&quot;,
     &quot;id&quot;: &quot;down&quot;
     &quot;description&quot;: &quot;A new status&quot;,
-&quot;level&quot;: &quot;ERROR&quot;,
+    &quot;level&quot;: &quot;ERROR&quot;,
     &quot;image&quot;: &quot;cross-circle&quot;,
     &quot;url&quot;: &quot;/api/v1/statuses/down&quot;,
 }
