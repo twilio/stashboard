@@ -60,7 +60,20 @@ Returns a list of all current services tracked by StashBoard
                 "id": "example-foo",
                 "description": "An explanation of this service"
                 "url": "/api/v1/services/example-foo",
-                "current-event": null,
+                "current-event": {
+		    'message': 'What an event!',
+                    'sid': 'ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M',
+                    'status': {
+		        'description': 'Hey, dude',
+                        'id': 'up',
+                        'image': '/images/status/tick-circle.png',
+                        'level': 'NORMAL',
+                        'name': 'Up',
+                        'url': '/statuses/up'
+			},
+                    'timestamp': 'Mon, 28 Jun 2010 22:17:06 GMT',
+                    'url': '/services/twilio/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M'},
+
             },
             {
                 "name": "Example Bar",
@@ -122,6 +135,7 @@ Returns a service object
         "id": "example-service",
         "description": "An explanation of what this service represents"
         "url": "/api/v1/services/example-service",
+	"current-event": null,
     }
     
 #### POST
@@ -132,9 +146,9 @@ Updates a service's description and returns the updated service object.
 
 Param          Optional    Description
 -----           ---------   --------------------------------
-name            Required    Name of the service
+name            Optional    Name of the service
 
-description     Required    Description of service
+description     Optional    Description of service
 -------------------------------------------------------------
 Table: Service Instance POST parameters
 
@@ -163,6 +177,7 @@ Deletes a service and returns the deleted service object
         "id": "example-service",
         "description": "System is now operational",
         "url": "/api/v1/services/example-service",
+	"current-event": null,
     }
 
 
@@ -208,27 +223,29 @@ Returns all events associated with a given service in reverse chronological orde
     {
         "events": [
             {
-                "timestamp": "2010-05-22T01:52:23.104012", 
+                "timestamp": "Mon, 28 Jun 2010 22:17:06 GMT",
                 "message": "Problem fixed", 
                 "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GBAM",
                 "url": "/api/v1/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd2...
                 "status": {
-                    "name": "down",
+                    "id": "down",
+		    "name": "Down",
                     "description": "An explanation of what this status represents",
-                    "severity": 1000,
+                    "level": ERROR,
                     "image": "/static/images/status/cross-circle.png",
                     "url": "/api/v1/statuses/down",
                 },
             }, 
             {
-                "timestamp": "2010-05-22T01:52:16.383246", 
+                "timestamp": "Mon, 28 Jun 2010 22:18:06 GMT",
                 "message": "Might be up", 
                 "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
                 "url": "/api/v1/services/example-service/events/ahJpc215d2Vic...
                 "status": {
-                    "name": "down",
+		    "id": "down",
+                    "name": "Down",
                     "description": "An explanation of what this status represents",
-                    "severity": 1000,
+                    "level": ERROR,
                     "image": "/static/images/status/cross-circle.png",
                     "url": "/api/v1/statuses/down",
                 },
@@ -260,14 +277,15 @@ Table: Events List POST parameters
 > POST /api/v1/services/{service}/events  HTTP/1.1 status=AVAILABLE&message=System%20is%20now%20operational
 
     {
-        "timestamp": "2010-05-22T01:52:16.383246", 
+        "timestamp": Mon, 28 Jun 2010 22:18:06 GMT"
         "message": "Might be up", 
         "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
         "url": "/api/v1/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
         "status": {
-            "name": "down",
+            "id": "down",
+	    "name": "Down",
             "description": "An explanation of what this status represents",
-            "severity": 1000,
+	    "level": "ERROR",
             "image": "/static/images/status/cross-circle.png",
             "url": "/api/v1/statuses/down",
         },
@@ -328,14 +346,15 @@ Returns the current event for a given service.
 > GET /api/v1/services/{service}/events/current HTTP/1.1
 
     {
-        "timestamp": "2010-05-22T01:52:16.383246", 
+        "timestamp": "Mon, 28 Jun 2010 22:17:06 GMT",
         "message": "Might be up", 
         "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
         "url": "/api/v1/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
         "status": {
-            "name": "down",
+            "id": "down",
+	    "name": "Down",
             "description": "An explanation of what this status represents",
-            "severity": 1000,
+	    "level": "ERROR",
             "image": "/static/images/status/cross-circle.png",
             "url": "/api/v1/statuses/down",
         },
@@ -368,14 +387,15 @@ Returns a service event with the given event sid. The event's status object is a
 > GET /api/v1/services/{service}/events/{sid} HTTP/1.1
 
     {
-        "timestamp": "2010-05-22T01:52:16.383246", 
+        "timestamp": "Mon, 28 Jun 2010 22:17:06 GMT",
         "message": "Might be up", 
         "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
         "url": "/api/v1/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
         "status": {
-            "name": "down",
+            "id": "down",
+	    "name": "Down",
             "description": "An explanation of what this status represents",
-            "severity": 1000,
+	    "level": "ERROR",
             "image": "/static/images/status/cross-circle.png",
             "url": "/api/v1/statuses/down",
         },
@@ -394,14 +414,15 @@ Deletes the given event and returns the deleted event
 > DELETE /services/{service}/events/{sid} HTTP/1.1
 
     {
-        "timestamp": "2010-05-22T01:52:16.383246", 
+        "timestamp": "Mon, 28 Jun 2010 22:17:06 GMT",
         "message": "Might be up", 
         "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
         "url": "/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
         "status": {
-            "name": "down",
+            "id": "down",
+	    "name": "Down",
             "description": "An explanation of what this status represents",
-            "severity": 1000,
+ 	    "level": "ERROR",
             "image": "/static/images/status/cross-circle.png",
             "url": "/statuses/down",
         },    
@@ -424,15 +445,9 @@ Property                   Description
 day                         The day this object represents, given
                             in RFC 1132 format.
                 
-events                      A list of all the days events in reverse 
-                            chronological order
-                
 summary                     The overall status for the given day. See the 
                             Statuses resource
                 
-informationAvailable        A boolean value which is true when 
-                            outstanding events occur.
-
 -------------------------------------------------------------
 Table: Calendar day object properties
 
@@ -462,29 +477,13 @@ Table: Calendar Resource Query options
     { "days": [
         {
             "date": "Tue, 22 Jun 2010 00:00:00 GMT", 
-            "informationAvailable": false, 
-            "events": [
-                {
-                    "status": {
-                        "description": "This web service is up", 
-                        "url": "/api/v1/statuses/up", 
-                        "image": "/images/status/tick-circle.png",
-                        "name": "Up", 
-                        "id": "up", 
-                        "severity": 3
-                    }, 
-                    "timestamp": "Tue, 22 Jun 2010 18:50:48 GMT", 
-                    "message": "This service is currently running", 
-                    "url": "/api/v1/services/example-service/events/ahJpc215d2Vic
-                    "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GAcM"}
-                ], 
             "summary": {
                 "description": "This web service is up", 
                 "url": "/api/v1/statuses/up", 
                 "image": "/images/status/tick-circle.png", 
                 "name": "Up", 
                 "id": "up", 
-                "severity": 3
+		"level": "NORMAL",
             }
         },         
         
@@ -524,8 +523,8 @@ description     The description of the status
 
 url             The URL of the specific status resource
 
-severity        The severity of this status. Larger values
-                are more severe.
+level		The level of this status. Can be any value
+		listed in the Levels List resource
                 
 image           The URL of the image for this status
 -------------------------------------------------------------
@@ -547,7 +546,7 @@ Returns all possible service statuses
                 "name": "Available",
                 "id": "available",
                 "description": "An explanation of what this status represents",
-                "severity": 10,
+		"level": "NORMAL",
                 "image": "/static/images/status/tick-circle.png",
                 "url": "api/v1/statuses/up",
             },
@@ -555,7 +554,7 @@ Returns all possible service statuses
                 "name": "Down",
                 "id": "down",
                 "description": "An explanation of what this status represents",
-                "severity": 1000,
+		"level": "ERROR",
                 "image": "/static/images/status/cross-circle.png",
                 "url": "api/v1/statuses/down",
             },
@@ -574,9 +573,9 @@ name            Required    The name of the status
 
 description     Required    The description of the status
 
-severity        Required    The severity of the status.
-                            Must be a positive integer
-                            greater than zero
+level        	Required    The level of the status.
+			    Must be a values listed in the
+			    Levels resource
 
 image           Required    The filename of the image, with
                             no extension. See the 
@@ -593,7 +592,7 @@ name=Down&description=A%20new%20status&severity=1000&image=cross-circle.png
         "name": "Down",
         "id": "down"
         "description": "A new status",
-        "severity": 1000,
+	"level": "ERROR",
         "image": "cross-circle",
         "url": "/api/v1/statuses/down",
     }
@@ -624,7 +623,7 @@ Returns a status object
         "name": "Down",
         "id": "down",
         "description": "A new status",
-        "level": "NORMAL",
+        "level": "ERROR",
         "image": "/static/images/status/cross-circle.png",
         "url": "/api/v1/statuses/down",
     }
@@ -641,7 +640,7 @@ description     Optional    The description of the status
 
 level           Optional    The level of the status. Must be
                             a string value listed in the
-                            levels resource (see below)
+                            Levels resource (see below)
 
 image           Optional    The filename of the image, with
                             no extension. See the 
@@ -660,7 +659,7 @@ description=A%20new%20status&severity=1010&image=cross-circle.png
         "name": "Down",
         "id": "down",
         "description": "A new status",
-        "level": "NORMAL",
+        "level": "ERROR",
         "image": "/static/images/status/cross-circle.png",
         "url": "/api/v1/statuses/down",
     }
@@ -677,7 +676,7 @@ Delete the given status and return the deleted status
         "name": "Down",
         "id": "down",
         "description": "A new status",
-        "level": "NORMAL",
+        "level": "ERROR",
         "image": "/static/images/status/cross-circle.png",
         "url": "/api/v1/statuses/down",
     }
