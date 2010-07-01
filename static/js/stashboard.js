@@ -59,7 +59,13 @@ stashboard.callback = function(data){
   var img = document.createElement('img');
   img.setAttribute("style", "width: 64px");
   img.setAttribute("src", "http://localhost:8080/images/widget/" + summary + ".png");
-  div.appendChild(img);
+  
+  
+  var a = document.createElement('a');
+  a.setAttribute("style", "text-decoration: none; border: 0;");
+  a.setAttribute("href", "http://localhost:8080/");
+  a.appendChild(img);
+  div.appendChild(a);
   document.body.appendChild(div);
   
   
