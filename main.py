@@ -35,7 +35,6 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 
 import logging
 import wsgiref.handlers
-from firepython.middleware import FirePythonWSGI
 from google.appengine.ext import webapp
 from google.appengine.api import users
 
@@ -44,9 +43,17 @@ from handlers import site, api
 # Log a message each time this module get loaded.
 logging.info('Loading %s, app version = %s',
              __name__, os.getenv('CURRENT_VERSION_ID'))
+           
+if (config.SITE["rich_client"]):  
+    serviceHandler = site.ServiceHandler
+    rootHandler = site.RootHandler
+else:
+    rootHandler = site.BasicRootHandler
+    serviceHandler = site.BasicServiceHandler
 
 ROUTES = [
-    ('/*$', site.RootHandler),
+    ('/*$', rootHandler),
+    ('/debug', site.DebugHandler),
     #('/*[^/]', site.) redirect pages without slashed to pages with slashes
     
     #API
@@ -55,21 +62,23 @@ ROUTES = [
     (r'/api/(.+)/services', api.ServicesListHandler),
     (r'/api/(.+)/services/(.+)/events', api.EventsListHandler),
     (r'/api/(.+)/services/(.+)/events/current', api.CurrentEventHandler),
+    (r'/api/(.+)/services/(.+)/events/calendar', api.EventCalendarHandler),
     (r'/api/(.+)/services/(.+)/events/(.+)', api.EventInstanceHandler),
     (r'/api/(.+)/services/(.+)', api.ServiceInstanceHandler),
     (r'/api/(.+)/statuses', api.StatusesListHandler),
     (r'/api/(.+)/statuses/(.+)', api.StatusInstanceHandler),
     (r'/api/(.+)/status-images', api.ImagesListHandler),
+    (r'/api/(.+)/levels', api.LevelsListHandler),
     (r'/api/.*', api.NotFoundHandler),
     
     #SITE
-    (r'/services/(.+)/(.+)/(.+)/(.+)', site.ServiceHandler),
-    (r'/services/(.+)/(.+)/(.+)', site.ServiceHandler),
-    (r'/services/(.+)/(.+)', site.ServiceHandler),
-    (r'/services/(.+)', site.ServiceHandler),
-    (r'/documentation', site.DocumentationHandler),
-    (r'/profile', site.ProfileHandler),
-    (r'/profile/verify', site.VerifyAccessHandler),
+    (r'/services/(.+)/(.+)/(.+)/(.+)', serviceHandler),
+    (r'/services/(.+)/(.+)/(.+)', serviceHandler),
+    (r'/services/(.+)/(.+)', serviceHandler),
+    (r'/services/(.+)', serviceHandler),
+    (r'/documentation/credentials', site.ProfileHandler),
+    (r'/documentation/verify', site.VerifyAccessHandler),
+    (r'/documentation/(.+)', site.DocumentationHandler),
     
     ('/.*$', site.NotFoundHandler),
     
@@ -78,8 +87,6 @@ ROUTES = [
 
 def main():
     application = webapp.WSGIApplication(ROUTES, debug=config.DEBUG)
-    if users.is_current_user_admin():
-        application = FirePythonWSGI(application)
     wsgiref.handlers.CGIHandler().run(application)
 
 if __name__ == "__main__":

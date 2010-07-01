@@ -31,6 +31,7 @@ h3.date-range {color: #999;}
 }
 
 .frame { padding: 20px;}
+.dialog { display: none; }
 
 #sidebar { float: right; margin: 20px; width: 250px; }
 
@@ -46,23 +47,24 @@ h3.date-range {color: #999;}
 
 #add-service { margin-top: 20px;}
 
-.legend {border: solid 5px rgb(228, 228, 228); width: 100%; margin: 20px 0;}
-.legend tr td:first-child {width: 16px;}
+.legend h4 { color: #999; font-size: 18px; margin: 20px 0 5px 0;}
+.legend table {border: solid 5px rgb(228, 228, 228); width: 100%; margin: 0 0 20px 0;}
+.legend table tr td:first-child {width: 16px;}
 
 
 /* wordpress entries styling - main content column */
-#services table { width: 100%; border-spacing:10; font-size: 1.1em;}
-#services th {text-align: left;font-size: 20px;padding: 10px;border-bottom: 1px solid rgb(228, 228, 228);border-right: 1px solid rgb(228, 228, 228);}
-#services tr {font-size: 16px;}
-#services td {padding: 10px;border-bottom: 1px solid rgb(228, 228, 228);border-right: 1px solid rgb(228, 228, 228);}
-#services .today {background: rgb(228, 228, 228);}
-#services .highlight {background: rgb(247, 247, 247);}
-#services .status, #services .date, #services .today, .delete {text-align: center;}
-#services table a {text-decoration: underline;}
+#webservices table { width: 100%; border-spacing:10; font-size: 1.1em;}
+#webservices th {text-align: left;font-size: 20px;padding: 10px;border-bottom: 1px solid rgb(228, 228, 228);border-right: 1px solid rgb(228, 228, 228);}
+#webservices tr {font-size: 16px;}
+#webservices td {padding: 10px;border-bottom: 1px solid rgb(228, 228, 228);border-right: 1px solid rgb(228, 228, 228);}
+#webservices .today {background: rgb(228, 228, 228);}
+#webservices .highlight {background: rgb(247, 247, 247);}
+#webservices .status, #webservices .date, #webservices .today, .delete {text-align: center;}
+#webservices table a {text-decoration: underline;}
 
-#services .event-log th {font-size: 16px;text-align: center;}
-#services .event-log td {fonst-size: 14px;}
-#services .event-log td:first-child {text-align: center;}
+#webservices .event-log th {font-size: 16px;text-align: center;}
+#webservices .event-log td {fonst-size: 14px;}
+#webservices .event-log td:first-child {text-align: center;}
 .status-header {width: 10%;}
 .time-header {width: 20%;}
 .delete-header {width: 8%;}
@@ -93,7 +95,7 @@ h3.date-range {color: #999;}
 #footer ul {padding: 10px 0px;}
 #footer ul.left { float: left;}
 #footer ul.right { float: right;}
-#footer ul li {display: inline;}   
+#footer ul li {display: inline;}
 
 .dialog label, .dialog textarea, .dialog input 
     { margin: 10px; clear: right;}
@@ -102,18 +104,75 @@ h3.date-range {color: #999;}
     
 .dialog textarea { width: 400px; height: 75px;}
 
+
+
 #delete-service { float: right;}
-#delete-service-modal {display: none;}  
+#delete-service-modal {display: none;}
+
+#documentation { 
+    font-size: 14px;
+}  
+
+#documentation a { color: #4476B5; text-decoration: underline;}
 
 #documentation p { margin: 10px 0px; }
 #documentation h2 { margin: 20px 0 10px 0; }
-#documentation h3 { margin: 10px 0px; font-size: 20px; }
-#documentation h4 { margin: 8px 0px; }
-#documentation h5 { margin: 5px 0px; }
+#documentation h3 { margin: 15px 0px 10px 0; font-size: 24px; color:#555555;}
+#documentation h4 { margin: 10px 0px; font-size: 22px; color: #4476B5;}
+#documentation h5 { margin: 10px 0px; font-size: 16px;}
 
-#documentation blockquote {
+#documentation table {
+    font-size: 12px;
+}
+
+#documentation table td, #documentation table th {
+    padding: 10px;
+    border: 1px solid #555555;
+}
+
+#documentation table td {
+}
+
+#documentation table th {
+    background: #ccc;
+}
+
+#documentation table caption {font-style: italic; text-align: right;}
+
+
+#documentation nav ul {
+    height: 50px; background: #4476b5;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    broder-radius: 10px;
+    margin-bottom: 20px;
+
+}
+
+#documentation nav li {
+    float: left;
+    height: 50px;
+    margin: 0 20px;
+    line-height: 50px;
+}
+
+#documentation nav li a {
+    display:block;
+    font-size:15px;
+    font-weight:bold;
+    text-decoration:none;
+    color: #F3FBEC;
+}
+
+#documentation nav .selected {
+    background:url("../images/sub-nav-selected-arrow.png") no-repeat scroll center bottom transparent;
+}
+
+
+
+#documentation blockquote, pre {
     background: #F0F0F0;
-    margin: 15px 0;
+    margin: 10px 0;
     padding: 10px;
     width:auto;
 }

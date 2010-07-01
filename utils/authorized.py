@@ -32,6 +32,38 @@ from google.appengine.api import users
 from google.appengine.api import oauth
 
 import logging
+import os
+
+def force_ssl(only_admin = False):
+    """
+    A decorator to enforce the use of SSL when accessing certain resources
+    """
+    def wrapper(handler_method):
+        def check_ssl(self, *args, **kwargs):
+            
+            user = users.get_current_user()
+            admin = users.is_current_user_admin()
+            
+            if os.environ.get('SERVER_SOFTWARE', '').startswith('Dev'):
+                
+                handler_method(self, *args, **kwargs)
+                
+            elif self.request.scheme == "https":
+                
+                handler_method(self, *args, **kwargs)
+                
+            elif only_admin and not admin:
+
+                handler_method(self, *args, **kwargs) 
+                
+            else:
+                
+                url = self.request.url.replace("http", "https", 1)
+                logging.info("Redirecting to SSL version: %s" % url)
+                self.redirect(url)
+                
+        return check_ssl
+    return wrapper
 
 def api(role):
     """
@@ -39,6 +71,13 @@ def api(role):
     """
     def wrapper(handler_method):
         def check_login(self, *args, **kwargs):
+            host = self.request.headers.get('host', 'nohost')
+            
+            if self.request.scheme != "https":
+                if not os.environ.get('SERVER_SOFTWARE', '').startswith('Dev'):
+                    self.error(403, "SSL is required for POST / PUT / DELETE requests")
+                    return
+
             try:
                 user = oauth.get_current_user()
                 admin = oauth.is_current_user_admin()
@@ -50,16 +89,16 @@ def api(role):
                 admin = users.is_current_user_admin()
                 
             if not user:
-                logging.debug("Unauthorized API access attempt")
+                logging.error("Unauthorized API access attempt")
                 self.error(403, "Authorization Failure")
             elif role == "admin" and admin:
-                logging.debug("Role is %s so will allow handler", role)
+                logging.info("Role is %s so will allow handler", role)
                 handler_method(self, *args, **kwargs)
             elif user:
-                logging.debug("User not in admin role")
+                logging.error("User not in admin role")
                 self.error(403, "User not in admin role: %s" % role)
             else:
-                logging.debug("Unknown api role: %s", role)
+                logging.error("Unknown api role: %s", role)
                 self.error(403, "Unknown api role: %s" % role)
 
         return check_login

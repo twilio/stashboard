@@ -1,8 +1,125 @@
 {% extends "base.html" %}
 
-{% block js %}
+{% block js_end %}
     <script type="text/javascript">
+      var currentNow = new Date();
+      var d = new Date(currentNow.getTime() - 86400000);
+      var thead = $("#service-list thead tr");
+      
+      for (var i=0; i < 5; i++) {
+        $("<th />", {
+          "class": "date",
+          text: (d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear()
+        }).appendTo(thead);
+        var d = new Date(d.getTime() - 86400000);
+      }
+    
+      var createServiceRow = function(data, fetchStatuses){
+        informationImage = "/images/status/question-white.png";
+                
+        var tr = $('<tr />', {id: data.id});
+        
+        $('<td />').append(
+          $('<a />', {
+            href: 'services/' + data.id,
+            text: data.name
+          })
+        ).appendTo(tr);
+        
+        $('<td />', {"class": "status highlight"}).append(
+          $("<img />", {
+            src: informationImage,
+            alt: "Unknown Status"
+          })
+        ).appendTo(tr);
+        
+        for (var i=0; i < 5; i++) {
+          $("<td />", {"class": "status"}).append(
+            $("<img />", {
+              src: informationImage,
+              alt: "Unknown Status"
+            })
+          ).appendTo(tr);
+        }
+        
+        $("#service-list").fadeIn('fast', function(){    
+          $("#services-body").append(tr);
+        });
+        
+        if (fetchStatuses){
+          
+          $.ajax({ 
+            type: "GET",
+            url: "/api/v1/services/" + data.id + "/events/current",
+            dataType: 'json', 
+            success: function(evt){ 
+              $("#" + data.id + " td.highlight img")
+                .attr("src", evt.status.image);
+              },
+            error: function(){ 
+
+              }
+          });
+          
+          
+          currentDate = new Date(currentNow.getTime() -  86400000);
+          var before = $.datepicker.formatDate("yy-m-d", currentDate);
+          var url = "/api/v1/services/" + data.id + "/events/calendar";
+          url += "?start=" + before + "&days=" + 5;
+          
+          $.ajax({ 
+            type: "GET",
+            url: url,
+            dataType: 'json', 
+            success: function(results){ 
+              
+              for (var i=0; i < results.days.length; i++) {
+                var day = results.days[i];
+                var d = new Date(day.date);
+                var td = $("#" + data.id).children("td").eq(i+2);
+                
+                if (day.summary.level != "NORMAL") {
+                  url = "/services/" + data.id + "/" + d.getUTCFullYear() + "/";
+                  url += (d.getUTCMonth() + 1) + "/" + d.getUTCDate();
+                  
+                  td.html($("<a />", {href: url}).append(
+                    $("<img />",{src: "/images/status/information.png"})));
+                    
+                } else {
+                  td.html($("<img />",{src: day.summary.image}));
+                }
+              }
+              
+            },
+            error: function(){ 
+
+            },
+          });
+          
+        }
+
+      };
+    
       $(document).ready(function(){
+        
+        $.ajax({ 
+          type: "GET",
+          url: "/api/v1/services",
+          dataType: 'json', 
+          success: function(data){ 
+            
+            var services = data.services;
+            
+            for (var i=0; i < services.length; i++) {
+              createServiceRow(services[i], true);
+            }
+            
+            },
+          error: function(){ 
+            
+            }
+          });
+        
         $("#statusBox").click(function(){
           if($(this).is(":checked")){
             $("#submit .status").removeAttr('disabled');
@@ -25,11 +142,11 @@
         
         $("#add-status").click(function(){
           $("#add-status-modal").dialog('open');
-        })
+        });
         
         $("#add-service-modal").dialog({
-              height: 300,
-              width: 450,
+              height: 310,
+              width: 460,
               resizable: false,
               modal: true,
               autoOpen: false,
@@ -46,26 +163,11 @@
                     context: $("#service-list"), 
                     success: function(data){ 
                       $("#add-service-modal").dialog('close');
-                        
-                      //This is kinda ugly
-                      var tr = '<tr><td><a href="services/' + data.id;
-                      tr += '">' + data.name + '</a></td>';
-                      tr += '<td class="status highlight"><img src="/images/status/question-white.png" alt=""></td>';
-                      
-                      for (var i=0; i < 5; i++) {
-                        tr += '<td class="status"><img src="/images/status/question-white.png" alt=""></td>';
-                      };
-                      
-                      tr += '</tr>';
-                      
-                      $("#service-list").fadeIn('fast', function(){    
-                        $("#service-list").children('tbody').append(tr);
-                      });
-                      
+                        createServiceRow(data, false);
                       },
                     error: function(){ 
                       $("#add-service-modal").dialog('close');
-                      },
+                      }
                     });
                     
                 },
@@ -74,120 +176,24 @@
                 }
               }
         });
-        
-        $("#add-status-modal").dialog({
-              height: 500,
-              width: 450,
-              resizable: false,
-              modal: true,
-              autoOpen: false,
-              buttons: {
-                'Create Status': function(){
-                  $.ajax({ 
-                    type: "POST",
-                    url: "/api/v1/statuses",
-                    data: { 
-                      name: $("#status-name").val(), 
-                      description: $("#status-description").val(),
-                      image: $("input[name=status-image]:checked").val(),
-                      severity: $("#status-severity").val()
-                    },
-                    dataType: 'json', 
-                    context: $(".legend").children('tbody'), 
-                    success: function(data){ 
-                      $("#add-status-modal").dialog('close');
-                      var tr = "<tr><td class=\"icon\">";
-                      tr += '<img src="' + data.image + '" ';
-                      tr += 'alt="' + data.name + '"/></td>';
-                      tr += '<td>' + data.description + '</td>';
-                      tr += '<td>' + data.severity + '</td>';
-                      tr += '</tr>';
-                      $(this).append(tr);
-                    },
-                    error: function(){ 
-                      $("#add-status-modal").dialog('close');
-                    },
-                  });
-                    
-                },
-                'Cancel': function(){
-                  $(this).dialog('close');
-                }
-              }
-        });
-        
-        $(".delete-status").live('click', function(event){
-          event.preventDefault();
-          $.ajax({ 
-            type: "DELETE",
-            data: {},
-            url: $(this).attr("href"), 
-            context: $(this).parent().parent(), 
-            success: function(){
-                  $(this).fadeOut('fast', function(){
-                    $(this).remove();
-                  });
-                },
-            error: function(){
-                  alert("CRAP");
-                },
-            });
-        });
-        
-        
+
       });
     </script>
 {% endblock %}
 
 {% block content %}
 
-      <div id="services" class="frame">
+      <div id="webservices" class="frame">
         
           <table id="service-list">
             <thead>
               <tr>
                 <th>Service</th>
                 <th class="today">Today</th>
-              
-                {% for day in past %}
-                  <th class="date">{{ day|date:"N j" }}</th>
-                {% endfor %}
-
             </thead>
-            {% for service in services %}
-              <tr>
-                  <td>
-                    <a href="services/{{service.slug}}">{{ service.name }}
-                  </td>
-                
-                  <td class="status highlight">
-                    <a href="services/{{ service.slug }}">
-                    <img src="{{ service.current_event.status.image_url}}"
-                      alt="{{ service.current_event.name }}"/>
-                    </a>
-                  </td>
-                
-                  {% for date in service.past_five_days %}
-                    <td class="status">
-                      {% if date %}
-                        <a href="services/{{ service.slug }}/{{ date.year}}/{{ date.month }}/{{ date.day }}">
-                          <img src="{{ default_status.image_url}}"
-                                      alt="{{ info_status.name }}"/>
-                          </a>
-                      {% else %}
-                        <img src="{{ default_status.image_url}}"
-                                      alt="{{ default_status.name }}"/>
-                      {% endif %}
-                    </td>
-                  {% endfor %}
-              </tr>
-            {% empty %}
-              <tr>
-                <td colspan="7">
-                  No service information available 
-                </td>
-              </tr>
-            {% endfor %}
+
+            <tbody id="services-body">
+            </tbody>
           </table>
         
         {% if user_is_admin %}

@@ -1,9 +1,51 @@
 from google.appengine.ext import db
 import datetime
+from wsgiref.handlers import format_date_time
+from time import mktime
 from datetime import timedelta
 from datetime import date
 import config
 import urlparse
+
+class Level(object):
+    """
+    A fake db.Model object, just in case we want to actually store things
+    in the future
+    """
+    levels = {
+        "NORMAL": 10,
+        "WARNING": 30,
+        "ERROR": 40,
+        "CRITICAL": 50,
+    }
+    
+    normal  = "NORMAL"
+    warning = "WARNING"
+    critial = "CRITICAL"
+    error   = "ERROR"
+    
+    @staticmethod
+    def all():
+        llist = []
+        for k in Level.levels.keys():
+            llist.append((k, Level.levels[k]))
+        
+        return map(lambda x: x[0], sorted(llist, key=lambda x: x[1]))
+        
+    @staticmethod
+    def get_severity(level):
+        try:
+            return Level.levels[level]
+        except:
+            return False
+            
+    @staticmethod
+    def get_level(severity):
+        for k in Level.levels.keys():
+            if Level.levels[k] == severity:
+                return k
+        return False
+     
 
 class Service(db.Model):
     """A service to track
@@ -20,8 +62,43 @@ class Service(db.Model):
         
     def current_event(self):
         return self.events.order('-start').get()
+
+    #Specialty function for front page
+    def last_five_days(self):
         
-    def critical_incident(self, day):
+        
+        lowest = Status.default()
+        severity = lowest.severity
+        
+        yesterday = date.today() - timedelta(days=1)
+        ago = yesterday - timedelta(days=5)
+        
+        events = self.events.filter('start >', ago) \
+            .filter('start <', yesterday).fetch(100)
+        
+        stats = {}
+        
+        for i in range(5):
+            stats[yesterday.day] = {
+                "image": lowest.image,
+                "day": yesterday,
+            }
+            yesterday = yesterday - timedelta(days=1)
+        
+        for event in events:
+            if event.status.severity > severity:
+                stats[event.start.day]["image"] = "information"
+                stats[event.start.day]["information"] = True
+        results = []
+        for k in stats.keys():
+            results.append(stats[k])
+            
+        results.reverse()
+        
+        return results
+        
+        
+    def events_for_day(self, day):
         """ Return the largest seveirty (of events) for a given day. If no 
         events occured, return the lowest severity rating.
         
@@ -32,29 +109,12 @@ class Service(db.Model):
         
         next_day = day + timedelta(days=1)
         
-        events = self.events.filter('start >', day) \
+        return self.events.filter('start >', day) \
             .filter('start <', next_day).fetch(40)
             
-        if events:
-            levels = map(lambda x: x.status.severity, events)
-            lowest = Status.lowest_severity()
-            return max(levels) > lowest.severity
-        else:
-            return False 
-        
-        
-    def past_five_days(self):
-        days = []
-        day = date.today()
-        for i in range(5):
-            day = day - timedelta(days=1)
-            if self.critical_incident(day):
-                days.append(day)
-            else:
-                days.append(None)
-            
-        return days
-
+    def compare(self, other_status):
+        return 0
+    
     slug = db.StringProperty(required=True)
     name = db.StringProperty(required=True)
     description = db.StringProperty(required=True)
@@ -73,6 +133,12 @@ class Service(db.Model):
         m["id"] = str(self.slug)
         m["description"] = str(self.description)
         m["url"] = base_url + self.resource_url()
+        
+        event = self.current_event()
+        if event:
+            m["current-event"] = event.rest(base_url)
+        else:
+            m["current-event"] = None
 
         return m
 
@@ -92,21 +158,12 @@ class Status(db.Model):
         return Status.all().filter('slug = ', status_slug).get()
         
     @staticmethod
-    def get_info():
-        """ The info status. We don't make this a real status object because 
-            it should not have a severity ranking.
+    def default():
         """
-        info = {}
-        info["name"] = "Information Available"
-        info["image"] = "information.png"
-        info["slug"] = "information-available"
-        info["description"] = "There is information available"
-        info["severity"] = -1
-        return info
-        
-    @staticmethod
-    def lowest_severity():
-        return Status.all().order('severity').get()
+        Return the first status with a NORMAL level.
+        """
+        normal = Level.get_severity(Level.normal)
+        return Status.all().filter('severity == ', normal).get()
         
     name = db.StringProperty(required=True)
     slug = db.StringProperty(required=True)
@@ -118,16 +175,16 @@ class Status(db.Model):
         return "/images/status/" + unicode(self.image) + ".png"
         
     def resource_url(self):
-        return "/statuses/" + self.name
+        return "/statuses/" + str(self.slug)
         
     def rest(self, base_url):
         """ Return a Python object representing this model"""
 
         m = {}
         m["name"] = str(self.name)
-        m["slug"] = str(self.slug)
+        m["id"] = str(self.slug)
         m["description"] = str(self.description)
-        m["severity"] = str(self.severity)
+        m["level"] = Level.get_level(int(self.severity))
         m["url"] = base_url + self.resource_url()
         # This link shouldn't be hardcoded
         
@@ -138,11 +195,7 @@ class Status(db.Model):
     
 
 class Event(db.Model):
-    
-    @staticmethod
-    def current(service):
-        return Event.all().filter('service =', service).order('-start').get()
-    
+
     start = db.DateTimeProperty(required=True, auto_now_add=True)
     status = db.ReferenceProperty(Status, required=True)
     message = db.TextProperty(required=True)
@@ -166,8 +219,8 @@ class Event(db.Model):
         m = {}
         m["sid"] = self.sid()
 
-        start_time = self.start.replace(microsecond=0)
-        m["timestamp"] = start_time.isoformat()
+        stamp = mktime(self.start.timetuple())
+        m["timestamp"] = format_date_time(stamp)
         
         m["status"] = self.status.rest(base_url)
         m["message"] = str(self.message)

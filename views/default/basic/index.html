@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+      <div id="webservices" class="frame">
+        
+          <table id="service-list">
+            <thead>
+              <tr>
+                <th>Service</th>
+                <th class="today">Today</th>
+              
+                {% for day in past %}
+                  <th class="date">{{ day|date:"N j" }}</th>
+                {% endfor %}
+
+            </thead>
+
+            <tbody id="services-body">
+              {% for service in services %}
+                <tr>
+                  <td>
+                    <a href="/services/{{ service.slug }}">
+                      {{ service.name }} </a>
+                  </td>
+                  
+                  <td class="status highlight">
+                    <img src="/images/status/{{ service.current_event.status.image }}.png"
+                      alt="{{ service.current_event.name }}"/>
+                  </td>
+                  
+                  {% for status in service.last_five_days %}
+                    <td class="status">
+                      {% if status.information %}
+                      <a href="/services/{{service.slug}}/{{ status.day|date:"Y/n/j" }}">
+                      {% endif %}
+                      
+                      <img src="/images/status/{{ status.image }}.png"
+                        alt="{{ status.image }}"/>
+                        
+                      {% if status.information %} </a> {% endif %}
+                    </td>
+                  {% endfor %}
+                      
+                </tr>
+                
+              {% endfor %}
+              
+            </tbody>
+          </table>
+        
+        {% include "_legend.html" %}
+        
+      </div>
+      
+{% endblock %}
+

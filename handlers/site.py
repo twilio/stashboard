@@ -48,7 +48,6 @@ import cgi
 import urllib
 import logging
 import urlparse
-
 from google.appengine.ext import webapp
 from google.appengine.ext import db
 from google.appengine.api import users
@@ -57,8 +56,8 @@ from google.appengine.api import oauth
 import oauth2 as oauth
 from handlers import restful
 from utils import authorized
-from utils import sanitizer
 from models import Status, Service, Event, Profile, AuthRequest
+
 import config
 
 def default_template_data():
@@ -69,27 +68,37 @@ def default_template_data():
     else:
         greeting = users.create_login_url("/")
         
+    
+        
     status_images = [
-        "clock",
-        "bug",
-        "broom",
-        "cross-circle",
-        "exclamation",
-        "flag",
-        "heart",
-        "hard-hat",
-        "information",
-        "lock",
-        "plug",
-        "question",
-        "traffic-cone",
-        "wrench",
+        [
+            "tick-circle",
+            "cross-circle",
+            "exclamation",
+            "wrench",
+            "flag",
+        ],
+        [
+            "clock",
+            "heart",
+            "hard-hat",
+            "information",
+            "lock",
+        ],
+        [
+            "plug",
+            "question",
+            "traffic-cone",
+            "bug",
+            "broom",
+        ],
     ]
     
     data = {
         "user": user,
         "user_is_admin": users.is_current_user_admin(),
         "login_link": greeting, 
+        'common_statuses': status_images,
     }
     
     return data
@@ -118,6 +127,8 @@ class UnauthorizedHandler(webapp.RequestHandler):
         #self.render(template_data, 'unathorized.html')
 
 class RootHandler(restful.Controller):
+    
+    @authorized.force_ssl(only_admin=True)
     def get(self):
         user = users.get_current_user()
         logging.debug("RootHandler#get")
@@ -126,17 +137,13 @@ class RootHandler(restful.Controller):
         q.order("name")
         
         td = default_template_data()
-        td["services"] = q.fetch(10)
         td["past"] = get_past_days(5)
-        td["all_statuses"] = Status.all().order('severity')
-        td["default_status"] = Status.lowest_severity()
-        td["info_status"] = Status.get_info()
-        td["recent_events"] = Event.all().order('-start').fetch(10)
 
         self.render(td, 'index.html')
         
 class ServiceHandler(restful.Controller):
         
+    @authorized.force_ssl(only_admin=True)
     def get(self, service_slug, year=None, month=None, day=None):
         user = users.get_current_user()
         logging.debug("ServiceHandler#get")
@@ -170,18 +177,112 @@ class ServiceHandler(restful.Controller):
             
         td = default_template_data()
         td["service"] = service_slug
+        td["start_date"] = start_date
+        td["end_date"] = end_date
 
         self.render(td, 'service.html')
         
+class DebugHandler(restful.Controller):
+    
+    @authorized.force_ssl()
+    def get(self):
+        logging.debug("DebugHandler %s", self.request.scheme)
+        td = default_template_data()
+        self.render(td,'base.html')
+
+        
+class BasicRootHandler(restful.Controller):
+    def get(self):
+        user = users.get_current_user()
+        logging.debug("BasicRootHandler#get")
+
+        q = Service.all()
+        q.order("name")
+        services = q.fetch(100)
+        
+        p = Status.all()
+        p.order("severity")
+        
+        past = get_past_days(5)
+        
+        for service in services:
+            events = service.events.filter('start <=', past[0]).filter('start >=', past[4]).fetch(100)
+
+        td = default_template_data()
+        td["services"] = q.fetch(100)
+        td["statuses"] = p.fetch(100)
+        td["past"] = past
+
+        self.render(td, 'basic','index.html')
+
+class BasicServiceHandler(restful.Controller):
+
+    def get(self, service_slug, year=None, month=None, day=None):
+        user = users.get_current_user()
+        logging.debug("BasicServiceHandler#get")
+
+        service = Service.get_by_slug(service_slug)
+        
+
+        if not service:
+            self.render({}, "404.html")
+            return
+
+        events = service.events
+        show_admin = False
+
+        try: 
+            if day:
+                start_date = date(int(year),int(month),int(day))
+                end_date = start_date + timedelta(days=1)
+            elif month:
+                start_date = date(int(year),int(month),1)
+                days = calendar.monthrange(start_date.year, start_date.month)[1]
+                end_date = start_date + timedelta(days=days)
+            elif year:
+                start_date = date(int(year),1,1)
+                end_date = start_date + timedelta(days=365)
+            else:
+                start_date = None
+                end_date = None
+                show_admin = True
+        except ValueError:
+            self.render({},'404.html')
+            return
+            
+        if start_date and end_date:
+            events.filter('start > ', start_date).filter('start <', end_date)
+
+        td = default_template_data()
+        td["service"] = service
+        td["events"] = events.fetch(100)
+        td["start_date"] = start_date
+        td["end_date"] = end_date
+
+        self.render(td, 'basic','service.html')
+        
 class DocumentationHandler(restful.Controller):
     
-    def get(self):
+    def get(self, page):
         td = default_template_data()
-        self.render(td, 'documentation.html')
+        
+        if page == "overview":
+            td["overview_selected"] = True
+            self.render(td, 'overview.html')
+        elif page == "rest":
+            td["rest_selected"] = True
+            self.render(td, 'restapi.html')
+        elif page == "examples":
+            td["example_selected"] = True
+            self.render(td, 'examples.html')
+        else:
+            self.render({},'404.html')
+            
         
             
 class VerifyAccessHandler(restful.Controller):
     
+    @authorized.force_ssl()
     @authorized.role("admin")
     def get(self):
         oauth_token = self.request.get('oauth_token', default_value=None)
@@ -216,66 +317,76 @@ class VerifyAccessHandler(restful.Controller):
                                       secret=access_token['oauth_token_secret'])
                     profile.put()
                 
-        self.redirect("/profile")
+        self.redirect("/documentation/credentials")
+        
+        
+
 
         
             
 class ProfileHandler(restful.Controller):
     
-    @authorized.role("admin")
+    @authorized.force_ssl()
     def get(self):
-        user = users.get_current_user()
         
-        profile = Profile.all().filter('owner = ', user).get()
+        consumer_key = 'anonymous'
+        consumer_secret = 'anonymous'
         
         td = default_template_data()
+        td["logged_in"] = False
+        td["credentials_selected"] = True
+        td["consumer_key"] = consumer_key
         
-        if profile:
+        user = users.get_current_user()
+        
+        if user: 
             
-            td["user_is_authorized"] = True
-            td["profile"] = profile
-            
-        else:
-            
-            host = self.request.headers.get('host', 'nohost')
-
-            consumer_key = 'anonymous'
-            consumer_secret = 'anonymous'
-            
-            callback = 'http://%s/profile/verify' % host
-
-            request_token_url = 'https://%s/_ah/OAuthGetRequestToken?oauth_callback=%s' % (host, callback)
-            authorize_url = 'https://%s/_ah/OAuthAuthorizeToken' % host
-
-            consumer = oauth.Consumer(consumer_key, consumer_secret)
-            client = oauth.Client(consumer)
-
-            # Step 1: Get a request token. This is a temporary token that is used for 
-            # having the user authorize an access token and to sign the request to obtain 
-            # said access token.
-            
-            td["user_is_authorized"] = False
-            
-            if "localhost" not in host:
+            td["logged_in"] = users.is_current_user_admin()
+            profile = Profile.all().filter('owner = ', user).get()
                 
-                resp, content = client.request(request_token_url, "GET")
+            if profile:
             
-                if resp['status'] == '200':
+                td["user_is_authorized"] = True
+                td["profile"] = profile
+            
+            else:
+            
+                host = self.request.headers.get('host', 'nohost')
+            
+                callback = 'http://%s/documentation/verify' % host
 
-                    request_token = dict(cgi.parse_qsl(content))
+                request_token_url = 'https://%s/_ah/OAuthGetRequestToken?oauth_callback=%s' % (host, callback)
+                authorize_url = 'https://%s/_ah/OAuthAuthorizeToken' % host
+
+                consumer = oauth.Consumer(consumer_key, consumer_secret)
+                client = oauth.Client(consumer)
+
+                # Step 1: Get a request token. This is a temporary token that is used for 
+                # having the user authorize an access token and to sign the request to obtain 
+                # said access token.
+            
+                td["user_is_authorized"] = False
+            
+                if "localhost" not in host:
+                
+                    resp, content = client.request(request_token_url, "GET")
+            
+                    if resp['status'] == '200':
+
+                        request_token = dict(cgi.parse_qsl(content))
                     
-                    authr = AuthRequest.all().filter("owner =", user).get()
+                        authr = AuthRequest.all().filter("owner =", user).get()
                     
-                    if authr:
-                        authr.request_secret = request_token['oauth_token_secret']
-                    else:
-                        authr = AuthRequest(owner=user,
-                                request_secret=request_token['oauth_token_secret'])
+                        if authr:
+                            authr.request_secret = request_token['oauth_token_secret']
+                        else:
+                            authr = AuthRequest(owner=user,
+                                    request_secret=request_token['oauth_token_secret'])
                                 
-                    authr.put()
+                        authr.put()
                 
-                    td["oauth_url"] = "%s?oauth_token=%s" % (authorize_url, request_token['oauth_token'])
+                        td["oauth_url"] = "%s?oauth_token=%s" % (authorize_url, request_token['oauth_token'])
                 
-        self.render(td, 'profile.html')
+        self.render(td, 'credentials.html')
 
         

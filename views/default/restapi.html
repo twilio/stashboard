@@ -1,0 +1,1324 @@
+{% extends "documentation.html" %}
+{% block document %}
+<div id="rest-api-basics"
+><h2
+  >REST API Basics</h2
+  ><p
+  >The REST API always returns a JSON object. A list resource is represented as a object with a &quot;resource-name&quot; attribute</p
+  ><pre
+  ><code
+    >{
+    &quot;resource-name&quot;: [&quot;List&quot;, &quot;of&quot;, &quot;objects&quot;]
+}
+</code
+    ></pre
+  ><div id="authentication"
+  ><h3
+    >Authentication</h3
+    ><p
+    >No authentication is needed to access resources via HTTP GET; however, all other methods require authentication. Authentication via OAuth is covered in the <a href="/documentation/authentication"
+      >&quot;Authentication section&quot;</a
+      ></p
+    ></div
+  ><div id="base-url"
+  ><h3
+    >Base URL</h3
+    ><p
+    >All URLs referenced in this document, including sample API return objects, have the following base URL:</p
+    ><pre
+    ><code
+      >http[s]://status.your.domain.com
+</code
+      ></pre
+    ></div
+  ></div
+><div id="services-list-resource"
+><h2
+  >Services List Resource</h2
+  ><p
+  >The Services List resource represents all web services currently tracked via StashBoard. The resources also allows for the creation of new, trackable web services.</p
+  ><div id="resource-url"
+  ><h3
+    >Resource URL</h3
+    ><blockquote
+    ><p
+      >/api/v1/services</p
+      ></blockquote
+    ></div
+  ><div id="resource-properties"
+  ><h3
+    >Resource Properties</h3
+    ><table
+    ><caption
+      >Service resource properties</caption
+      ><col width="20%"
+       /><col width="56%"
+       /><thead
+      ><tr class="header"
+	><th align="left"
+	  >Property</th
+	  ><th align="left"
+	  >Description</th
+	  ></tr
+	></thead
+      ><tbody
+      ><tr class="odd"
+	><td align="left"
+	  >id</td
+	  ><td align="left"
+	  >The unique identifier by which to identify the service</td
+	  ></tr
+	><tr class="even"
+	><td align="left"
+	  >name</td
+	  ><td align="left"
+	  >The name of the service, defined by the user</td
+	  ></tr
+	><tr class="odd"
+	><td align="left"
+	  >description</td
+	  ><td align="left"
+	  >The description of the web service</td
+	  ></tr
+	><tr class="even"
+	><td align="left"
+	  >current-event</td
+	  ><td align="left"
+	  >The current event for the service</td
+	  ></tr
+	><tr class="odd"
+	><td align="left"
+	  >url</td
+	  ><td align="left"
+	  >The URL of the specific service resource</td
+	  ></tr
+	></tbody
+      ></table
+    ></div
+  ><div id="http-methods"
+  ><h3
+    >HTTP Methods</h3
+    ><div id="get"
+    ><h4
+      >GET</h4
+      ><p
+      >Returns a list of all current services tracked by StashBoard</p
+      ><div id="example"
+      ><h5
+	>Example</h5
+	><blockquote
+	><p
+	  >GET /api/v1/services HTTP/1.1</p
+	  ></blockquote
+	><pre
+	><code
+	  >{
+    &quot;services&quot;: [
+        {
+            &quot;name&quot;: &quot;Example Foo&quot;,
+            &quot;id&quot;: &quot;example-foo&quot;,
+            &quot;description&quot;: &quot;An explanation of this service&quot;
+            &quot;url&quot;: &quot;/api/v1/services/example-foo&quot;,
+            &quot;current-event&quot;: {
+                'message': 'What an event!',
+                'sid': 'ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M',
+                'status': {
+                    'description': 'Hey, dude',
+                    'id': 'up',
+                    'image': '/images/status/tick-circle.png',
+                    'level': 'NORMAL',
+                    'name': 'Up',
+                    'url': '/statuses/up'
+        },
+                'timestamp': 'Mon, 28 Jun 2010 22:17:06 GMT',
+                'url': '/services/twilio/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M'},
+
+        },
+        {
+            &quot;name&quot;: &quot;Example Bar&quot;,
+            &quot;id&quot;: &quot;example-bar&quot;,
+            &quot;description&quot;: &quot;An explanation of this service&quot;
+            &quot;url&quot;: &quot;/api/v1/services/example-bar&quot;,
+            &quot;current-event&quot;: null,
+        }
+    ]
+}
+</code
+	  ></pre
+	></div
+      ></div
+    ><div id="post"
+    ><h4
+      >POST</h4
+      ><p
+      >Creates a new service (or updates an existing service) and returns the new service object.</p
+      ><table
+      ><caption
+	>Services List POST parameters</caption
+	><col width="20%"
+	 /><col width="15%"
+	 /><col width="40%"
+	 /><thead
+	><tr class="header"
+	  ><th align="left"
+	    >Param</th
+	    ><th align="left"
+	    >Optional</th
+	    ><th align="left"
+	    >Description</th
+	    ></tr
+	  ></thead
+	><tbody
+	><tr class="odd"
+	  ><td align="left"
+	    >name</td
+	    ><td align="left"
+	    >Required</td
+	    ><td align="left"
+	    >Name of the service</td
+	    ></tr
+	  ><tr class="even"
+	  ><td align="left"
+	    >description</td
+	    ><td align="left"
+	    >Required</td
+	    ><td align="left"
+	    >Description of service</td
+	    ></tr
+	  ></tbody
+	></table
+      ><div id="example-1"
+      ><h5
+	>Example</h5
+	><blockquote
+	><p
+	  >POST /api/v1/services HTTP/1.1 name=New%20Service&amp;description=A%20great%20service</p
+	  ></blockquote
+	><pre
+	><code
+	  >{
+    &quot;name&quot;: &quot;New Service&quot;,
+    &quot;id&quot;: &quot;new-service&quot;,
+    &quot;description&quot;: &quot;A great service&quot;
+    &quot;url&quot;: &quot;/api/v1/services/new-service&quot;,
+    &quot;current-event&quot;: null,
+}
+</code
+	  ></pre
+	></div
+      ></div
+    ></div
+  ></div
+><div id="service-instance-resource"
+><h2
+  >Service Instance Resource</h2
+  ><p
+  >The Service Instance resources represents an individual web service tracked by StashBoard</p
+  ><div id="resource-url-1"
+  ><h3
+    >Resource Url</h3
+    ><blockquote
+    ><p
+      >/api/v1/services/{service}</p
+      ></blockquote
+    ></div
+  ><div id="http-methods-1"
+  ><h3
+    >HTTP Methods</h3
+    ><div id="get-1"
+    ><h4
+      >GET</h4
+      ><p
+      >Returns a service object</p
+      ><div id="example-2"
+      ><h5
+	>Example</h5
+	><blockquote
+	><p
+	  >GET /api/v1/services/{service} HTTP/1.1</p
+	  ></blockquote
+	><pre
+	><code
+	  >{
+    &quot;name&quot;: &quot;Example Service&quot;,
+    &quot;id&quot;: &quot;example-service&quot;,
+    &quot;description&quot;: &quot;An explanation of what this service represents&quot;
+    &quot;url&quot;: &quot;/api/v1/services/example-service&quot;,
+    &quot;current-event&quot;: null,
+}
+</code
+	  ></pre
+	></div
+      ></div
+    ><div id="post-1"
+    ><h4
+      >POST</h4
+      ><p
+      >Updates a service's description and returns the updated service object.</p
+      ><table
+      ><caption
+	>Service Instance POST parameters</caption
+	><col width="20%"
+	 /><col width="15%"
+	 /><col width="40%"
+	 /><thead
+	><tr class="header"
+	  ><th align="left"
+	    >Param</th
+	    ><th align="left"
+	    >Optional</th
+	    ><th align="left"
+	    >Description</th
+	    ></tr
+	  ></thead
+	><tbody
+	><tr class="odd"
+	  ><td align="left"
+	    >name</td
+	    ><td align="left"
+	    >Optional</td
+	    ><td align="left"
+	    >Name of the service</td
+	    ></tr
+	  ><tr class="even"
+	  ><td align="left"
+	    >description</td
+	    ><td align="left"
+	    >Optional</td
+	    ><td align="left"
+	    >Description of service</td
+	    ></tr
+	  ></tbody
+	></table
+      ><div id="example-3"
+      ><h5
+	>Example</h5
+	><blockquote
+	><p
+	  >POST /api/v1/services/{service} description=System%20is%20now%20operational</p
+	  ></blockquote
+	><pre
+	><code
+	  >{
+    &quot;name&quot;: &quot;Example Service&quot;,
+    &quot;id&quot;: &quot;example-service&quot;,
+    &quot;description&quot;: &quot;System is now operational&quot;,
+    &quot;url&quot;: &quot;/api/v1/services/example-service&quot;,
+    &quot;current-event&quot;: null,
+}
+</code
+	  ></pre
+	></div
+      ></div
+    ></div
+  ><div id="delete"
+  ><h3
+    >DELETE</h3
+    ><p
+    >Deletes a service and returns the deleted service object</p
+    ><div id="example-4"
+    ><h4
+      >Example</h4
+      ><blockquote
+      ><p
+	>DELETE /api/v1/services/{service} HTTP/1.1</p
+	></blockquote
+      ><pre
+      ><code
+	>{
+    &quot;name&quot;: &quot;Example Service&quot;,
+    &quot;id&quot;: &quot;example-service&quot;,
+    &quot;description&quot;: &quot;System is now operational&quot;,
+    &quot;url&quot;: &quot;/api/v1/services/example-service&quot;,
+    &quot;current-event&quot;: null,
+}
+</code
+	></pre
+      ></div
+    ></div
+  ></div
+><div id="events-list-resource"
+><h2
+  >Events List Resource</h2
+  ><p
+  >The Events List resource represents all event associated with a given service</p
+  ><div id="resource-url-2"
+  ><h3
+    >Resource URL</h3
+    ><blockquote
+    ><p
+      >/api/v1/services/{service}/events</p
+      ></blockquote
+    ></div
+  ><div id="properties"
+  ><h3
+    >Properties</h3
+    ><table
+    ><caption
+      >Event resource properties</caption
+      ><col width="20%"
+       /><col width="56%"
+       /><thead
+      ><tr class="header"
+	><th align="left"
+	  >Property</th
+	  ><th align="left"
+	  >Description</th
+	  ></tr
+	></thead
+      ><tbody
+      ><tr class="odd"
+	><td align="left"
+	  >sid</td
+	  ><td align="left"
+	  >The unique identifier by which to identify the event</td
+	  ></tr
+	><tr class="even"
+	><td align="left"
+	  >message</td
+	  ><td align="left"
+	  >The message associated with this event</td
+	  ></tr
+	><tr class="odd"
+	><td align="left"
+	  >timestamp</td
+	  ><td align="left"
+	  >The time at which this event occurred, given in RFC 1132 format.</td
+	  ></tr
+	><tr class="even"
+	><td align="left"
+	  >url</td
+	  ><td align="left"
+	  >The URL of the specific event resource</td
+	  ></tr
+	><tr class="odd"
+	><td align="left"
+	  >status</td
+	  ><td align="left"
+	  >The status of this event, as described by the Statuses resource</td
+	  ></tr
+	></tbody
+      ></table
+    ></div
+  ><div id="http-methods-2"
+  ><h3
+    >HTTP Methods</h3
+    ><div id="get-2"
+    ><h4
+      >GET</h4
+      ><p
+      >Returns all events associated with a given service in reverse chronological order.</p
+      ><div id="example-5"
+      ><h5
+	>Example</h5
+	><blockquote
+	><p
+	  >GET /api/v1/services/{service}/events HTTP/1.1</p
+	  ></blockquote
+	><pre
+	><code
+	  >{
+    &quot;events&quot;: [
+        {
+            &quot;timestamp&quot;: &quot;Mon, 28 Jun 2010 22:17:06 GMT&quot;,
+            &quot;message&quot;: &quot;Problem fixed&quot;, 
+            &quot;sid&quot;: &quot;ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GBAM&quot;,
+            &quot;url&quot;: &quot;/api/v1/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd2&quot;,
+            &quot;status&quot;: {
+                &quot;id&quot;: &quot;down&quot;,
+                &quot;name&quot;: &quot;Down&quot;,
+                &quot;description&quot;: &quot;An explanation of what this status represents&quot;,
+                &quot;level&quot;: &quot;ERROR&quot;,
+                &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
+                &quot;url&quot;: &quot;/api/v1/statuses/down&quot;,
+            },
+        }, 
+        {
+            &quot;timestamp&quot;: &quot;Mon, 28 Jun 2010 22:18:06 GMT&quot;,
+            &quot;message&quot;: &quot;Might be up&quot;, 
+            &quot;sid&quot;: &quot;ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M&quot;,
+            &quot;url&quot;: &quot;/api/v1/services/example-service/events/ahJpc215d2Vic...&quot;
+            &quot;status&quot;: {
+                &quot;id&quot;: &quot;down&quot;,
+                &quot;name&quot;: &quot;Down&quot;,
+                &quot;description&quot;: &quot;An explanation of what this status represents&quot;,
+                &quot;level&quot;: &quot;ERROR&quot;,
+                &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
+                &quot;url&quot;: &quot;/api/v1/statuses/down&quot;,
+            },
+        }
+    ]
+}
+</code
+	  ></pre
+	></div
+      ></div
+    ><div id="post-2"
+    ><h4
+      >POST</h4
+      ><p
+      >Creates a new event for the given service and returns the newly created event object</p
+      ><table
+      ><caption
+	>Events List POST parameters</caption
+	><col width="15%"
+	 /><col width="15%"
+	 /><col width="40%"
+	 /><thead
+	><tr class="header"
+	  ><th align="left"
+	    >Param</th
+	    ><th align="left"
+	    >Optional</th
+	    ><th align="left"
+	    >Description</th
+	    ></tr
+	  ></thead
+	><tbody
+	><tr class="odd"
+	  ><td align="left"
+	    >status</td
+	    ><td align="left"
+	    >Required</td
+	    ><td align="left"
+	    >The system status for the event. This must be a valid system status identifier found in the Statuses List resource</td
+	    ></tr
+	  ><tr class="even"
+	  ><td align="left"
+	    >message</td
+	    ><td align="left"
+	    >Required</td
+	    ><td align="left"
+	    >The message for the event</td
+	    ></tr
+	  ></tbody
+	></table
+      ><div id="example-6"
+      ><h5
+	>Example</h5
+	><blockquote
+	><p
+	  >POST /api/v1/services/{service}/events HTTP/1.1 status=AVAILABLE&amp;message=System%20is%20now%20operational</p
+	  ></blockquote
+	><pre
+	><code
+	  >{
+    &quot;timestamp&quot;: &quot;Mon, 28 Jun 2010 22:18:06 GMT&quot;
+    &quot;message&quot;: &quot;Might be up&quot;, 
+    &quot;sid&quot;: &quot;ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M&quot;,
+    &quot;url&quot;: &quot;/api/v1/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M&quot;,
+    &quot;status&quot;: {
+        &quot;id&quot;: &quot;down&quot;,
+        &quot;name&quot;: &quot;Down&quot;,
+        &quot;description&quot;: &quot;An explanation of what this status represents&quot;,
+        &quot;level&quot;: &quot;ERROR&quot;,
+        &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
+        &quot;url&quot;: &quot;/api/v1/statuses/down&quot;,
+    },
+}
+</code
+	  ></pre
+	></div
+      ></div
+    ><div id="put"
+    ><h4
+      >PUT</h4
+      ><p
+      >Not supported</p
+      ></div
+    ><div id="delete-1"
+    ><h4
+      >DELETE</h4
+      ><p
+      >Not supported</p
+      ></div
+    ></div
+  ><div id="url-filtering"
+  ><h3
+    >URL Filtering</h3
+    ><p
+    >The Events List resource also supports filtering events via dates. To filter events, place on of the following options into the query string for a GET request</p
+    ><table
+    ><caption
+      >Events List URL Filtering Options</caption
+      ><col width="15%"
+       /><col width="40%"
+       /><thead
+      ><tr class="header"
+	><th align="left"
+	  >Option</th
+	  ><th align="left"
+	  >Description</th
+	  ></tr
+	></thead
+      ><tbody
+      ><tr class="odd"
+	><td align="left"
+	  >before</td
+	  ><td align="left"
+	  >Only show events before this date. Must be in the format YYYY-MM-DD</td
+	  ></tr
+	><tr class="even"
+	><td align="left"
+	  >after</td
+	  ><td align="left"
+	  >Only show events after this date. Must be in the format YYYY-MM-DD</td
+	  ></tr
+	></tbody
+      ></table
+    ><div id="example-7"
+    ><h5
+      >Example</h5
+      ><blockquote
+      ><p
+	>GET /api/v1/services/{service}/events?before=2010-06-10 HTTP/1.1</p
+	></blockquote
+      ><p
+      >would return all events before June 6, 2010.</p
+      ><p
+      >Similarly, both &quot;before&quot; and &quot;after&quot; can be used to create date ranges</p
+      ><blockquote
+      ><p
+	>GET /api/v1/services/{service}/events?before=2010-06-17&amp;after=2010-06-01 HTTP/1.1</p
+	></blockquote
+      ><p
+      >would return all events between June 6, 2010 and June 17, 2010</p
+      ></div
+    ></div
+  ></div
+><div id="current-service-event"
+><h2
+  >Current Service Event</h2
+  ><p
+  >The Current Service Event resource simply returns the current event for a given service.</p
+  ><div id="resource-url-3"
+  ><h3
+    >Resource Url</h3
+    ><blockquote
+    ><p
+      >/api/v1/services/{service}/events/current</p
+      ></blockquote
+    ></div
+  ><div id="get-3"
+  ><h3
+    >GET</h3
+    ><p
+    >Returns the current event for a given service.</p
+    ><div id="example-8"
+    ><h4
+      >Example</h4
+      ><blockquote
+      ><p
+	>GET /api/v1/services/{service}/events/current HTTP/1.1</p
+	></blockquote
+      ><pre
+      ><code
+	>{
+    &quot;timestamp&quot;: &quot;Mon, 28 Jun 2010 22:17:06 GMT&quot;,
+    &quot;message&quot;: &quot;Might be up&quot;, 
+    &quot;sid&quot;: &quot;ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M&quot;,
+    &quot;url&quot;: &quot;/api/v1/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M&quot;,
+    &quot;status&quot;: {
+        &quot;id&quot;: &quot;down&quot;,
+        &quot;name&quot;: &quot;Down&quot;,
+        &quot;description&quot;: &quot;An explanation of what this status represents&quot;,
+        &quot;level&quot;: &quot;ERROR&quot;,
+        &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
+        &quot;url&quot;: &quot;/api/v1/statuses/down&quot;,
+    },
+}
+</code
+	></pre
+      ></div
+    ></div
+  ><div id="post-put"
+  ><h3
+    >POST / PUT</h3
+    ><p
+    >Not supported</p
+    ></div
+  ><div id="delete-2"
+  ><h3
+    >DELETE</h3
+    ><p
+    >Not supported</p
+    ></div
+  ></div
+><div id="event-instance-resource"
+><h2
+  >Event Instance Resource</h2
+  ><p
+  >The Event Instance resource represents an individual event for a given service.</p
+  ><div id="resource-url-4"
+  ><h3
+    >Resource URL</h3
+    ><blockquote
+    ><p
+      >/services/{service}/events/{sid}</p
+      ></blockquote
+    ></div
+  ><div id="http-methods-3"
+  ><h3
+    >HTTP Methods</h3
+    ><div id="get-4"
+    ><h4
+      >GET</h4
+      ><p
+      >Returns a service event with the given event sid. The event's status object is also returned as well.</p
+      ><div id="example-9"
+      ><h5
+	>Example</h5
+	><blockquote
+	><p
+	  >GET /api/v1/services/{service}/events/{sid} HTTP/1.1</p
+	  ></blockquote
+	><pre
+	><code
+	  >{
+    &quot;timestamp&quot;: &quot;Mon, 28 Jun 2010 22:17:06 GMT&quot;,
+    &quot;message&quot;: &quot;Might be up&quot;, 
+    &quot;sid&quot;: &quot;ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M&quot;,
+    &quot;url&quot;: &quot;/api/v1/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M&quot;,
+    &quot;status&quot;: {
+        &quot;id&quot;: &quot;down&quot;,
+        &quot;name&quot;: &quot;Down&quot;,
+        &quot;description&quot;: &quot;An explanation of what this status represents&quot;,
+        &quot;level&quot;: &quot;ERROR&quot;,
+        &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
+        &quot;url&quot;: &quot;/api/v1/statuses/down&quot;,
+    },
+}
+</code
+	  ></pre
+	></div
+      ></div
+    ><div id="post-put-1"
+    ><h4
+      >POST / PUT</h4
+      ><p
+      >Not supported</p
+      ></div
+    ><div id="delete-3"
+    ><h4
+      >DELETE</h4
+      ><p
+      >Deletes the given event and returns the deleted event</p
+      ><div id="example-10"
+      ><h5
+	>Example</h5
+	><blockquote
+	><p
+	  >DELETE /services/{service}/events/{sid} HTTP/1.1</p
+	  ></blockquote
+	><pre
+	><code
+	  >{
+    &quot;timestamp&quot;: &quot;Mon, 28 Jun 2010 22:17:06 GMT&quot;,
+    &quot;message&quot;: &quot;Might be up&quot;, 
+    &quot;sid&quot;: &quot;ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M&quot;,
+    &quot;url&quot;: &quot;/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M&quot;,
+    &quot;status&quot;: {
+        &quot;id&quot;: &quot;down&quot;,
+        &quot;name&quot;: &quot;Down&quot;,
+        &quot;description&quot;: &quot;An explanation of what this status represents&quot;,
+        &quot;level&quot;: &quot;ERROR&quot;,
+        &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
+        &quot;url&quot;: &quot;/statuses/down&quot;,
+    },    
+}
+</code
+	  ></pre
+	></div
+      ></div
+    ></div
+  ></div
+><div id="service-calendar-resource"
+><h2
+  >Service Calendar Resource</h2
+  ><p
+  >The Service Calendar resource represents the status of the service over a given date range. The returned object contains a list of date objects, detailed below.</p
+  ><div id="resource-url-5"
+  ><h3
+    >Resource URL</h3
+    ><blockquote
+    ><p
+      >api/v1/services/{service}/calendar</p
+      ></blockquote
+    ></div
+  ><div id="resource-properties-1"
+  ><h3
+    >Resource Properties</h3
+    ><table
+    ><caption
+      >Calendar day object properties</caption
+      ><col width="35%"
+       /><col width="56%"
+       /><thead
+      ><tr class="header"
+	><th align="left"
+	  >Property</th
+	  ><th align="left"
+	  >Description</th
+	  ></tr
+	></thead
+      ><tbody
+      ><tr class="odd"
+	><td align="left"
+	  >day</td
+	  ><td align="left"
+	  >The day this object represents, given in RFC 1132 format.</td
+	  ></tr
+	><tr class="even"
+	><td align="left"
+	  >summary</td
+	  ><td align="left"
+	  >The overall status for the given day. See the Statuses resource</td
+	  ></tr
+	></tbody
+      ></table
+    ></div
+  ><div id="http-methods-4"
+  ><h3
+    >HTTP Methods</h3
+    ><div id="get-5"
+    ><h4
+      >GET</h4
+      ><p
+      >Return a list of day objects. Two options are available to affect the number and type of results returned.</p
+      ><table
+      ><caption
+	>Calendar Resource Query options</caption
+	><col width="11%"
+	 /><col width="20%"
+	 /><col width="40%"
+	 /><thead
+	><tr class="header"
+	  ><th align="left"
+	    >Option</th
+	    ><th align="left"
+	    >Default</th
+	    ><th align="left"
+	    >Description</th
+	    ></tr
+	  ></thead
+	><tbody
+	><tr class="odd"
+	  ><td align="left"
+	    >start</td
+	    ><td align="left"
+	    >Current Date</td
+	    ><td align="left"
+	    >First day returned in the list. Must be in the format YYYY-MM-DD</td
+	    ></tr
+	  ><tr class="even"
+	  ><td align="left"
+	    >days</td
+	    ><td align="left"
+	    >10</td
+	    ><td align="left"
+	    >The number of days to return prior to the start date (specified above)</td
+	    ></tr
+	  ></tbody
+	></table
+      ><div id="example-11"
+      ><h5
+	>Example</h5
+	><blockquote
+	><p
+	  >GET /api/v1/services/{service}/events/calendar?start=2010-6-22&amp;days=5</p
+	  ></blockquote
+	><pre
+	><code
+	  >{ &quot;days&quot;: [
+    {
+        &quot;date&quot;: &quot;Tue, 22 Jun 2010 00:00:00 GMT&quot;, 
+        &quot;summary&quot;: {
+            &quot;description&quot;: &quot;This web service is up&quot;, 
+            &quot;url&quot;: &quot;/api/v1/statuses/up&quot;, 
+            &quot;image&quot;: &quot;/images/status/tick-circle.png&quot;, 
+            &quot;name&quot;: &quot;Up&quot;, 
+            &quot;id&quot;: &quot;up&quot;, 
+            &quot;level&quot;: &quot;NORMAL&quot;,
+        }
+    },         
+
+    ........
+
+    ]
+}
+</code
+	  ></pre
+	></div
+      ></div
+    ><div id="post-put-2"
+    ><h4
+      >POST / PUT</h4
+      ><p
+      >Not supported</p
+      ></div
+    ><div id="delete-4"
+    ><h4
+      >DELETE</h4
+      ><p
+      >Not supported</p
+      ></div
+    ></div
+  ></div
+><div id="status-list-resource"
+><h2
+  >Status List Resource</h2
+  ><p
+  >The Status List resource represents all possible systems statuses.</p
+  ><div id="resource-url-6"
+  ><h3
+    >Resource URL</h3
+    ><blockquote
+    ><p
+      >api/v1/statuses</p
+      ></blockquote
+    ></div
+  ><div id="resource-properties-2"
+  ><h3
+    >Resource Properties</h3
+    ><table
+    ><caption
+      >Status resource properties</caption
+      ><col width="20%"
+       /><col width="56%"
+       /><thead
+      ><tr class="header"
+	><th align="left"
+	  >Property</th
+	  ><th align="left"
+	  >Description</th
+	  ></tr
+	></thead
+      ><tbody
+      ><tr class="odd"
+	><td align="left"
+	  >id</td
+	  ><td align="left"
+	  >The unique identifier by which to identify the status</td
+	  ></tr
+	><tr class="even"
+	><td align="left"
+	  >name</td
+	  ><td align="left"
+	  >The name of the status, defined by the user</td
+	  ></tr
+	><tr class="odd"
+	><td align="left"
+	  >description</td
+	  ><td align="left"
+	  >The description of the status</td
+	  ></tr
+	><tr class="even"
+	><td align="left"
+	  >url</td
+	  ><td align="left"
+	  >The URL of the specific status resource</td
+	  ></tr
+	><tr class="odd"
+	><td align="left"
+	  >level</td
+	  ><td align="left"
+	  >The level of this status. Can be any value listed in the Levels List resource</td
+	  ></tr
+	><tr class="even"
+	><td align="left"
+	  >image</td
+	  ><td align="left"
+	  >The URL of the image for this status</td
+	  ></tr
+	></tbody
+      ></table
+    ></div
+  ><div id="http-methods-5"
+  ><h3
+    >HTTP Methods</h3
+    ><div id="get-6"
+    ><h4
+      >GET</h4
+      ><p
+      >Returns all possible service statuses</p
+      ><div id="example-12"
+      ><h5
+	>Example</h5
+	><blockquote
+	><p
+	  >GET api/v1/statuses HTTP/1.1</p
+	  ></blockquote
+	><pre
+	><code
+	  >{
+    &quot;statuses&quot;: [
+        {
+            &quot;name&quot;: &quot;Available&quot;,
+            &quot;id&quot;: &quot;available&quot;,
+            &quot;description&quot;: &quot;An explanation of what this status represents&quot;,
+            &quot;level&quot;: &quot;NORMAL&quot;,
+            &quot;image&quot;: &quot;/static/images/status/tick-circle.png&quot;,
+            &quot;url&quot;: &quot;api/v1/statuses/up&quot;,
+        },
+        {
+            &quot;name&quot;: &quot;Down&quot;,
+            &quot;id&quot;: &quot;down&quot;,
+            &quot;description&quot;: &quot;An explanation of what this status represents&quot;,
+            &quot;level&quot;: &quot;ERROR&quot;,
+            &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
+            &quot;url&quot;: &quot;api/v1/statuses/down&quot;,
+        },
+    ]
+}
+</code
+	  ></pre
+	></div
+      ></div
+    ><div id="post-3"
+    ><h4
+      >POST</h4
+      ><p
+      >Creates a new service status and returns this newly created status</p
+      ><table
+      ><caption
+	>Status Instance POST parameters</caption
+	><col width="20%"
+	 /><col width="15%"
+	 /><col width="40%"
+	 /><thead
+	><tr class="header"
+	  ><th align="left"
+	    >Param</th
+	    ><th align="left"
+	    >Optional</th
+	    ><th align="left"
+	    >Description</th
+	    ></tr
+	  ></thead
+	><tbody
+	><tr class="odd"
+	  ><td align="left"
+	    >name</td
+	    ><td align="left"
+	    >Required</td
+	    ><td align="left"
+	    >The name of the status</td
+	    ></tr
+	  ><tr class="even"
+	  ><td align="left"
+	    >description</td
+	    ><td align="left"
+	    >Required</td
+	    ><td align="left"
+	    >The description of the status</td
+	    ></tr
+	  ><tr class="odd"
+	  ><td align="left"
+	    >level</td
+	    ><td align="left"
+	    >Required Must be a va Levels resou</td
+	    ><td align="left"
+	    >The level of the status. lues listed in the rce</td
+	    ></tr
+	  ><tr class="even"
+	  ><td align="left"
+	    >image</td
+	    ><td align="left"
+	    >Required</td
+	    ><td align="left"
+	    >The filename of the image, with no extension. See the status-images resource</td
+	    ></tr
+	  ></tbody
+	></table
+      ><div id="example-13"
+      ><h5
+	>Example</h5
+	><blockquote
+	><p
+	  >POST /api/v1/statuses HTTP/1.1 name=Down&amp;description=A%20new%20status&amp;severity=1000&amp;image=cross-circle.png</p
+	  ></blockquote
+	><pre
+	><code
+	  >{
+    &quot;name&quot;: &quot;Down&quot;,
+    &quot;id&quot;: &quot;down&quot;
+    &quot;description&quot;: &quot;A new status&quot;,
+    &quot;level&quot;: &quot;ERROR&quot;,
+    &quot;image&quot;: &quot;cross-circle&quot;,
+    &quot;url&quot;: &quot;/api/v1/statuses/down&quot;,
+}
+</code
+	  ></pre
+	></div
+      ></div
+    ><div id="put-1"
+    ><h4
+      >PUT</h4
+      ><p
+      >Not Supported</p
+      ></div
+    ><div id="delete-5"
+    ><h4
+      >DELETE</h4
+      ><p
+      >Not Supported</p
+      ></div
+    ></div
+  ></div
+><div id="status-instance-resource"
+><h2
+  >Status Instance Resource</h2
+  ><p
+  >The Status Instance resource represents a single service status</p
+  ><div id="resource-url-7"
+  ><h3
+    >Resource Url</h3
+    ><blockquote
+    ><p
+      >/api/v1/statuses/{name}</p
+      ></blockquote
+    ></div
+  ><div id="get-7"
+  ><h3
+    >GET</h3
+    ><p
+    >Returns a status object</p
+    ><div id="example-14"
+    ><h4
+      >Example</h4
+      ><pre
+      ><code
+	>{
+    &quot;name&quot;: &quot;Down&quot;,
+    &quot;id&quot;: &quot;down&quot;,
+    &quot;description&quot;: &quot;A new status&quot;,
+    &quot;level&quot;: &quot;ERROR&quot;,
+    &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
+    &quot;url&quot;: &quot;/api/v1/statuses/down&quot;,
+}
+</code
+	></pre
+      ></div
+    ></div
+  ><div id="post-4"
+  ><h3
+    >POST</h3
+    ><table
+    ><caption
+      >Status Instance POST parameters</caption
+      ><col width="20%"
+       /><col width="15%"
+       /><col width="40%"
+       /><thead
+      ><tr class="header"
+	><th align="left"
+	  >Param</th
+	  ><th align="left"
+	  >Optional</th
+	  ><th align="left"
+	  >Description</th
+	  ></tr
+	></thead
+      ><tbody
+      ><tr class="odd"
+	><td align="left"
+	  >name</td
+	  ><td align="left"
+	  >Optional</td
+	  ><td align="left"
+	  >The name of the status</td
+	  ></tr
+	><tr class="even"
+	><td align="left"
+	  >description</td
+	  ><td align="left"
+	  >Optional</td
+	  ><td align="left"
+	  >The description of the status</td
+	  ></tr
+	><tr class="odd"
+	><td align="left"
+	  >level</td
+	  ><td align="left"
+	  >Optional</td
+	  ><td align="left"
+	  >The level of the status. Must be a string value listed in the Levels resource (see below)</td
+	  ></tr
+	><tr class="even"
+	><td align="left"
+	  >image</td
+	  ><td align="left"
+	  >Optional</td
+	  ><td align="left"
+	  >The filename of the image, with no extension. See the status-images resource</td
+	  ></tr
+	></tbody
+      ></table
+    ><p
+    >Returns the newly updated status</p
+    ><div id="example-15"
+    ><h4
+      >Example</h4
+      ><blockquote
+      ><p
+	>POST /api/v1/statuses HTTP/1.1 description=A%20new%20status&amp;severity=1010&amp;image=cross-circle.png</p
+	></blockquote
+      ><pre
+      ><code
+	>{
+    &quot;name&quot;: &quot;Down&quot;,
+    &quot;id&quot;: &quot;down&quot;,
+    &quot;description&quot;: &quot;A new status&quot;,
+    &quot;level&quot;: &quot;ERROR&quot;,
+    &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
+    &quot;url&quot;: &quot;/api/v1/statuses/down&quot;,
+}
+</code
+	></pre
+      ></div
+    ></div
+  ><div id="delete-6"
+  ><h3
+    >DELETE</h3
+    ><p
+    >Delete the given status and return the deleted status</p
+    ><div id="example-16"
+    ><h4
+      >Example</h4
+      ><blockquote
+      ><p
+	>DELETE /api/v1/statuses/{name}</p
+	></blockquote
+      ><pre
+      ><code
+	>{
+    &quot;name&quot;: &quot;Down&quot;,
+    &quot;id&quot;: &quot;down&quot;,
+    &quot;description&quot;: &quot;A new status&quot;,
+    &quot;level&quot;: &quot;ERROR&quot;,
+    &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
+    &quot;url&quot;: &quot;/api/v1/statuses/down&quot;,
+}
+</code
+	></pre
+      ></div
+    ></div
+  ><div id="put-2"
+  ><h3
+    >PUT</h3
+    ><p
+    >Not supported</p
+    ></div
+  ></div
+><div id="status-levels-resource"
+><h2
+  >Status Levels Resource</h2
+  ><p
+  >The Status Levels resource is a read-only resource which lists the possible levels for a status.</p
+  ><div id="resource-url-8"
+  ><h3
+    >Resource Url</h3
+    ><blockquote
+    ><p
+      >/api/v1/levels</p
+      ></blockquote
+    ></div
+  ><div id="get-8"
+  ><h3
+    >GET</h3
+    ><p
+    >Returns a list of possible status levels in increasing severity</p
+    ><div id="example-17"
+    ><h4
+      >Example</h4
+      ><blockquote
+      ><p
+	>GET /api/v1/levels</p
+	></blockquote
+      ><pre
+      ><code
+	>{
+    &quot;levels&quot;: [
+        &quot;INFO&quot;, 
+        &quot;NORMAL&quot;, 
+        &quot;WARNING&quot;, 
+        &quot;ERROR&quot;, 
+        &quot;CRITICAL&quot;,
+    ]
+}
+</code
+	></pre
+      ></div
+    ></div
+  ><div id="post-put-3"
+  ><h3
+    >POST / PUT</h3
+    ><p
+    >Not supported</p
+    ></div
+  ><div id="delete-7"
+  ><h3
+    >DELETE</h3
+    ><p
+    >Not supported</p
+    ></div
+  ></div
+><div id="status-images-resource"
+><h2
+  >Status Images Resource</h2
+  ><p
+  >The Status Images resource is a read-only resource which lists the icons available to use for statuses</p
+  ><div id="resource-url-9"
+  ><h3
+    >Resource Url</h3
+    ><blockquote
+    ><p
+      >/api/v1/status-images</p
+      ></blockquote
+    ></div
+  ><div id="get-9"
+  ><h3
+    >GET</h3
+    ><p
+    >Returns a list of status images.</p
+    ><div id="example-18"
+    ><h4
+      >Example</h4
+      ><blockquote
+      ><p
+	>GET /api/v1/status-images</p
+	></blockquote
+      ><pre
+      ><code
+	>{
+    &quot;images&quot;: [
+        {
+            &quot;name&quot;: &quot;sample-image&quot;,
+            &quot;url&quot;: &quot;/status-images/sample-image.png&quot;,
+        },
+        {
+            &quot;name&quot;: &quot;sample-image&quot;,
+            &quot;url&quot;: &quot;/status-images/sample-image.png&quot;,
+        },
+    ]
+}
+</code
+	></pre
+      ></div
+    ></div
+  ><div id="post-put-4"
+  ><h3
+    >POST / PUT</h3
+    ><p
+    >Not supported</p
+    ></div
+  ><div id="delete-8"
+  ><h3
+    >DELETE</h3
+    ><p
+    >Not supported</p
+    ></div
+  ></div
+>
+
+{% endblock %}

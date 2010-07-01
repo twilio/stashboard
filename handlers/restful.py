@@ -128,8 +128,9 @@ def methods_via_query_allowed(handler_method):
     return redirect_if_needed
     
 class Controller(webapp.RequestHandler):
-    def base_url(self, host, version):
-        return "http://" + host + "/api/" + version
+    def base_url(self, version):
+        host = self.request.headers.get('host', 'nohost')
+        return self.request.scheme + "://" + host + "/api/" + version
         
     def valid_version(self, version):
         return version == "v1"
@@ -159,13 +160,25 @@ class Controller(webapp.RequestHandler):
     def head(self, *params):
         pass
         
-    def render(self, templateparams, templatefile):
-        path = os.path.join(config.SITE["template_path"], templatefile)
+    def render(self, templateparams, *args):
+        path = config.SITE["template_path"]
+
+        for p in args:
+            path = os.path.join(path, p)
+            
         self.response.out.write(template.render(path, templateparams))
         
     def json(self, data):
-        self.response.headers.add_header("Content-Type", "text/plain")
+        callback = self.request.get('callback', default_value=None)
+        
         data = jsonpickle.encode(data)
+        
+        if callback:
+            self.response.headers.add_header("Content-Type", "application/javascript")
+            data = callback + "(" + data + ");"
+        else:
+            self.response.headers.add_header("Content-Type", "application/json")
+        
         self.response.out.write(data)
         
     def text(self, data):

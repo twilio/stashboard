@@ -29,6 +29,7 @@ clients, like a Flex app or a desktop program.
 __author__ = 'Kyle Conroy'
 
 import datetime
+from datetime import timedelta
 import string
 import re
 import os
@@ -38,15 +39,17 @@ import logging
 import jsonpickle
 import status_images
 
+from wsgiref.handlers import format_date_time
+from time import mktime
+
 from google.appengine.ext import webapp
 from google.appengine.api import users
 from google.appengine.ext import db
 
 from handlers import restful
 from utils import authorized
-from utils import sanitizer
 from utils import slugify
-from models import Status, Event, Service
+from models import Status, Event, Service, Level
 import config
 
 class NotFoundHandler(restful.Controller):
@@ -57,15 +60,13 @@ class NotFoundHandler(restful.Controller):
 class ServicesListHandler(restful.Controller):
     def get(self, version):
         logging.debug("ServicesListHandler#get")
-        host = self.request.headers.get('host', 'nohost')
-        
         if (self.valid_version(version)):
             
-            query = Service.all()
+            query = Service.all().order('name')
             data = []
 
             for s in query:
-                data.append(s.rest(self.base_url(host, version)))
+                data.append(s.rest(self.base_url(version)))
 
             data = { "services": data }
 
@@ -73,13 +74,11 @@ class ServicesListHandler(restful.Controller):
             
         else:
             self.error(404, "API Version %s not supported" % version)
-
-
+            
     @authorized.api("admin")
     def post(self, version):
         logging.debug("ServicesListHandler#post")
-        host = self.request.headers.get('host', 'nohost')
-        
+
         if (self.valid_version(version)):
             
             name = self.request.get('name', default_value=None)
@@ -93,14 +92,14 @@ class ServicesListHandler(restful.Controller):
                 if existing_s:
                     existing_s.description = description
                     existing_s.put()
-                    self.json(existing_s.rest(self.base_url(host, version)))
+                    self.json(existing_s.rest(self.base_url(version)))
                 # Create new service
                 else:
                     s = Service(name=name, slug=slug, description=description)
                     s.put()
-                    self.json(s.rest(self.base_url(host, version)))
+                    self.json(s.rest(self.base_url(version)))
             else:
-                self.error(400, "Bad Data")
+                self.error(400, "Bad Data: Name: %s, Description: %s" % (name, description))
         else:
             self.error(404, "API Version %s not supported" % version)
 
@@ -108,44 +107,45 @@ class ServicesListHandler(restful.Controller):
 class ServiceInstanceHandler(restful.Controller):
     def get(self, version, service):
         logging.debug("ServiceInstanceHandler#get")
-        host = self.request.headers.get('host', 'nohost')
         
         if (self.valid_version(version)):
             service = Service.get_by_slug(service)
 
             if (service):
-                self.json(service.rest(self.base_url(host, version)))
+                self.json(service.rest(self.base_url(version)))
             else:
                 self.error(404, "Service %s does not exist" % service_slug)
         else:
             self.error(404, "API Version %s not supported" % version)
         
-
 
     @authorized.api("admin")
     def post(self, version, service_slug):
         logging.debug("ServiceInstanceHandler#post")
-        host = self.request.headers.get('host', 'nohost')
-        description = self.request.get('description')
+        name = self.request.get('name', default_value=None)
+        description = self.request.get('description', default_value=None)
         
         if (self.valid_version(version)):
             service = Service.get_by_slug(service_slug)
-
             if service:
-                service.description = description
-                service.put()
-                self.json(service.rest(self.base_url(host, version)))   
+                if description:
+                    service.description = description
+                
+                if name:
+                    service.name = name
+                
+                if name or description:
+                    service.put()
+                    
+                self.json(service.rest(self.base_url(version)))   
             else:
                 self.error(404, "Service %s does not exist" % service_slug)
         else:
             self.error(404, "API Version %s not supported" % version)
         
-
-            
     @authorized.api("admin")
     def delete(self, version, service_slug):
         logging.debug("ServiceInstanceHandler#delete slug=%s" % service_slug)
-        host = self.request.headers.get('host', 'nohost')
         
         if (self.valid_version(version)):
             
@@ -153,7 +153,7 @@ class ServiceInstanceHandler(restful.Controller):
             
             if service:
                 service.delete()
-                self.json(service.rest(self.base_url(host, version)))
+                self.json(service.rest(self.base_url(version)))
             else:
                 self.error(404, "Service %s not found" % service_slug)
         else:
@@ -166,20 +166,40 @@ class ServiceInstanceHandler(restful.Controller):
 class EventsListHandler(restful.Controller):
     def get(self, version, service_slug):
         logging.debug("StatusesListHandler#get")
-        host = self.request.headers.get('host', 'nohost')
         
         if (self.valid_version(version)):
             service = Service.get_by_slug(service_slug)
 
             if service:
+                after = self.request.get('after', default_value=None)
+                before = self.request.get('before', default_value=None)
+                
                 query = Event.all()
-                query.filter('service =', service).order('-start')
+                query.filter('service =', service)
+                        
+                if after:
+                    try:
+                        aft = datetime.datetime.strptime(after, "%Y-%m-%d")
+                        query.filter("start > ", aft)
+                    except:
+                        self.error(400, "Invalid Date: %s" % after)
+                        return
 
+                if before:
+                    try:
+                        bef = datetime.datetime.strptime(before, "%Y-%m-%d")
+                        query.filter("start <", bef)
+                    except:
+                        self.error(400, "Invalid Date: %s" % before)
+                        return
+                        
+                query.order('-start')
+                        
                 if query:
                     data = []
 
                     for s in query:
-                        data.append(s.rest(self.base_url(host, version)))
+                        data.append(s.rest(self.base_url(version)))
 
                     data = { "events": data }
 
@@ -192,30 +212,34 @@ class EventsListHandler(restful.Controller):
             self.error(404, "API Version %s not supported" % version)
         
 
-
     @authorized.api("admin")
     def post(self, version, service_slug):
         logging.debug("EventsListHandler#post")
-        host = self.request.headers.get('host', 'nohost')
         
         if (self.valid_version(version)):
             status_slug = self.request.get("status", default_value=None)
             message = self.request.get("message", default_value=None)
-
-            if status_slug and message:
+            
+            if message:
                 service = Service.get_by_slug(service_slug)
                 if service:
-                    status = Status.get_by_slug(status_slug)
+                    
+                    if not status_slug:
+                        status = service.current_event().status
+                    else:
+                        status = Status.get_by_slug(status_slug)
+                        
                     if status:
-                        e = Event(status=status, service=service, message=message)
+                        e = Event(status=status, service=service, \
+                                message=message)
                         e.put()
-                        self.json(e.rest(self.base_url(host, version)))
+                        self.json(e.rest(self.base_url(version)))
                     else:
                         self.error(404, "Status %s not found" % status_slug)
                 else:
                     self.error(404, "Service %s not found" % service_slug)
             else:
-                self.error(400, "Event status is required")
+                self.error(400, "Event message is required")
         else:
             self.error(404, "API Version %s not supported" % version)
         
@@ -224,28 +248,75 @@ class EventsListHandler(restful.Controller):
 class CurrentEventHandler(restful.Controller):
     def get(self, version, service_slug):
         logging.debug("CurrentStatusHandler#get")
-        host = self.request.headers.get('host', 'nohost')
         
         if (self.valid_version(version)):
         
             service = Service.get_by_slug(service_slug)
         
             if (service):
-                event = Event.current(service)
+                event = service.current_event()
         
                 if (event):
-                    self.json(event.rest(self.base_url(host, version))) 
+                    self.json(event.rest(self.base_url(version))) 
                 else:
                     self.error(404, "No current event for Service %s" % service_slug)
             else:
                 self.error(404, "Service %s not found" % service_slug)
         else:
             self.error(404, "Version %s not supported" % version)
+            
+            
+class EventCalendarHandler(restful.Controller):
+    def get(self, version, service_slug):
+        logging.debug("EventCalenderHandler#get")
+
+        if (self.valid_version(version)):
+
+            service = Service.get_by_slug(service_slug)
+            status = Status.default()
+
+            if service:
+                if status:
+                    today = datetime.datetime.now()
+                    start = self.request.get('start', default_value=today.strftime("%Y-%m-%d"))
+                    days = int(self.request.get('days', default_value="10"))
+                
+                    if start and days:
+                        try:
+                            aft = datetime.datetime.strptime(start, "%Y-%m-%d")
+                        except:
+                            self.error(400, "Invalid Date: %s" % start)
+                            return
+                        
+                    calendar = []
+                        
+                    for i in range(days):
+                        summary = status
+
+                        for e in service.events_for_day(aft):
+                            if e.status.severity > summary.severity:
+                                summary = e.status
+                            
+                        stamp = mktime(aft.timetuple())
+                    
+                        calendar.append({
+                            "date": format_date_time(stamp),
+                            "summary": summary.rest(self.base_url(version)),
+                        })
+                    
+                        aft = aft - timedelta(days=1)
+
+                    self.json({"days": calendar})
+                else:
+                    self.error(404, "No status with level %s, please make one" % Level.normal)
+            else:
+                self.error(404, "Service %s not found" % service_slug)
+        else:
+            self.error(404, "Version %s not supported" % version)            
     
 class EventInstanceHandler(restful.Controller):
     def get(self, version, service_slug, sid):
         logging.debug("EventInstanceHandler#get sid=%s" % sid)
-        host = self.request.headers.get('host', 'nohost')
         
         if (self.valid_version(version)):
             service = Service.get_by_slug(service_slug)
@@ -253,7 +324,7 @@ class EventInstanceHandler(restful.Controller):
             if (service):
                 event = Event.get(db.Key(sid))
                 if (event and service.key() == event.service.key()):
-                    self.json(event.rest(self.base_url(host, version))) 
+                    self.json(event.rest(self.base_url(version))) 
                 else:
                     self.error(404, "No event for Service %s with sid = %s" % (service_slug,sid))
             else:
@@ -262,11 +333,9 @@ class EventInstanceHandler(restful.Controller):
             self.error(404, "API Version %s not supported" % version)
         
 
-            
     @authorized.api("admin")
     def delete(self, version, service_slug, sid):
         logging.debug("EventInstanceHandler#delete sid=%s" % sid)
-        host = self.request.headers.get('host', 'nohost')
         
         if (self.valid_version(version)):
             service = Service.get_by_slug(service_slug)
@@ -275,7 +344,7 @@ class EventInstanceHandler(restful.Controller):
                 event = Event.get(db.Key(sid))
                 if (event and service.key() == event.service.key()):
                     event.delete()
-                    self.success(event.rest(self.base_url(host, version)))
+                    self.success(event.rest(self.base_url(version)))
                 else:
                     self.error(404, "No event for Service %s with sid = %s" % (service_slug,sid))
             else:
@@ -288,16 +357,15 @@ class EventInstanceHandler(restful.Controller):
 class StatusesListHandler(restful.Controller):
     def get(self, version):
         logging.debug("StatusesListHandler#get")
-        host = self.request.headers.get('host', 'nohost')
         
         if (self.valid_version(version)):
-            query = Status.all()
+            query = Status.all().order('severity')
 
             if (query):
                 data = []
 
                 for s in query:
-                    data.append(s.rest(self.base_url(host, version)))
+                    data.append(s.rest(self.base_url(version)))
 
                 self.json({"statuses": data}) 
             else:
@@ -306,16 +374,15 @@ class StatusesListHandler(restful.Controller):
             self.error(404, "API Version %s not supported" % version)
         
 
-
     @authorized.api("admin")
     def post(self, version):
         
         if (self.valid_version(version)):
             name = self.request.get('name', default_value=None)
             description = self.request.get('description', default_value=None)
-            severity = int(self.request.get('severity', default_value=None))
             image = self.request.get('image', default_value=None)
-            host = self.request.headers.get('host', 'nohost')
+            level = self.request.get('level', default_value=None)
+            severity = Level.get_severity(level)
 
             if name and description and severity and image:
                 slug = slugify.slugify(name)
@@ -328,13 +395,13 @@ class StatusesListHandler(restful.Controller):
                     status.image = image
                     status.name = name
                     status.put()
-                    self.json(status.rest(self.base_url(host, version)))
+                    self.json(status.rest(self.base_url(version)))
                 # Create new service
                 else:
                     status = Status(name=name, slug=slug, description=description, 
                         severity=severity, image=image)
                     status.put()
-                    self.json(status.rest(self.base_url(host, version)))
+                    self.json(status.rest(self.base_url(version)))
             else:
                 self.error(400, "Bad Data")
         else:
@@ -345,37 +412,49 @@ class StatusesListHandler(restful.Controller):
 class StatusInstanceHandler(restful.Controller):
     def get(self, version, status_slug):
         logging.debug("CurrentStatusHandler#get")
-        host = self.request.headers.get('host', 'nohost')
         
         if (self.valid_version(version)):
             status = Status.get_by_slug(status_slug)
 
             if (status):
-                self.json(status.rest(self.base_url(host, version))) 
+                self.json(status.rest(self.base_url(version))) 
             else:
                 self.error(404, "No status %s for Service %s" % status_slug)
         else:
             self.error(404, "API Version %s not supported" % version)
         
 
-
-
     @authorized.api("admin")
     def post(self, version, status_slug):
-        description = self.request.get('description', default_value=None)
-        host = self.request.headers.get('host', 'nohost')
+
         
         if (self.valid_version(version)):
-            if description:
-                status = Status.get_by_slug(status_slug)
-                if status:
+            status = Status.get_by_slug(status_slug)
+            if status:
+                name = self.request.get('name', default_value=None)
+                image = self.request.get('image', default_value=None)
+                description = self.request.get('description', default_value=None)
+                level = self.request.get('level', default_value=None)
+                severity = Level.get_severity(level)
+                
+                if description:
                     status.description = description
+                    
+                if image:
+                    status.image = image
+                    
+                if name:
+                    status.name = name
+                    
+                if severity:
+                    status.severity = severity
+                
+                if description or name or image or severity:
                     status.put()
-                    self.json(status.rest(self.base_url(host, version)))
-                else:
-                    self.error(404, "Status %s not found" % status_slug)
+                    
+                self.json(status.rest(self.base_url(version)))
             else:
-                self.error(400, "Description is required" % service_slug)
+                self.error(404, "Status %s not found" % status_slug)
         else:
             self.error(404, "API Version %s not supported" % version)
             
@@ -398,5 +477,17 @@ class ImagesListHandler(restful.Controller):
             else:
                 self.error(404, "No images")
         else:
+            self.error(404, "API Version %s not supported" % version)
+            
+class LevelsListHandler(restful.Controller):
+    def get(self, version):
+        logging.debug("LevelsListHandler#get")
+        
+        if (self.valid_version(version)):
+            
+            self.json({"levels": Level.all()})
+            
+        else:
+            
             self.error(404, "API Version %s not supported" % version)
 

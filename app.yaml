@@ -10,6 +10,9 @@ handlers:
 - url: /images
   static_dir: static/images
 
+- url: /js
+  static_dir: static/js
+
 - url: /favicon\.ico
   static_files: static/favicon.ico
   upload: static/favicon.ico
@@ -17,9 +20,10 @@ handlers:
 - url: /robots\.txt
   static_files: static/robots.txt
   upload: static/robots.txt
-
+  
 - url: .*
   script: main.py
+  secure: optional
 
 skip_files: |
  ^(.*/)?(

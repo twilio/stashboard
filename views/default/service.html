@@ -12,7 +12,7 @@
           var period; 
           
           if (d.getHours() < 12) {
-              if (d.getHours() == 0) {
+              if (d.getHours() === 0) {
                   hour = 12;
               } else {
                   hour = d.getHours();
@@ -61,6 +61,7 @@
           return tr;
         };
         
+        
         $.ajax({
           type: "GET",
           url: "/api/v1/services/{{ service }}",
@@ -68,6 +69,8 @@
           success: function(service){
             
             $("h2").text(service.name);
+            
+            {% if user_is_admin %}
             
             $.ajax({
               type: "GET",
@@ -81,7 +84,7 @@
                 for (var i=0; i < statuses.length; i++) {
                   $("<option />", {
                     "name": "severity",
-                    val: statuses[i].slug,
+                    val: statuses[i].id,
                     text: statuses[i].name
                   }).appendTo($(this));
                 };
@@ -91,6 +94,8 @@
 
               }
             });
+            
+            {% endif %}
 
             $.ajax({ 
               type: "GET",
@@ -183,7 +188,7 @@
 
 {% block content %}
         
-      <div id="services" class="frame">
+      <div id="webservices" class="frame">
         
         {% if user_is_admin %}
           <a class="button" id="delete-service">
@@ -197,16 +202,13 @@
           {% if start_date %}
             {{ start_date|date:"n/j/Y"  }}
           {% endif %}
-
-          {% if end_date %}
-             - {{ end_date|date:"n/j/Y"  }}
-          {% endif %}
         </h3>
         
         {% if user_is_admin %}
         <div id="submit">
             <label id="statusLabel" for="status">Status:</label>
             <select id="statusValue" class="update-status" name="severity">
+              <option name="severity" value="">Current</option>
             </select>
             <label id="messageLabel" for="message">Message:</label>
             <textarea id="messageValue" class="update-message" name="message"></textarea>

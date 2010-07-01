@@ -3,290 +3,31 @@
 {% block content %}
 
   <div class="frame" id="documentation">
-
-    <h2>REST API Documentation</h2>
     
-    <p>The REST API always returns a JSON object. A list resources is represented as a object with a "data" attribute</p>
-    <pre><code>{
-        "data": ["List", "of", "objects"]
-    }
-    </code></pre>
-    <p>No authentication is needed to access resources via GET; however, all other methods require authentication</p>
-    <h2>Base URL</h2>
-    <p>All URLs referenced in this document have the following base:</p>
-    <pre><code>http[s]://ismywebservicedown.appspot.com/api/v1
-    </code></pre>
-    <p>This includes urls included in the sample JSON responses</p>
-    <h2>/services</h2>
-    <h3>GET</h3>
-    <p>Returns a list of services</p>
-    <blockquote>
-    <p>GET /services HTTP/1.1</p>
-    </blockquote>
-    <pre><code>{
-        "data": [
-            {
-                "name": "Example Foo",
-                "id": "example-foo",
-                "description": "An explanation of this service"
-                "url": "/services/example-foo",
-            },
-            {
-                "name": "Example Bar",
-                "id": "example-bar",
-                "description": "An explanation of this service"
-                "url": "/services/example-bar",
-            }
-        ]
-    }
-    </code></pre>
-    <h3>POST</h3>
-    <p>Create a new service (or updates an existing server) and returns the new service object. </p>
-    <h4>Parameters</h4>
-    <ul>
-    <li><strong>name</strong>: Name of the service</li>
-    <li><strong>description</strong>: Description of service</li>
-    </ul>
-    <blockquote>
-    <p>POST /services HTTP/1.1
-    name=New%20Service&amp;description=A%20great%20service</p>
-    </blockquote>
-    <pre><code>{
-        "name": "New Service",
-        "id": "new-service",
-        "description": "A great service"
-        "url": "/services/new-service",
-    }
-    </code></pre>
-    <h2>/services/{service}</h2>
-    <h3>GET</h3>
-    <p>Returns a service instance</p>
-    <blockquote>
-    <p>GET /services/{service} HTTP/1.1</p>
-    </blockquote>
-    <pre><code>{
-        "name": "Example Service",
-        "id": "example-service",
-        "description": "An explanation of what this service represents"
-        "url": "/services/example-service",
-    }
-    </code></pre>
-    <h3>POST</h3>
-    <p>Update a service's description. Returns the updated object</p>
-    <ul>
-    <li><strong>description</strong>: Description of service</li>
-    </ul>
-    <blockquote>
-    <p>POST /services/{service} description=System%20is%20now%20operational</p>
-    </blockquote>
-    <pre><code>{
-        "name": "Example Service",
-        "id": "example-service",
-        "description": "System% is now operational",
-        "url": "/services/example-service",
-    }
-    </code></pre>
-    <h3>DELETE</h3>
-    <p>Delete a service, returns the service object deleted</p>
-    <blockquote>
-    <p>DELETE /services/{service} HTTP/1.1</p>
-    </blockquote>
-    <pre><code>{
-        "name": "Example Service",
-        "id": "example-service",
-        "description": "System% is now operational",
-        "url": "/services/example-service",
-    }
-    </code></pre>
-    <h2>/services/{service}/events</h2>
-    <h3>GET</h3>
-    <p>Returns all events associated with a given service, ordered by reverse chronological order. </p>
-    <blockquote>
-    <p>GET /services/{service}/events HTTP/1.1</p>
-    </blockquote>
-    <pre><code>{
-        "data": [
-            {
-                "timestamp": "2010-05-22T01:52:23.104012", 
-                "message": "Problem fixed", 
-                "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GBAM",
-                "url": "/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GBAM",
-                "status": "/statuses/up"
-            }, 
-            {
-                "timestamp": "2010-05-22T01:52:16.383246", 
-                "message": "Might be up", 
-                "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
-                "url": "/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
-                "status": "/statuses/intermittent"
-            }
-        ]
-    }
-    </code></pre>
-    <h3>POST</h3>
-    <h4>Parameters</h4>
-    <ul>
-    <li><strong>status</strong>: An valid system status. See /statuses</li>
-    <li><strong>message</strong>: A message for the event</li>
-    </ul>
-    <p>Will return the newly created status</p>
-    <blockquote>
-    <p>POST /services/{service}/events  HTTP/1.1 status=AVAILABLE&amp;message=System%20is%20now%20operational</p>
-    </blockquote>
-    <pre><code>{
-        "timestamp": "2010-05-22T01:52:16.383246", 
-        "message": "Might be up", 
-        "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
-        "url": "/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
-        "status": "/statuses/intermittent"
-    }
-    </code></pre>
-    <h3>PUT</h3>
-    <p>Not supported</p>
-    <h3>DELETE</h3>
-    <p>Not supported</p>
-    <h2>/services/{service}/events/current</h2>
-    <h3>GET</h3>
-    <p>Returns the current service status</p>
-    <blockquote>
-    <p>GET /services/{service}/events/current HTTP/1.1</p>
-    </blockquote>
-    <pre><code>{
-        "timestamp": "2010-05-22T01:52:16.383246", 
-        "message": "Might be up", 
-        "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
-        "url": "/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
-        "status": "/statuses/intermittent"
-    }
-    </code></pre>
-    <h3>POST / PUT</h3>
-    <p>Not supported</p>
-    <h3>DELETE</h3>
-    <p>Not supported</p>
-    <h2>/services/{service}/events/{sid}</h2>
-    <p>Returns the status with the given sid</p>
-    <h3>GET</h3>
-    <blockquote>
-    <p>GET /services/{service}/events/{sid}</p>
-    </blockquote>
-    <pre><code>{
-        "timestamp": "2010-05-22T01:52:16.383246", 
-        "message": "Might be up", 
-        "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
-        "url": "/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
-        "status": "/statuses/intermittent"
-    }
-    </code></pre>
-    <h3>POST / PUT</h3>
-    <p>Not supported</p>
-    <h3>DELETE</h3>
-    <h4>Parameters</h4>
-    <p>Deletes the given event. Returns the deleted event</p>
-    <blockquote>
-    <p>DELETE /services/{service}/events/{sid} HTTP/1.1</p>
-    </blockquote>
-    <pre><code>{
-        "timestamp": "2010-05-22T01:52:16.383246", 
-        "message": "Might be up", 
-        "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
-        "url": "/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
-        "status": "/statuses/intermittent"
-    }
-    </code></pre>
-    <h2>/statuses</h2>
-    <h3>GET</h3>
-    <p>Returns the possible states</p>
-    <blockquote>
-    <p>GET /statuses HTTP/1.1</p>
-    </blockquote>
-    <pre><code>{
-        "data": [
-            {
-                "name": "available",
-                "description": "An explanation of what this status represents",
-                "severity": 10,
-                "image": "/static/images/status/tick-circle.png",
-                "url": "/statuses/up",
-            },
-            {
-                "name": "down",
-                "description": "An explanation of what this status represents",
-                "severity": 1000,
-                "image": "/static/images/status/cross-circle.png",
-                "url": "/statuses/down",
-            },
-        ]
-    }
-    </code></pre>
-    <h3>POST</h3>
-    <h4>Parameters</h4>
-    <ul>
-    <li><strong>name</strong>: The type of the new status</li>
-    <li><strong>description</strong>: The explanation of the status</li>
-    <li><strong>severity</strong>: The severity of the status</li>
-    <li><strong>image</strong>: The filename of the image. No path information</li>
-    </ul>
-    <blockquote>
-    <p>POST /statuses HTTP/1.1
-    name=down&amp;description=A%20new%20status&amp;severity=1000&amp;image=cross-circle.png</p>
-    </blockquote>
-    <pre><code>{
-        "name": "down",
-        "description": "A new status",
-        "severity": 1000,
-        "image": "/static/images/status/cross-circle.png",
-        "url": "/statuses/down",
-    }
-    </code></pre>
-    <h3>DELETE</h3>
-    <p>Not Supported</p>
-    <h3>PUT</h3>
-    <p>Not Supported</p>
-    <h2>/statuses/{name}</h2>
-    <h3>GET</h3>
-    <p>Return a status</p>
-    <pre><code>{
-        "name": "down",
-        "description": "A new status",
-        "severity": 1000,
-        "image": "/static/images/status/cross-circle.png",
-        "url": "/statuses/down",
-    }
-    </code></pre>
-    <h3>POST</h3>
-    <ul>
-    <li><strong>description</strong>: The explanation of the status</li>
-    <li><strong>severity</strong>: The severity of the status</li>
-    <li><strong>image</strong>: The filename of the image. No path information</li>
-    </ul>
-    <p>Returns the newly updated status</p>
-    <blockquote>
-    <p>POST /statuses HTTP/1.1
-    description=A%20new%20status&amp;severity=1010&amp;image=cross-circle.png</p>
-    </blockquote>
-    <pre><code>{
-        "name": "down",
-        "description": "A new status",
-        "severity": 1010,
-        "image": "/static/images/status/cross-circle.png",
-        "url": "/statuses/down",
-    }
-    </code></pre>
-    <h3>DELETE</h3>
-    <p>Delete the given status</p>
-    <blockquote>
-    <p>DELETE /statuses/{name}</p>
-    </blockquote>
-    <pre><code>{
-        "name": "down",
-        "description": "A new status",
-        "severity": 1010,
-        "image": "/static/images/status/cross-circle.png",
-        "url": "/statuses/down",
-    }
-    </code></pre>
-    <h3>PUT</h3>
-    <p>Not supported</p>
+    <nav>
+      <ul>
+        <li {% if overview_selected %} class="selected" {% endif %}>
+          <a href="/documentation/overview">Overview</a></li>
+          
+        <li {% if rest_selected %} class="selected" {% endif %}>
+          <a href="/documentation/rest">REST API</a></li>
+          
+        <li {% if example_selected %} class="selected" {% endif %}>
+          <a href="/documentation/examples">Examples</a></li>
+        
+        <li {% if credentials_selected %} class="selected" {% endif %}>
+          <a href="/documentation/credentials">API Credentials</a></li>
+        
+      </ul>
+    </nav>
+    
+    <div>
+      
+      {% block document %}
+      
+      {% endblock %}
+      
+    </div>
 
   </div>
 
