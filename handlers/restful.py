@@ -169,8 +169,16 @@ class Controller(webapp.RequestHandler):
         self.response.out.write(template.render(path, templateparams))
         
     def json(self, data):
-        self.response.headers.add_header("Content-Type", "text/plain")
+        callback = self.request.get('callback', default_value=None)
+        
         data = jsonpickle.encode(data)
+        
+        if callback:
+            self.response.headers.add_header("Content-Type", "application/javascript")
+            data = callback + "(" + data + ");"
+        else:
+            self.response.headers.add_header("Content-Type", "application/json")
+        
         self.response.out.write(data)
         
     def text(self, data):

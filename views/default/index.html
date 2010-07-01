@@ -2,20 +2,20 @@
 
 {% block js_end %}
     <script type="text/javascript">
+      var currentNow = new Date();
+      var d = new Date(currentNow.getTime() - 86400000);
+      var thead = $("#service-list thead tr");
+      
+      for (var i=0; i < 5; i++) {
+        $("<th />", {
+          "class": "date",
+          text: (d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear()
+        }).appendTo(thead);
+        var d = new Date(d.getTime() - 86400000);
+      }
+    
       var createServiceRow = function(data, fetchStatuses){
         informationImage = "/images/status/question-white.png";
-        
-        var currentNow = new Date();
-        var d = new Date(currentNow.getTime() - 86400000);
-        var thead = $("#service-list thead tr");
-        
-        for (var i=0; i < 5; i++) {
-          $("<th />", {
-            "class": "date",
-            text: (d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear()
-          }).appendTo(thead);
-          var d = new Date(d.getTime() - 86400000);
-        }
                 
         var tr = $('<tr />', {id: data.id});
         
