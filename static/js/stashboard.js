@@ -98,7 +98,7 @@ stashboard.callback = function(data){
   }
   
   
-  setTimeout(stashboard.start, 2000);
+  setTimeout(stashboard.start, 4000);
   
 
 };
