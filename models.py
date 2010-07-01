@@ -14,14 +14,12 @@ class Level(object):
     """
     levels = {
         "NORMAL": 10,
-        "INFO": 20,
         "WARNING": 30,
         "ERROR": 40,
         "CRITICAL": 50,
     }
     
     normal  = "NORMAL"
-    info    = "INFO"
     warning = "WARNING"
     critial = "CRITICAL"
     error   = "ERROR"
@@ -63,7 +61,7 @@ class Service(db.Model):
         return Service.all().filter('slug = ', service_slug).get()
         
     def current_event(self):
-        return self.events.filter('info =', False).order('-start').get()
+        return self.events.order('-start').get()
 
     #Specialty function for front page
     def last_five_days(self):
@@ -160,19 +158,6 @@ class Status(db.Model):
         return Status.all().filter('slug = ', status_slug).get()
         
     @staticmethod
-    def get_info():
-        """ The info status. We don't make this a real status object because 
-            it should not have a severity ranking.
-        """
-        info = {}
-        info["name"] = "Information Available"
-        info["image"] = "information.png"
-        info["slug"] = "information-available"
-        info["description"] = "There is information available"
-        info["level"] = "INFO"
-        return info
-        
-    @staticmethod
     def default():
         """
         Return the first status with a NORMAL level.
@@ -211,7 +196,6 @@ class Status(db.Model):
 
 class Event(db.Model):
 
-    info = db.BooleanProperty(required=True)
     start = db.DateTimeProperty(required=True, auto_now_add=True)
     status = db.ReferenceProperty(Status, required=True)
     message = db.TextProperty(required=True)

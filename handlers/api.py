@@ -219,16 +219,19 @@ class EventsListHandler(restful.Controller):
         if (self.valid_version(version)):
             status_slug = self.request.get("status", default_value=None)
             message = self.request.get("message", default_value=None)
-
-            if status_slug and message:
+            
+            if message:
                 service = Service.get_by_slug(service_slug)
                 if service:
-                    status = Status.get_by_slug(status_slug)
+                    
+                    if not status_slug:
+                        status = service.current_event().status
+                    else:
+                        status = Status.get_by_slug(status_slug)
+                        
                     if status:
-                        info = status.severity == Level.get_severity(Level.info)
-                        logging.error("%s: %s" % (Level.info, Level.get_severity(Level.info)))
                         e = Event(status=status, service=service, \
-                                message=message, info=info)
+                                message=message)
                         e.put()
                         self.json(e.rest(self.base_url(version)))
                     else:
@@ -236,7 +239,7 @@ class EventsListHandler(restful.Controller):
                 else:
                     self.error(404, "Service %s not found" % service_slug)
             else:
-                self.error(400, "Event status is required")
+                self.error(400, "Event message is required")
         else:
             self.error(404, "API Version %s not supported" % version)
         

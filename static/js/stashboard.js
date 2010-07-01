@@ -12,8 +12,15 @@ stashboard.callback = function(data){
   var services = data.services || [];
   var severity = 0;
   var summary = "green";
-  var escalte = null;
+  var escalate = null;
   var serv = null;
+  
+  var levels = {
+    NORMAL: [0, "green"],
+    WARNING: [10, "yellow"],
+    ERROR: [20, "red"],
+    CRITICAL: [30, "red"],
+  };
   
   console.log(services.length);
   for (var i=0; i < services.length; i++) {
@@ -27,22 +34,13 @@ stashboard.callback = function(data){
     
     console.log(level);
     
-    if (level === "INFO" && severity === 0) {
-      severity = 1;
-      summary = "blue";
-    } else if (level !== "NORMAL" && severity < 2) {
-      if (level === "WARNING" && severity < 3){
-        summary = "yellow";
-        escalte = evt;
-        serv = service;
-        severity = 2;
-      } else {
-        summary = "red";
-        escalte = evt;
-        serv = service;
-        severity = 3;
-      }
-    } 
+    if (level && levels[level][0] > severity) {
+      escalate = evt;
+      summary = levels[level][1];
+      severity = levels[level][0];
+      serv = service;
+    }
+    
   }
   
   var div = document.createElement('div');
@@ -65,7 +63,7 @@ stashboard.callback = function(data){
   document.body.appendChild(div);
   
   
-  if (escalte) {
+  if (escalate) {
     var message = document.createElement('div');
     message.setAttribute("id", "stashboardMessage");
     message.setAttribute("style", "-webkit-border-bottom-left-radius: 15px; -webkit-border-bottom-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; position: absolute;top: 0px;height: 45px;right: 20px;padding: 0px 105px 0 15px;line-height: 45px;-moz-box-shadow: 0px 0px 8px rgb(204, 204, 204);-moz-border-radius-bottomleft: 15px;-moz-border-radius-bottomright: 15px;border-bottom: 1px solid #ccc;border-left: 1px solid #ccc;border-right: 1px solid #ccc; background: #eee;z-index: 99;");
@@ -73,13 +71,13 @@ stashboard.callback = function(data){
   
     var img = document.createElement('img');
     img.setAttribute("style", "float: left; margin: 14px 10px 0 0;");
-    img.setAttribute("src", escalte.status.image);
+    img.setAttribute("src", escalate.status.image);
   
     var strong = document.createElement('strong');
     strong.innerHTML = serv.name + ":  ";
   
     var p = document.createElement('span');
-    p.innerHTML = escalte.message;
+    p.innerHTML = escalate.message;
   
     message.appendChild(img);
     message.appendChild(strong);
