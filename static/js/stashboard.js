@@ -2,7 +2,13 @@
 stashboard = {};
   
 stashboard.start = function(){
+  var previous = document.getElementById("stashboardJavascript");
+  if (previous){
+    previous.parentNode.removeChild(previous);
+  }
+  
   var jsonp = document.createElement('script');
+  jsonp.setAttribute("id", "stashboardJavascript");
   jsonp.setAttribute("src","http://ismywebservicedown.appspot.com/api/v1/services?callback=stashboard.callback&random=" + Math.random());
   jsonp.setAttribute("type", "text/javascript");
   document.body.appendChild(jsonp);
@@ -92,7 +98,7 @@ stashboard.callback = function(data){
   }
   
   
-  setTimeout(stashboard.start, 20000);
+  setTimeout(stashboard.start, 2000);
   
 
 };
