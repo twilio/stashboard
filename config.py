@@ -7,6 +7,9 @@ use_library('django', '1.1')
 
 APP_ROOT_DIR = os.path.abspath(os.path.dirname(__file__))
 
+#Stashboard version
+VERSION = "1.0.0"
+
 # If we're debugging, turn the cache off, etc.
 # Set to true if we want to have our webapp print stack traces, etc
 DEBUG = os.environ['SERVER_SOFTWARE'].startswith('Dev')
