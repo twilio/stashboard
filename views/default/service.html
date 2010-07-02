@@ -74,28 +74,38 @@
             
             {% endif %}
             
-            $.ajax({
-              type: "GET",
-              url: "/api/v1/statuses",
-              dataType: "json",
-              context: $("#statusValue"),
-              success: function(data){
+            var populatStatuses = function(current) {
+              
+              $.ajax({
+                type: "GET",
+                url: "/api/v1/statuses",
+                dataType: "json",
+                context: $("#statusValue"),
+                success: function(data){
 
-                var statuses = data.statuses;
+                  var statuses = data.statuses;
 
-                for (var i=0; i < statuses.length; i++) {
-                  $("<option />", {
-                    "name": "severity",
-                    val: statuses[i].id,
-                    text: statuses[i].name
-                  }).appendTo($(this));
-                };
+                  for (var i=0; i < statuses.length; i++) {
+                    
+                    var selected = false;
+                    if (current === statuses[i].name)
+                      selected = true;
+                    
+                    $("<option />", {
+                      "name": "severity",
+                      val: statuses[i].id,
+                      text: statuses[i].name,
+                      selected: selected
+                    }).appendTo($(this));
+                  };
 
-              },
-              error: function(){
+                },
+                error: function(){
 
-              }
-            });
+                }
+              });
+            
+            };
 
             $.ajax({ 
               type: "GET",
@@ -105,14 +115,23 @@
               success: function(data){
 
                 var events = data.events;
-                for (var i=0; i < events.length; i++) {
-                  var tr = createRow(events[i]);
-                  $(this).append(tr);  
-                };
+                var length = events.length;
+                
+                if (length > 0) {
+                  populatStatuses(events[0].status.name);
+                  for (var i=0; i < length; i++) {
+                    var tr = createRow(events[i]);
+                    $(this).append(tr);  
+                  };
+                } else {
+                  populatStatuses();
+                }
+                
+                
 
               },
               error: function(){
-
+                populatStatuses();
               }
             });
             
