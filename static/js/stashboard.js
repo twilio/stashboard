@@ -72,7 +72,7 @@ stashboard.callback = function(data){
   var message = null;
   if (escalate) {
     message = document.createElement('div');
-    message.setAttribute("style", "font-size: 14px; max-width: 50%; overflow: hidden;-webkit-border-bottom-left-radius: 15px; -webkit-border-bottom-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; position: absolute;top: 0px;height: 45px;right: 20px;padding: 0px 55px 0 15px;line-height: 45px;-moz-box-shadow: 0px 0px 8px rgb(204, 204, 204);-moz-border-radius-bottomleft: 15px;-moz-border-radius-bottomright: 15px;border-bottom: 1px solid #ccc;border-left: 1px solid #ccc;border-right: 1px solid #ccc; background: #eee;z-index: 99;");
+    message.setAttribute("style", "font-size: 14px; max-width: 35%; overflow: hidden;-webkit-border-bottom-left-radius: 15px; -webkit-border-bottom-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; position: absolute;top: 0px;height: 45px;right: 20px;padding: 0px 55px 0 15px;line-height: 45px;-moz-box-shadow: 0px 0px 8px rgb(204, 204, 204);-moz-border-radius-bottomleft: 15px;-moz-border-radius-bottomright: 15px;border-bottom: 1px solid #ccc;border-left: 1px solid #ccc;border-right: 1px solid #ccc; background: #eee;z-index: 99;");
 
   
   
