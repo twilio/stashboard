@@ -72,6 +72,8 @@
             
             {% if user_is_admin %}
             
+            {% endif %}
+            
             $.ajax({
               type: "GET",
               url: "/api/v1/statuses",
@@ -94,8 +96,6 @@
 
               }
             });
-            
-            {% endif %}
 
             $.ajax({ 
               type: "GET",
@@ -208,7 +208,6 @@
         <div id="submit">
             <label id="statusLabel" for="status">Status:</label>
             <select id="statusValue" class="update-status" name="severity">
-              <option name="severity" value="">Current</option>
             </select>
             <label id="messageLabel" for="message">Message:</label>
             <textarea id="messageValue" class="update-message" name="message"></textarea>

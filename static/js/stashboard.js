@@ -1,6 +1,8 @@
 // StashBoard :{
 stashboard = {};
-  
+
+stashboard.host = "http://ismywebservicedown.appspot.com";
+
 stashboard.start = function(){
   var previous = document.getElementById("stashboardJavascript");
   if (previous){
@@ -9,7 +11,7 @@ stashboard.start = function(){
   
   var jsonp = document.createElement('script');
   jsonp.setAttribute("id", "stashboardJavascript");
-  jsonp.setAttribute("src","http://ismywebservicedown.appspot.com/api/v1/services?callback=stashboard.callback&random=" + Math.random());
+  jsonp.setAttribute("src", stashboard.host + "/api/v1/services?callback=stashboard.callback&random=" + Math.random());
   jsonp.setAttribute("type", "text/javascript");
   document.body.appendChild(jsonp);
 };
@@ -47,17 +49,17 @@ stashboard.callback = function(data){
   }
   
   var div = document.createElement('div');
-  var style = "width: 65px; height: 70px; position: absolute; top: 0px; right: 45px;background:#ccc;-moz-border-radius-bottomleft: 15px; -webkit-border-bottom-left-radius: 15px;-moz-border-radius-bottomright: 15px; -webkit-border-bottom-right-radius: 15px;border-bottom-right-radius: 15px; border-bottom-left-radius: 15px;border-bottom: 1px solid #999; border-left: 1px solid #999; border-right: 1px solid #999;-moz-box-shadow: 0px 0px 10px #ccc; -webkit-box-shadow: 0px 0px 10px #ccc; z-index: 9999";
+  var style = "width: 45px; height: 45px; position: absolute; top: 0px; right: 20px;background:#ccc;-moz-border-radius-bottomleft: 15px; -webkit-border-bottom-left-radius: 15px;-moz-border-radius-bottomright: 15px; -webkit-border-bottom-right-radius: 15px;border-bottom-right-radius: 15px; border-bottom-left-radius: 15px;border-bottom: 1px solid #999; border-left: 1px solid #999; border-right: 1px solid #999;-moz-box-shadow: 0px 0px 10px #ccc; -webkit-box-shadow: 0px 0px 10px #ccc; z-index: 9999";
   div.setAttribute("style", style);
   
   var img = document.createElement('img');
-  img.setAttribute("style", "width: 64px; border: 0");
-  img.setAttribute("src", "http://ismywebservicedown.appspot.com/images/widget/" + summary + ".png");
+  img.setAttribute("style", "width: 45px; border: 0");
+  img.setAttribute("src", stashboard.host + "/images/widget/" + summary + ".png");
   
   
   var a = document.createElement('a');
   a.setAttribute("style", "text-decoration: none; border: 0;");
-  a.setAttribute("href", "http://ismywebservicedown.appspot.com/");
+  a.setAttribute("href", stashboard.host);
   a.appendChild(img);
   div.appendChild(a);
   var previous = document.getElementById("stashboardStatus");
@@ -70,7 +72,7 @@ stashboard.callback = function(data){
   var message = null;
   if (escalate) {
     message = document.createElement('div');
-    message.setAttribute("style", "max-width: 50%; overflow: hidden;-webkit-border-bottom-left-radius: 15px; -webkit-border-bottom-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; position: absolute;top: 0px;height: 45px;right: 20px;padding: 0px 105px 0 15px;line-height: 45px;-moz-box-shadow: 0px 0px 8px rgb(204, 204, 204);-moz-border-radius-bottomleft: 15px;-moz-border-radius-bottomright: 15px;border-bottom: 1px solid #ccc;border-left: 1px solid #ccc;border-right: 1px solid #ccc; background: #eee;z-index: 99;");
+    message.setAttribute("style", "font-size: 14px; max-width: 250px; -webkit-border-bottom-left-radius: 15px; -webkit-border-bottom-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; position: absolute;top: 0px;right: 20px;padding: 0px 15px 15px 15px;-moz-box-shadow: 0px 0px 8px rgb(204, 204, 204);-moz-border-radius-bottomleft: 15px;-moz-border-radius-bottomright: 15px;border-bottom: 1px solid #ccc;border-left: 1px solid #ccc;border-right: 1px solid #ccc; background: #eee;z-index: 99;");
   
   
     img = document.createElement('img');
@@ -78,9 +80,11 @@ stashboard.callback = function(data){
     img.setAttribute("src", escalate.status.image);
   
     var strong = document.createElement('strong');
+    strong.setAttribute("style", "display:block; float: left; padding: 15px 0px");
     strong.innerHTML = serv.name + ":  ";
   
-    var p = document.createElement('span');
+    var p = document.createElement('div');
+    p.setAttribute("style", "line-height: 18px; clear: both; padding-top: 7px");
     p.innerHTML = escalate.message;
   
     message.appendChild(img);
@@ -98,7 +102,7 @@ stashboard.callback = function(data){
   }
   
   
-  setTimeout(stashboard.start, 4000);
+  //setTimeout(stashboard.start, 4000);
   
 
 };
