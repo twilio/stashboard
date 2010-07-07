@@ -1,7 +1,7 @@
 // StashBoard :{
 stashboard = {};
 
-stashboard.host = "http://ismywebservicedown.appspot.com";
+stashboard.host = "http://status.twilio.com";
 
 stashboard.start = function(){
   var previous = document.getElementById("stashboardJavascript");

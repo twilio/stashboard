@@ -20,7 +20,16 @@ h3.date-range {color: #999;}
 #header h2 {margin: 15px 0; float: left; line-height: 67px;}
 #logo { height: 40px; float: left; width: 40px; margin: 15px 0;}
 
-#rest-docs { float: right; margin: 30px 30px 0 0;}
+#notice { 
+    float: right; margin-top:17px; 
+    border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;
+    padding: 10px; display: none;
+}
+
+#notice.error { background: red; }
+#notice.success { background: green; }
+#notice.info { background: yellow; }
+#notice a { font-family: Arial; font-weight: bold;padding-left: 10px;}
 
 #status { height: 200px; }
 #status h2 { font-size: 60px; color: #FFF; text-align: center; padding-top: 65px;text-shadow: 2px 2px 0px #000;}
@@ -104,7 +113,7 @@ h3.date-range {color: #999;}
     
 .dialog textarea { width: 400px; height: 75px;}
 
-
+.breadcrumb { font-weight: normal;}
 
 #delete-service { float: right;}
 #delete-service-modal {display: none;}

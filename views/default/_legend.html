@@ -140,6 +140,7 @@
                 },
                 error: function(){ 
                   $("#add-status-modal").dialog('close');
+		  stashboard.error("Could not create new status due to missing information");
                 },
               });
                 
@@ -163,7 +164,7 @@
               });
             },
         error: function(){
-              alert("CRAP");
+	     stashboard.error("Unable to delete event");
             },
         });
     });

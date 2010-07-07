@@ -56,8 +56,7 @@
               $("#" + data.id + " td.highlight img")
                 .attr("src", evt.status.image);
               },
-            error: function(){ 
-
+            error: function(evt){ 
               }
           });
           
@@ -165,8 +164,9 @@
                       $("#add-service-modal").dialog('close');
                         createServiceRow(data, false);
                       },
-                    error: function(){ 
+                    error: function(evt){ 
                       $("#add-service-modal").dialog('close');
+		      stashboard.error("Could not create service. Make sure Name and Description are valid");
                       }
                     });
                     

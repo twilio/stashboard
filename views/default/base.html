@@ -2,14 +2,15 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Is My Web Service Up?</title>
+    <title>Twilio System Status</title>
     <link rel="stylesheet" href="/static/css/reset.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="/static/css/style.css" type="text/css" media="screen" />    
     <link rel="stylesheet" href="/static/css/jqueryui.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="/static/css/prettify.css" type="text/css" media="screen" />    
-    <script type="text/javascript"      src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
     <script type="text/javascript"
 src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/js/common.js"></script>
   <!--[if lt IE 9]>
   <script>
     var e = ("abbr,article,aside,audio,canvas,datalist,details," +
@@ -34,6 +35,7 @@ src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></sc
   <body>
     <div id="wrapper">
       <div id="header">
+	<div id="notice"><span></span><a href="#">X</a></div>
         <img id="logo" src="/images/logo.png" alt="Twilio Logo"/>
         <a href="/"><h1 id="title"><span>status</span>.twilio</h1></a>
       </div>
@@ -47,10 +49,14 @@ src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></sc
     <div id="footer">
       <ul class="left">
         <li>
-          {% if user %}
-            <a href="{{ login_link }}">Logout</a>
-          {% else %}
-            <a href="{{ login_link }}">Login</a>
+          {% if login_link %}
+            <a href="{{ login_link }}">
+              {% if user %}
+                Logout
+              {% else %}
+                Login
+              {% endif %}
+            </a>
           {% endif %}
         </li>
 	<li>-</li>
