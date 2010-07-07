@@ -72,7 +72,8 @@ h3.date-range {color: #999;}
 #webservices .status, #webservices .date, #webservices .today, .delete {text-align: center;}
 #webservices table a {text-decoration: underline;}
 
-#webservices .event-log {margin-top: 20px}
+#webservices .event-log {margin-top: 20px; border-collapse: separate; border-left:1px solid #E4E4E4;border-top:1px solid #E4E4E4;}
+#webservices .event-log thead {background:none repeat scroll 0 0 #EEEEEE;}
 #webservices .event-log th {font-size: 16px;text-align: center;}
 #webservices .event-log td {fonst-size: 14px;}
 #webservices .event-log td:first-child {text-align: center;}
