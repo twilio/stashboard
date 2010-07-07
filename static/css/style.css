@@ -57,7 +57,7 @@ h3.date-range {color: #999;}
 #add-service { margin-top: 20px;}
 
 .legend h4 { color: #999; font-size: 18px; margin: 20px 0 5px 0;}
-.legend table {border: solid 5px rgb(228, 228, 228); width: 100%; margin: 0 0 20px 0;}
+.legend table {border: solid 5px rgb(228, 228, 228); width: 100%}
 .legend table tr td:first-child {width: 16px;}
 
 
@@ -105,6 +105,7 @@ h3.date-range {color: #999;}
 #footer ul.left { float: left;}
 #footer ul.right { float: right;}
 #footer ul li {display: inline;}
+#icons li, #icons li a{ color: #ccc; }
 
 .dialog label, .dialog textarea, .dialog input 
     { margin: 10px; clear: right;}
