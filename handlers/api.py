@@ -467,6 +467,10 @@ class StatusInstanceHandler(restful.Controller):
             status = Status.get_by_slug(status_slug)            
 
             if status:
+                # We may want to think more about this
+                events = Event.all().filter('status =', status).fetch(1000)
+                for event in events:
+                    event.delete()
                 status.delete()
                 self.json(status.rest(self.base_url(version)))
             else:
