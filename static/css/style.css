@@ -26,7 +26,7 @@ h3.date-range {color: #999;}
     padding: 10px; display: none;
 }
 
-#notice.error { background: red; }
+#notice.error { background: #FCF0F0; border: 1px solid #E2D0D0; }
 #notice.success { background: green; }
 #notice.info { background: yellow; }
 #notice a { font-family: Arial; font-weight: bold;padding-left: 10px;}
@@ -55,6 +55,7 @@ h3.date-range {color: #999;}
 }
 
 #add-service { margin-top: 20px;}
+#add-status { margin-top: 20px;}
 
 .legend h4 { color: #999; font-size: 18px; margin: 20px 0 5px 0;}
 .legend table {border: solid 5px rgb(228, 228, 228); width: 100%}
@@ -71,6 +72,7 @@ h3.date-range {color: #999;}
 #webservices .status, #webservices .date, #webservices .today, .delete {text-align: center;}
 #webservices table a {text-decoration: underline;}
 
+#webservices .event-log {margin-top: 20px}
 #webservices .event-log th {font-size: 16px;text-align: center;}
 #webservices .event-log td {fonst-size: 14px;}
 #webservices .event-log td:first-child {text-align: center;}
@@ -116,7 +118,10 @@ h3.date-range {color: #999;}
 
 .breadcrumb { font-weight: normal;}
 
-#delete-service { float: right;}
+#add-event { float: right;}
+#add-event-model {display: none;}
+
+#delete-service {margin-top: 20px}
 #delete-service-modal {display: none;}
 
 #documentation { 

@@ -457,6 +457,23 @@ class StatusInstanceHandler(restful.Controller):
                 self.error(404, "Status %s not found" % status_slug)
         else:
             self.error(404, "API Version %s not supported" % version)
+
+    @authorized.api("admin")
+    def delete(self, version, status_slug):
+        logging.debug("StatusInstanceHandler#delete slug=%s" % status_slug)
+        
+        if (self.valid_version(version)):
+
+            status = Status.get_by_slug(status_slug)            
+
+            if status:
+                status.delete()
+                self.json(status.rest(self.base_url(version)))
+            else:
+                self.error(404, "Status %s not found" % service_slug)
+        else:
+            self.error(404, "API Version %s not supported" % version)
+
             
 
             

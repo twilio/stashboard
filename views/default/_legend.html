@@ -7,6 +7,8 @@
         <th></th>
         <th>Description</th>
         <th>Level</th>
+	<th>Edit</th>
+	<th>Delete</th>
       </tr>
     </thead>
     {% endif %}
@@ -42,6 +44,11 @@
       <textarea
         id="status-description" name="status-description"></textarea>
     </div>
+
+    <div class="dialog" id="delete-status-modal" title="Delete Status">
+      <p>Are you sure you want to delete this status?</p>
+    </div>
+
   {% endif %}
   
   <script type="text/javascript">
@@ -56,16 +63,89 @@
       })
     ).appendTo(tr);
     
-    $("<td />", {text: data.description}).appendTo(tr);
+    $("<td />", {"class": "description", text: data.description}).appendTo(tr);
     
     {% if user_is_admin %}
-    $("<td />", {text: data.level}).appendTo(tr);
+    
+    var edit = $("<a />", {text: "Edit", href: data.url});
+
+    $("<td />", {"class": "level", text: data.level}).appendTo(tr);
+    $("<td />", {html: edit}).appendTo(tr);
+    $("<td />", {html: 
+      $("<a />", {text: "Delete", href: data.url, "class": "delete-status"})
+    }).appendTo(tr);
+
+    edit.click(function(e){
+
+      e.preventDefault();
+      var a = $(e.target);
+      var tr = a.parent().parent();
+      var img = tr.children(".icon").children("img");
+      //This is somewhat ugly
+      var value = img.attr("src").split("/").pop().slice(0, -4);
+
+      $("#status-name").val(img.attr("alt"));
+      $("#status-description").val(tr.children(".description").text());
+      $("#statusLevel").val(tr.children(".level").text());
+      $("input[name=status-image]:checked").attr("checked", false);
+      $("input[value=" + value + "]").attr("checked", true);
+
+      $("#add-status-modal").dialog({
+          height: 515,
+          width: 460,
+          resizable: false,
+          autoOpen: true,
+          modal: true,
+          buttons: {
+            'Save': function(){
+              $.ajax({ 
+                type: "POST",
+                url: a.attr("href"),
+                data: { 
+                  name: $("#status-name").val(), 
+                  description: $("#status-description").val(),
+                  image: $("input[name=status-image]:checked").val(),
+                  level: $("#statusLevel").val()
+                },
+                dataType: 'json', 
+                context: tr,
+                success: function(data){ 
+                  $("#add-status-modal").dialog('close');
+                  this.children(".description").text(data.description);
+                  this.children(".level").text(data.level);
+                  this.children(".icon").children("img").attr("alt", data.name);
+                  this.children(".icon").children("img").attr("src", data.image);
+                },
+                error: function(){ 
+                  $("#add-status-modal").dialog('close');
+		  stashboard.error("Could not save status");
+                },
+              });
+                
+            },
+            'Cancel': function(){
+              $(this).dialog('close');
+            }
+          }
+    });
+    });			      
+
+
     {% endif %}
     
     $("#legend-body").append(tr);
   }
   
   $(document).ready(function(){
+
+    $("#add-status").click(function(){
+      $("#status-name").val("");
+      $("#status-description").val("");
+      $("#statusLevel").val("");
+      $("#add-status-modal").dialog('open');
+      $("input[name=status-image]").attr("checked", false);
+    });
+
     
     $.ajax({ 
       type: "GET",
@@ -150,23 +230,37 @@
             }
           }
     });
+
     
-    $(".delete-status").live('click', function(event){
-      event.preventDefault();
-      $.ajax({ 
-        type: "DELETE",
-        data: {},
-        url: $(this).attr("href"), 
-        context: $(this).parent().parent(), 
-        success: function(){
-              $(this).fadeOut('fast', function(){
-                $(this).remove();
-              });
+    $(".delete-status").live('click', function(e){
+      e.preventDefault();			      
+      var a = $(e.target); 			     
+      $("#delete-status-modal").dialog({
+        resizable: false,
+        modal: true,
+        buttons: {
+        'Delete Status': function(){
+          $.ajax({ 
+            type: "DELETE",
+            url: a.attr("href"),
+            dataType: 'json',
+            context: $("#delete-status-modal"),
+            success: function(data){
+              a.parent().parent().remove();
+              this.dialog('close');
             },
-        error: function(){
-	     stashboard.error("Unable to delete event");
-            },
-        });
+            error: function(){
+             this.dialog('close');			     
+	     stashboard.error("Unable to delete status");
+            },			      
+           });
+          },
+        'Cancel': function(){
+          $(this).dialog('close');
+        }
+      }
+     });
+
     });
     
   });
