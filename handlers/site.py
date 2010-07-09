@@ -51,7 +51,6 @@ import urlparse
 from google.appengine.ext import webapp
 from google.appengine.ext import db
 from google.appengine.api import users
-from google.appengine.api import oauth
 
 import oauth2 as oauth
 from handlers import restful

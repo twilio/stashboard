@@ -164,6 +164,31 @@ class Status(db.Model):
         """
         normal = Level.get_severity(Level.normal)
         return Status.all().filter('severity == ', normal).get()
+
+    @staticmethod
+    def install_defaults():
+        """
+        Install the default statuses. I am not sure where these should live just yet
+        """
+        # This should be Level.normal.severity and Level.normal.text
+        normal = Level.get_severity(Level.normal)
+        warning = Level.get_severity(Level.warning)
+        error = Level.get_severity(Level.error)
+
+        d = Status(name="Down", slug="down", image="cross-circle", severity=error, \
+                       description="The service is currently down")
+        u = Status(name="Up", slug="up", image="tick-circle", severity=normal, \
+                       description="The service is up")
+        w = Status(name="Warning", slug="warning", image="exclamation", severity=warning, \
+                       description="The service is experiencing intermittent problems")
+
+        d.put()
+        u.put()
+        w.put()
+
+        s = Setting(name="installed_defaults")
+        s.put()
+        
         
     name = db.StringProperty(required=True)
     slug = db.StringProperty(required=True)
@@ -236,4 +261,7 @@ class Profile(db.Model):
 class AuthRequest(db.Model):
     owner = db.UserProperty(required=True)
     request_secret = db.StringProperty()
+
+class Setting(db.Model):
+    name = db.StringProperty(required=True)
 
