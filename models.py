@@ -61,7 +61,9 @@ class Service(db.Model):
         return Service.all().filter('slug = ', service_slug).get()
         
     def current_event(self):
-        return self.events.order('-start').get()
+        event = self.events.order('-start').get()
+        return event
+
 
     #Specialty function for front page
     def last_five_days(self):
@@ -222,6 +224,7 @@ class Status(db.Model):
 class Event(db.Model):
 
     start = db.DateTimeProperty(required=True, auto_now_add=True)
+    informational = db.BooleanProperty(default=False)
     status = db.ReferenceProperty(Status, required=True)
     message = db.TextProperty(required=True)
     service = db.ReferenceProperty(Service, required=True, 
@@ -246,7 +249,7 @@ class Event(db.Model):
 
         stamp = mktime(self.start.timetuple())
         m["timestamp"] = format_date_time(stamp)
-        
+        m["informational"] = self.informational
         m["status"] = self.status.rest(base_url)
         m["message"] = str(self.message)
         m["url"] = base_url + self.resource_url()

@@ -15,9 +15,6 @@ VERSION = "1.0.0"
 DEBUG = os.environ['SERVER_SOFTWARE'].startswith('Dev')
 logging.info("Starting application in DEBUG mode: %s", DEBUG)
 
-# Don't change default_blog or default_page to prevent conflicts when merging #  Bloog source code updates.
-# Do change blog or page dictionaries at the bottom of this config module.
-
 SITE = {
     "html_type": "text/html",
     "charset": "utf-8",

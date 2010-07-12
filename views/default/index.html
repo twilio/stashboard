@@ -16,7 +16,7 @@
     
       var createServiceRow = function(data, fetchStatuses){
         informationImage = "/images/status/question-white.png";
-                
+	defaultImage = "/images/status/tick-circle.png";
         var tr = $('<tr />', {id: data.id});
         
         $('<td />').append(
@@ -26,9 +26,15 @@
           })
         ).appendTo(tr);
         
+	if (fetchStatuses) {
+		imageRow = informationImage;
+	} else {
+		imageRow = defaultImage;
+	}
+
         $('<td />', {"class": "status highlight"}).append(
           $("<img />", {
-            src: informationImage,
+            src: imageRow,
             alt: "Unknown Status"
           })
         ).appendTo(tr);
@@ -36,7 +42,7 @@
         for (var i=0; i < 5; i++) {
           $("<td />", {"class": "status"}).append(
             $("<img />", {
-              src: informationImage,
+              src: imageRow,
               alt: "Unknown Status"
             })
           ).appendTo(tr);
@@ -57,6 +63,8 @@
                 .attr("src", evt.status.image);
               },
             error: function(evt){ 
+              $("#" + data.id + " td.highlight img")
+                .attr("src", defaultImage);
               }
           });
           

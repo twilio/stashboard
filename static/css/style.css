@@ -57,16 +57,13 @@ h3.date-range {color: #999;}
 #add-service { margin-top: 20px;}
 #add-status { margin-top: 20px;}
 
-.legend h4 { color: #999; font-size: 18px; margin: 20px 0 5px 0;}
-.legend table {border: solid 5px rgb(228, 228, 228); width: 100%}
-.legend table tr td:first-child {width: 16px;}
 
 
 /* wordpress entries styling - main content column */
 #webservices table { width: 100%; border-spacing:10; font-size: 1.1em;}
 #webservices th {text-align: left;font-size: 20px;padding: 10px;border-bottom: 1px solid rgb(228, 228, 228);border-right: 1px solid rgb(228, 228, 228);}
 #webservices tr {font-size: 16px;}
-#webservices td {padding: 10px;border-bottom: 1px solid rgb(228, 228, 228);border-right: 1px solid rgb(228, 228, 228);}
+#webservices td {padding: 10px;border-bottom: 1px solid rgb(228, 228, 228);border-right: 1px solid rgb(228, 228, 228); vertical-align: middle;}
 #webservices .today {background: rgb(228, 228, 228);}
 #webservices .highlight {background: rgb(247, 247, 247);}
 #webservices .status, #webservices .date, #webservices .today, .delete {text-align: center;}
@@ -102,6 +99,13 @@ h3.date-range {color: #999;}
 #submit .update-status { float: left; margin: 10px 0px;}
 #submit .update-submit { clear: left; display: block; margin-left: auto; width: 150px;}
 
+#legend table tr, #legend table th {font-size: 12px}
+#legend h4 { color: #999; font-size: 18px; margin: 20px 0 5px 0;}
+#legend table {border: solid 2px rgb(228, 228, 228);width: auto}
+#legend table tr td:first-child {width: 16px;}
+#legend td {padding: 5px}
+
+
 #footer, #push {height: 3em;}
 #footer {padding: 0 30px; width: 900px; margin: auto;}
 #footer ul {padding: 10px 0px;}
@@ -119,11 +123,12 @@ h3.date-range {color: #999;}
 
 .breadcrumb { font-weight: normal;}
 
-#add-event { float: right;}
+#add-note, #update-status { float: right; margin-left: 15px}
 #add-event-model {display: none;}
 
-#delete-service {margin-top: 20px}
-#delete-service-modal {display: none;}
+#delete-service, #edit-service {margin-top: 20px}
+#delete-service {float: right}
+#delete-service-modal {display: none}
 
 #documentation { 
     font-size: 14px;

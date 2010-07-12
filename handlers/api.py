@@ -219,19 +219,27 @@ class EventsListHandler(restful.Controller):
         if (self.valid_version(version)):
             status_slug = self.request.get("status", default_value=None)
             message = self.request.get("message", default_value=None)
+            informational = self.request.get("informational", default_value=None)
             
             if message:
                 service = Service.get_by_slug(service_slug)
                 if service:
                     
                     if not status_slug:
-                        status = service.current_event().status
+                        event = service.current_event()
+                        if event:
+                            status = event.status
+                        else:
+                            status = Status.default()
                     else:
                         status = Status.get_by_slug(status_slug)
-                        
+
                     if status:
-                        e = Event(status=status, service=service, \
+                        e = Event(status=status, service=service,
                                 message=message)
+
+                        e.informational = informational and informational == "true"
+
                         e.put()
                         self.json(e.rest(self.base_url(version)))
                     else:

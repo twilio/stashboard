@@ -35,10 +35,16 @@
           var tr = $('<tr />');
           
           $('<td />', {text: time}).appendTo(tr);
+
+	  if (data.informational) {
+	      image = "/images/status/information.png";
+	  } else {
+              image = data.status.image;
+          }
           
           $('<td />', {"class": "status highlight"}).append(
             $('<img />', {
-              src: data.status.image, 
+              src: image, 
               alt: data.status.name
             })
           ).appendTo(tr);
@@ -68,7 +74,8 @@
           dataType: "json",
           success: function(service){
             
-            $("h2").append(service.name);
+            $("h2 span").text(service.name);
+	    $("#serviceDescription").text(service.description);
             
             {% if user_is_admin %}
             
@@ -157,7 +164,7 @@
               });
             });
 
-            $("#add-event").click(function(event){
+            $("#update-status").click(function(event){
               event.preventDefault();
               $("#add-event-modal").dialog({
 		    height: 290,
@@ -165,13 +172,13 @@
                     resizable: false,
                     modal: true,
                     buttons: {
-                      'Add Event': function(){
+                      'Update Status': function(){
 	                $.ajax({ 
 			type: "POST",
 			url: "/api/v1/services/" + service.id + "/events",
 			data: {
 			  status: $("#statusValue").val(),
-			  message: $("#messageValue").val(),
+			  message: $("#eventMessage").val(),
 			},
 			dataType: "json",
 			context:$("#add-event-modal"), 
@@ -192,6 +199,85 @@
                     }
 		});
             });
+
+            $("#add-note").click(function(event){
+              event.preventDefault();
+              $("#add-note-modal").dialog({
+		    height: 250,
+		    width: 460,
+                    resizable: false,
+                    modal: true,
+                    buttons: {
+                      'Add Note': function(){
+	                $.ajax({ 
+			type: "POST",
+			url: "/api/v1/services/" + service.id + "/events",
+			data: {
+			  message: $("#noteMessage").val(),
+			  informational: "true"
+			},
+			dataType: "json",
+			context:$("#add-note-modal"), 
+			success: function(data){
+			    this.dialog('close');
+			    var tr = createRow(data);
+			    $(".event-log").children('tbody').prepend(tr);
+			    },
+			error: function(){
+			    this.dialog('close');
+			    stashboard.error("Could not create note due to missing message");
+			},
+		        });
+                      },
+                      'Cancel': function(){
+                        $(this).dialog('close');
+                      }
+                    }
+		});
+            });
+
+        $("#service-name").val(service.name), 
+        $("#service-description").val(service.description)
+
+
+	$("#edit-service").click(function(e){
+	    e.preventDefault();
+            $("#edit-service-modal").dialog({
+              height: 310,
+              width: 460,
+              resizable: false,
+              modal: true,
+              buttons: {
+                'Edit Service': function(){
+                  $.ajax({ 
+                    type: "POST",
+                    url: "/api/v1/services/" + service.id,
+                    data: { 
+                      name: $("#service-name").val(), 
+                      description: $("#service-description").val()
+                      },
+                    dataType: 'json', 
+                    success: function(data){ 
+                      $("#edit-service-modal").dialog('close');
+			$("#serviceDescription").text(data.description);
+			$("h2 span").text(data.name);
+			$("#service-name").val(data.name);
+			$("#service-description").val(data.description);
+                      },
+                    error: function(evt){ 
+                      $("#edit-service-modal").dialog('close');
+		        stashboard.error("Could not create edit service information");
+                      }
+                    });
+                    
+                },
+                'Cancel': function(){
+                  $(this).dialog('close');
+                }
+              }
+            });
+        });
+
             
           },
           error: function(){
@@ -225,13 +311,19 @@
       <div id="webservices" class="frame">
         
         {% if user_is_admin %}
-          <a class="button" id="add-event">
-	    Add Event
+          <a class="button" id="update-status">
+	    Update Status
           </a>
+          <a class="button" id="add-note">
+	    Add Note
+          </a>
+
 
         {% endif %}
         
-        <h2><a class="breadcrumb" href="/">Home</a> :: </h2>
+        <h2><a class="breadcrumb" href="/">Home</a> :: <span></span></h2>
+
+	<p id="serviceDescription"></p>
         
         <h3 class="date-range">
           {% if start_date %}
@@ -258,6 +350,9 @@
           <a class="button" id="delete-service">
             Delete Service
           </a>
+          <a class="button" id="edit-service">
+            Edit Service
+          </a>
         {% endif %}
 
 
@@ -269,11 +364,24 @@
         <p>Are you sure you want to delete this service?</p>
       </div>
 
-      <div class="dialog" id="add-event-modal" title="Add New Event">
+      <div class="dialog" id="add-note-modal" title="Add Note">
+	<label id="messageLabel" for="message">Message:</label>
+	<textarea id="noteMessage" class="update-message" name="message"></textarea>
+      </div>
+
+      <div class="dialog" id="add-event-modal" title="Update Status">
 	<label id="statusLabel" for="status">Status:</label>
 	<select id="statusValue" class="update-status" name="severity"></select>
 	<label id="messageLabel" for="message">Message:</label>
-	<textarea id="messageValue" class="update-message" name="message"></textarea>
+	<textarea id="eventMessage" class="update-message" name="message"></textarea>
+      </div>
+
+      <div class="dialog" id="edit-service-modal" title="Edit Service">
+        <label  for="service-name">Name</label>
+        <input type="text" id="service-name" name="service-name">
+        <label for="service-description">Description</label>
+        <textarea
+          id="service-description" name="service-description"></textarea>
       </div>
       
       {% endif %}
