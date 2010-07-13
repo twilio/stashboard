@@ -11,7 +11,7 @@ a:hover{color:#666;}
 h1 {font-size: 32px;}
 h2 {font-size: 32px;}
 h3 {font-size: 24px;}
-h3.date-range {color: #999;}
+h3.date-range {color: #999; margin-top: 20px}
          
 #header {height: 70px;}
 
@@ -113,6 +113,9 @@ h3.date-range {color: #999;}
 #footer ul.right { float: right;}
 #footer ul li {display: inline;}
 #icons li, #icons li a{ color: #ccc; }
+
+td.status a{position: relative;}
+td.status a .information {position: absolute; top: 0px; left: 1px; z-index: 999999}
 
 .dialog label, .dialog textarea, .dialog input 
     { margin: 10px; clear: right;}

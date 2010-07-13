@@ -114,9 +114,21 @@
             
             };
 
+	    eventsURL = "/api/v1/services/" + service.id + "/events";
+	    
+	    {% if start_date %}
+	    
+	    var d = new Date()
+	    var gmtHours = -d.getTimezoneOffset()/60;
+	    eventsURL += "?after=" + "{{ start_date|date:"Y-n-j" }}";
+	    eventsURL += "&before=" + "{{ end_date|date:"Y-n-j" }}";
+	    eventsURL += "&offset=" + gmtHours;
+
+	    {% endif %}
+
             $.ajax({ 
               type: "GET",
-              url: "/api/v1/services/" + service.id + "/events",
+              url: eventsURL,
               dataType: "json",
               context: $(".event-log").children('tbody'), 
               success: function(data){
@@ -321,16 +333,16 @@
 
         {% endif %}
         
-        <h2><a class="breadcrumb" href="/">Home</a> :: <span></span></h2>
+        <h2><span></span></h2>
 
 	<p id="serviceDescription"></p>
-        
-        <h3 class="date-range">
-          {% if start_date %}
+
+        {% if start_date %}        
+          <h3 class="date-range">
             {{ start_date|date:"n/j/Y"  }}
-          {% endif %}
-        </h3>
-        
+          </h3>  
+        {% endif %}      
+
         <table class="event-log" cellpadding="10">
           <thead>
             <tr>

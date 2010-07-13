@@ -1,5 +1,5 @@
-application: twilio-status
-version: 1
+application: ismywebservicedown
+version: 3
 runtime: python
 api_version: 1
 

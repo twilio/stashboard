@@ -152,6 +152,12 @@ class ServiceInstanceHandler(restful.Controller):
             service = Service.get_by_slug(service_slug)
             
             if service:
+                query = Event.all()
+                query.filter('service =', service)
+                if query:
+                    for e in query:
+                        e.delete()
+
                 service.delete()
                 self.json(service.rest(self.base_url(version)))
             else:
@@ -173,13 +179,15 @@ class EventsListHandler(restful.Controller):
             if service:
                 after = self.request.get('after', default_value=None)
                 before = self.request.get('before', default_value=None)
-                
+                offset = int(self.request.get('offset', default_value=0))
+                                 
                 query = Event.all()
                 query.filter('service =', service)
                         
                 if after:
                     try:
                         aft = datetime.datetime.strptime(after, "%Y-%m-%d")
+                        aft = aft + timedelta(hours=offset)
                         query.filter("start > ", aft)
                     except:
                         self.error(400, "Invalid Date: %s" % after)
@@ -188,6 +196,7 @@ class EventsListHandler(restful.Controller):
                 if before:
                     try:
                         bef = datetime.datetime.strptime(before, "%Y-%m-%d")
+                        bef = bef + timedelta(hours=offset)
                         query.filter("start <", bef)
                     except:
                         self.error(400, "Invalid Date: %s" % before)
@@ -300,16 +309,21 @@ class EventCalendarHandler(restful.Controller):
                         
                     for i in range(days):
                         summary = status
+                        information = False
 
                         for e in service.events_for_day(aft):
                             if e.status.severity > summary.severity:
                                 summary = e.status
+                                information = True
+                            if e.informational:
+                                information = True
                             
                         stamp = mktime(aft.timetuple())
                     
                         calendar.append({
                             "date": format_date_time(stamp),
                             "summary": summary.rest(self.base_url(version)),
+                            "information": information,
                         })
                     
                         aft = aft - timedelta(days=1)

@@ -33,9 +33,12 @@
 	}
 
         $('<td />', {"class": "status highlight"}).append(
-          $("<img />", {
-            src: imageRow,
-            alt: "Unknown Status"
+          $('<a />', {
+            href: 'services/' + data.id,
+            html: $("<img />", {
+              src: imageRow,
+              alt: "Unknown Status"
+            })
           })
         ).appendTo(tr);
         
@@ -61,6 +64,9 @@
             success: function(evt){ 
               $("#" + data.id + " td.highlight img")
                 .attr("src", evt.status.image);
+	      $("#" + data.id + " td.highlight a").append(
+	        $("<img />", {src: "/images/small-information.png", "class": "information"})
+		);
               },
             error: function(evt){ 
               $("#" + data.id + " td.highlight img")
@@ -84,16 +90,16 @@
                 var day = results.days[i];
                 var d = new Date(day.date);
                 var td = $("#" + data.id).children("td").eq(i+2);
+
+                url = "/services/" + data.id + "/" + d.getUTCFullYear() + "/";
+                url += (d.getUTCMonth() + 1) + "/" + d.getUTCDate();
                 
-                if (day.summary.level != "NORMAL") {
-                  url = "/services/" + data.id + "/" + d.getUTCFullYear() + "/";
-                  url += (d.getUTCMonth() + 1) + "/" + d.getUTCDate();
-                  
+                if (day.information) {
                   td.html($("<a />", {href: url}).append(
                     $("<img />",{src: "/images/status/information.png"})));
-                    
                 } else {
-                  td.html($("<img />",{src: day.summary.image}));
+                  td.html($("<a />", {href: url}).append(
+                    $("<img />",{src: day.summary.image})));
                 }
               }
               
@@ -194,7 +200,7 @@
             <thead>
               <tr>
                 <th>Service</th>
-                <th class="today">Today</th>
+                <th class="today">Current</th>
             </thead>
 
             <tbody id="services-body">
