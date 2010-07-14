@@ -115,7 +115,7 @@ h3.date-range {color: #999; margin-top: 20px}
 #icons li, #icons li a{ color: #ccc; }
 
 td.status a{position: relative;}
-td.status a .information {position: absolute; top: 0px; left: 1px; z-index: 999999}
+td.status a .information {position: absolute; top: 0px; left: 1px; z-index: 500;}
 
 .dialog label, .dialog textarea, .dialog input 
     { margin: 10px; clear: right;}

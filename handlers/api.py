@@ -187,7 +187,7 @@ class EventsListHandler(restful.Controller):
                 if after:
                     try:
                         aft = datetime.datetime.strptime(after, "%Y-%m-%d")
-                        aft = aft + timedelta(hours=offset)
+                        aft = aft - timedelta(hours=offset)
                         query.filter("start > ", aft)
                     except:
                         self.error(400, "Invalid Date: %s" % after)
@@ -196,7 +196,7 @@ class EventsListHandler(restful.Controller):
                 if before:
                     try:
                         bef = datetime.datetime.strptime(before, "%Y-%m-%d")
-                        bef = bef + timedelta(hours=offset)
+                        bef = bef - timedelta(hours=offset)
                         query.filter("start <", bef)
                     except:
                         self.error(400, "Invalid Date: %s" % before)

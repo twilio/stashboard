@@ -64,10 +64,16 @@
             success: function(evt){ 
               $("#" + data.id + " td.highlight img")
                 .attr("src", evt.status.image);
-	      $("#" + data.id + " td.highlight a").append(
-	        $("<img />", {src: "/images/small-information.png", "class": "information"})
-		);
-              },
+                
+              if (evt.informational) {
+                $("#" + data.id + " td.highlight a").append(
+                  $("<img />", {
+                    src: "/images/small-information.png", 
+                    "class": "information"
+                    })
+                  )
+                }
+            },
             error: function(evt){ 
               $("#" + data.id + " td.highlight img")
                 .attr("src", defaultImage);
