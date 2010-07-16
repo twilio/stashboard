@@ -111,7 +111,7 @@ class Service(db.Model):
         
         next_day = day + timedelta(days=1)
         
-        return self.events.filter('start >', day) \
+        return self.events.filter('start >=', day) \
             .filter('start <', next_day).fetch(40)
             
     def compare(self, other_status):

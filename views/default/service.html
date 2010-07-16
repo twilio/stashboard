@@ -117,12 +117,12 @@
 	    eventsURL = "/api/v1/services/" + service.id + "/events";
 	    
 	    {% if start_date %}
-	    
-	    var d = new Date()
-	    var gmtHours = -d.getTimezoneOffset()/60;
-	    eventsURL += "?after=" + "{{ start_date|date:"Y-n-j" }}";
-	    eventsURL += "&before=" + "{{ end_date|date:"Y-n-j" }}";
-	    eventsURL += "&offset=" + gmtHours;
+
+	    var start = rfc1123(new Date("{{ start_date }}"));
+	    var end = rfc1123(new Date("{{ end_date }}"));
+
+	    eventsURL += "?start=" + start;
+	    eventsURL += "&end=" + end;
 
 	    {% endif %}
 

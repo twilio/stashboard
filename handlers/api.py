@@ -30,6 +30,10 @@ __author__ = 'Kyle Conroy'
 
 import datetime
 from datetime import timedelta
+from datetime import date
+from datetime import datetime
+from datetime import time
+from dateutil.parser import parse
 import string
 import re
 import os
@@ -52,6 +56,14 @@ from utils import slugify
 from models import Status, Event, Service, Level
 import config
 
+def aware_to_naive(d):
+    """Convert an aware date to an naive date, in UTC"""
+    offset = d.utcoffset()
+    if offset:
+        d = d.replace(tzinfo=None)
+        d = d - offset
+    return d
+
 class NotFoundHandler(restful.Controller):
     def get(self):
         logging.debug("NotFoundAPIHandler#get")
@@ -64,6 +76,7 @@ class ServicesListHandler(restful.Controller):
             
             query = Service.all().order('name')
             data = []
+
 
             for s in query:
                 data.append(s.rest(self.base_url(version)))
@@ -105,11 +118,11 @@ class ServicesListHandler(restful.Controller):
 
             
 class ServiceInstanceHandler(restful.Controller):
-    def get(self, version, service):
+    def get(self, version, service_slug):
         logging.debug("ServiceInstanceHandler#get")
         
         if (self.valid_version(version)):
-            service = Service.get_by_slug(service)
+            service = Service.get_by_slug(service_slug)
 
             if (service):
                 self.json(service.rest(self.base_url(version)))
@@ -177,29 +190,26 @@ class EventsListHandler(restful.Controller):
             service = Service.get_by_slug(service_slug)
 
             if service:
-                after = self.request.get('after', default_value=None)
-                before = self.request.get('before', default_value=None)
-                offset = int(self.request.get('offset', default_value=0))
+                start = self.request.get('start', default_value=None)
+                end = self.request.get('end', default_value=None)
                                  
                 query = Event.all()
                 query.filter('service =', service)
                         
-                if after:
+                if start:
                     try:
-                        aft = datetime.datetime.strptime(after, "%Y-%m-%d")
-                        aft = aft - timedelta(hours=offset)
-                        query.filter("start > ", aft)
+                        _start = aware_to_naive(parse(start))
+                        query.filter("start >= ", _start)
                     except:
-                        self.error(400, "Invalid Date: %s" % after)
+                        self.error(400, "Invalid Date: %s" % start)
                         return
 
-                if before:
+                if end:
                     try:
-                        bef = datetime.datetime.strptime(before, "%Y-%m-%d")
-                        bef = bef - timedelta(hours=offset)
-                        query.filter("start <", bef)
+                        _end  = aware_to_naive(parse(end))
+                        query.filter("start <=", _end)
                     except:
-                        self.error(400, "Invalid Date: %s" % before)
+                        self.error(400, "Invalid Date: %s" % end)
                         return
                         
                 query.order('-start')
@@ -294,17 +304,41 @@ class EventCalendarHandler(restful.Controller):
 
             if service:
                 if status:
-                    today = datetime.datetime.now()
-                    start = self.request.get('start', default_value=today.strftime("%Y-%m-%d"))
-                    days = int(self.request.get('days', default_value="10"))
-                
-                    if start and days:
+                    start = self.request.get('start', default_value=None)
+                    end = self.request.get('end', default_value=None)
+
+                    if start:
                         try:
-                            aft = datetime.datetime.strptime(start, "%Y-%m-%d")
+                            aft = parse(start)
+                            offset = aft.utcoffset()
+                            aft = aware_to_naive(aft)
+                            aft = aft.replace(hour=0, minute=0,second=0,microsecond=0)
+                            if offset:
+                                aft = aft - offset
                         except:
                             self.error(400, "Invalid Date: %s" % start)
                             return
-                        
+                    else:
+                        aft = datetime.combine(date.today(), time())
+
+
+                    if not end:
+                        _end = aft + timedelta(days=10)
+                    else:
+                        try:
+                            _end = parse(end)
+                            offset = _end.utcoffset()
+                            _end = aware_to_naive(_end)
+                            _end = _end.replace(hour=0, minute=0,second=0,microsecond=0)
+                            if offset:
+                                _end = _end - offset
+
+                        except:
+                            self.error(400, "Invalid Date: %s" % end)
+                            return
+                    
+                    # Add one so that we include the last day of the range
+                    days = (_end - aft).days + 1
                     calendar = []
                         
                     for i in range(days):
@@ -326,7 +360,7 @@ class EventCalendarHandler(restful.Controller):
                             "information": information,
                         })
                     
-                        aft = aft - timedelta(days=1)
+                        aft = aft + timedelta(days=1)
 
                     self.json({"days": calendar})
                 else:

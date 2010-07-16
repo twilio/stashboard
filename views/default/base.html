@@ -28,6 +28,33 @@ src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></sc
       $("code").addClass("prettyprint");
       prettyPrint();
     });
+	  function rfc1123(date){
+	    rfc = $.datepicker.formatDate("D, d M yy", date);
+            rfc = rfc + " " + date.getHours() + ":";
+	    rfc = rfc + date.getMinutes() + ":" + date.getSeconds();
+	    offset = date.getTimezoneOffset();
+	    minutes = offset % 60;
+	    hours = (offset - minutes) / 60;
+
+	    if (offset < 0) {
+		off = "+";
+	    } else {
+		off = "-";
+	    }
+	    
+	    if (hours < 10) {
+		off += "0";
+	    } 
+	    off += hours.toString();
+
+	    if (minutes < 10) {
+		off += "0";
+	    }
+	    off += minutes.toString();
+	
+	    return rfc + " " + off;
+	  }
+
     </script>
     {% block js %}
     {% endblock %}

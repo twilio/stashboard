@@ -80,11 +80,12 @@
               }
           });
           
-          
-          currentDate = new Date(currentNow.getTime() -  86400000);
-          var before = $.datepicker.formatDate("yy-m-d", currentDate);
+          rightNow = new Date();
+          endDate = new Date(rightNow.getTime() -  86400000);
+	  startDate = new Date(endDate.getTime() - 86400000 * 4);
           var url = "/api/v1/services/" + data.id + "/events/calendar";
-          url += "?start=" + before + "&days=" + 5;
+          url += "?start=" + rfc1123(startDate);
+	  url += "&end=" + rfc1123(endDate);
           
           $.ajax({ 
             type: "GET",
@@ -92,6 +93,7 @@
             dataType: 'json', 
             success: function(results){ 
               
+	      results.days.reverse();
               for (var i=0; i < results.days.length; i++) {
                 var day = results.days[i];
                 var d = new Date(day.date);
