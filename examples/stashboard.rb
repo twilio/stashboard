@@ -2,11 +2,11 @@ require 'rubygems'
 require 'oauth'
 require 'json'
 
-oauth_key = '1/PGS5Fvp5hmtUTlHnLyWDVHc8mPrev6IGwa7kicolTT8'
-oauth_secret = 'MnqTu_kS47zCs0p0xr9w3H02'
+oauth_key = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+oauth_secret = 'YYYYYYYYYYYYYYYYYYYYYYYY'
 
 # Fill in your website
-base = "https://ismywebservicedown.appspot.com"
+base = "https://stashboard.appspot.com"
 
 @consumer=OAuth::Consumer.new "anonymous", 
                               "anonymous",

@@ -4,8 +4,8 @@
   
   $consumer_key = 'anonymous';
   $consumer_secret = 'anonymous';
-  $oauth_key = '1/PGS5Fvp5hmtUTlHnLyWDVHc8mPrev6IGwa7kicolTT8';
-  $oauth_secret = 'MnqTu_kS47zCs0p0xr9w3H02';
+  $oauth_key = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+  $oauth_secret = 'YYYYYYYYYYYYYYYYYYYYYYYY'
   
   $consumer = new OAuthConsumer($consumer_key, $consumer_secret);
   $token = new OAuthToken($oauth_key, $oauth_secret);
@@ -35,7 +35,7 @@
   }
   
   // Fill in your website
-  $base_url = "https://ismywebservicedown.appspot.com/api/v1";
+  $base_url = "https://stashboard.appspot.com/api/v1";
   
   $data = array(
       "name" => "An Example Service",
