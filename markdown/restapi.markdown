@@ -96,7 +96,7 @@ Param          Optional    Description
 name            Required    Name of the service
 
 description     Required    Description of service
--------------------------------------------------------------
+------------------------------------------------------------
 Table: Services List POST parameters
 
 ##### Example
@@ -303,29 +303,30 @@ Not supported
     
 The Events List resource also supports filtering events via dates. To filter events, place on of the following options into the query string for a GET request
 
+While the format of these parameters is very flexible, we suggested either the RFC 2822 or RFC 1123 format due to their support for encoding timezone information.
+
 -------------------------------------------------------------
 
 Option     Description
 -----       --------------------------------
-before      Only show events before this 
-            date. Must be in the format 
-            YYYY-MM-DD
+start	    Only show events which started after
+            this date, inclusive.
             
-after       Only show events after this 
-            date. Must be in the format 
-            YYYY-MM-DD
+end         Only show events which started before
+	    this date, inclusive. 
+
 -------------------------------------------------------------
 Table: Events List URL Filtering Options
 
 ##### Example
 
-> GET /api/v1/services/{service}/events?before=2010-06-10 HTTP/1.1
+> GET /api/v1/services/{service}/events?start=2010-06-10 HTTP/1.1
 
-would return all events before June 6, 2010. 
+would return all events starting after June 6, 2010. 
 
-Similarly, both "before" and "after" can be used to create date ranges
+Similarly, both "start" and "end" can be used to create date ranges
 
-> GET /api/v1/services/{service}/events?before=2010-06-17&after=2010-06-01 HTTP/1.1
+> GET /api/v1/services/{service}/events?end=2010-06-17&start=2010-06-01 HTTP/1.1
 
 would return all events between June 6, 2010 and June 17, 2010  
   
@@ -427,78 +428,6 @@ Deletes the given event and returns the deleted event
             "url": "/statuses/down",
         },    
     }
-
-## Service Calendar Resource
-
-The Service Calendar resource represents the status of the service over a given date range. The returned object contains a list of date objects, detailed below.
-
-### Resource URL
-
-> api/v1/services/{service}/calendar
-
-### Resource Properties
-
--------------------------------------------------------------
-
-Property                   Description
---------------------        ---------------------------------------------
-day                         The day this object represents, given
-                            in RFC 1132 format.
-                
-summary                     The overall status for the given day. See the 
-                            Statuses resource
-                
--------------------------------------------------------------
-Table: Calendar day object properties
-
-### HTTP Methods
-
-#### GET
-
-Return a list of day objects. Two options are available to affect the number and type of results returned. 
-
--------------------------------------------------------------
-
-Option  Default         Description
------    -----------     --------------------------------
-start    Current         First day returned in the list. 
-         Date            Must be in the format YYYY-MM-DD
-            
-days     10              The number of days to return 
-                         prior to the start date 
-                         (specified above)
--------------------------------------------------------------
-Table: Calendar Resource Query options
-
-##### Example
-
-> GET /api/v1/services/{service}/events/calendar?start=2010-6-22&days=5
-
-    { "days": [
-        {
-            "date": "Tue, 22 Jun 2010 00:00:00 GMT", 
-            "summary": {
-                "description": "This web service is up", 
-                "url": "/api/v1/statuses/up", 
-                "image": "/images/status/tick-circle.png", 
-                "name": "Up", 
-                "id": "up", 
-                "level": "NORMAL",
-            }
-        },         
-        
-        ........
-        
-        ]
-    }
-    
-#### POST / PUT
-
-Not supported
-
-#### DELETE
-
-Not supported
 
 ## Status List Resource
 

@@ -51,8 +51,8 @@
     ><table
     ><caption
       >Service resource properties</caption
-      ><col width="20%"
-       /><col width="56%"
+      ><col width="16%"
+       /><col width="46%"
        /><thead
       ><tr class="header"
 	><th align="left"
@@ -155,9 +155,9 @@
       ><table
       ><caption
 	>Services List POST parameters</caption
-	><col width="20%"
-	 /><col width="15%"
-	 /><col width="40%"
+	><col width="16%"
+	 /><col width="12%"
+	 /><col width="32%"
 	 /><thead
 	><tr class="header"
 	  ><th align="left"
@@ -258,9 +258,9 @@
       ><table
       ><caption
 	>Service Instance POST parameters</caption
-	><col width="20%"
-	 /><col width="15%"
-	 /><col width="40%"
+	><col width="16%"
+	 /><col width="12%"
+	 /><col width="32%"
 	 /><thead
 	><tr class="header"
 	  ><th align="left"
@@ -356,8 +356,8 @@
     ><table
     ><caption
       >Event resource properties</caption
-      ><col width="20%"
-       /><col width="56%"
+      ><col width="16%"
+       /><col width="46%"
        /><thead
       ><tr class="header"
 	><th align="left"
@@ -429,7 +429,7 @@
                 &quot;name&quot;: &quot;Down&quot;,
                 &quot;description&quot;: &quot;An explanation of what this status represents&quot;,
                 &quot;level&quot;: &quot;ERROR&quot;,
-                &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
+                &quot;image&quot;: &quot;/images/status/cross-circle.png&quot;,
                 &quot;url&quot;: &quot;/api/v1/statuses/down&quot;,
             },
         }, 
@@ -443,7 +443,7 @@
                 &quot;name&quot;: &quot;Down&quot;,
                 &quot;description&quot;: &quot;An explanation of what this status represents&quot;,
                 &quot;level&quot;: &quot;ERROR&quot;,
-                &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
+                &quot;image&quot;: &quot;/images/status/cross-circle.png&quot;,
                 &quot;url&quot;: &quot;/api/v1/statuses/down&quot;,
             },
         }
@@ -461,9 +461,9 @@
       ><table
       ><caption
 	>Events List POST parameters</caption
-	><col width="15%"
-	 /><col width="15%"
-	 /><col width="40%"
+	><col width="12%"
+	 /><col width="12%"
+	 /><col width="32%"
 	 /><thead
 	><tr class="header"
 	  ><th align="left"
@@ -512,7 +512,7 @@
         &quot;name&quot;: &quot;Down&quot;,
         &quot;description&quot;: &quot;An explanation of what this status represents&quot;,
         &quot;level&quot;: &quot;ERROR&quot;,
-        &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
+        &quot;image&quot;: &quot;/images/status/cross-circle.png&quot;,
         &quot;url&quot;: &quot;/api/v1/statuses/down&quot;,
     },
 }
@@ -538,11 +538,13 @@
     >URL Filtering</h3
     ><p
     >The Events List resource also supports filtering events via dates. To filter events, place on of the following options into the query string for a GET request</p
+    ><p
+    >While the format of these parameters is very flexible, we suggested either the RFC 2822 or RFC 1123 format due to their support for encoding timezone information.</p
     ><table
     ><caption
       >Events List URL Filtering Options</caption
-      ><col width="15%"
-       /><col width="40%"
+      ><col width="12%"
+       /><col width="32%"
        /><thead
       ><tr class="header"
 	><th align="left"
@@ -554,15 +556,15 @@
       ><tbody
       ><tr class="odd"
 	><td align="left"
-	  >before</td
+	  >start</td
 	  ><td align="left"
-	  >Only show events before this date. Must be in the format YYYY-MM-DD</td
+	  >Only show events which started after this date, inclusive.</td
 	  ></tr
 	><tr class="even"
 	><td align="left"
-	  >after</td
+	  >end this</td
 	  ><td align="left"
-	  >Only show events after this date. Must be in the format YYYY-MM-DD</td
+	  >Only show events which started before date, inclusive.</td
 	  ></tr
 	></tbody
       ></table
@@ -571,15 +573,15 @@
       >Example</h5
       ><blockquote
       ><p
-	>GET /api/v1/services/{service}/events?before=2010-06-10 HTTP/1.1</p
+	>GET /api/v1/services/{service}/events?start=2010-06-10 HTTP/1.1</p
 	></blockquote
       ><p
-      >would return all events before June 6, 2010.</p
+      >would return all events starting after June 6, 2010.</p
       ><p
-      >Similarly, both &quot;before&quot; and &quot;after&quot; can be used to create date ranges</p
+      >Similarly, both &quot;start&quot; and &quot;end&quot; can be used to create date ranges</p
       ><blockquote
       ><p
-	>GET /api/v1/services/{service}/events?before=2010-06-17&amp;after=2010-06-01 HTTP/1.1</p
+	>GET /api/v1/services/{service}/events?end=2010-06-17&amp;start=2010-06-01 HTTP/1.1</p
 	></blockquote
       ><p
       >would return all events between June 6, 2010 and June 17, 2010</p
@@ -623,7 +625,7 @@
         &quot;name&quot;: &quot;Down&quot;,
         &quot;description&quot;: &quot;An explanation of what this status represents&quot;,
         &quot;level&quot;: &quot;ERROR&quot;,
-        &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
+        &quot;image&quot;: &quot;/images/status/cross-circle.png&quot;,
         &quot;url&quot;: &quot;/api/v1/statuses/down&quot;,
     },
 }
@@ -684,7 +686,7 @@
         &quot;name&quot;: &quot;Down&quot;,
         &quot;description&quot;: &quot;An explanation of what this status represents&quot;,
         &quot;level&quot;: &quot;ERROR&quot;,
-        &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
+        &quot;image&quot;: &quot;/images/status/cross-circle.png&quot;,
         &quot;url&quot;: &quot;/api/v1/statuses/down&quot;,
     },
 }
@@ -722,7 +724,7 @@
         &quot;name&quot;: &quot;Down&quot;,
         &quot;description&quot;: &quot;An explanation of what this status represents&quot;,
         &quot;level&quot;: &quot;ERROR&quot;,
-        &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
+        &quot;image&quot;: &quot;/images/status/cross-circle.png&quot;,
         &quot;url&quot;: &quot;/statuses/down&quot;,
     },    
 }
@@ -732,144 +734,12 @@
       ></div
     ></div
   ></div
-><div id="service-calendar-resource"
-><h2
-  >Service Calendar Resource</h2
-  ><p
-  >The Service Calendar resource represents the status of the service over a given date range. The returned object contains a list of date objects, detailed below.</p
-  ><div id="resource-url-5"
-  ><h3
-    >Resource URL</h3
-    ><blockquote
-    ><p
-      >api/v1/services/{service}/calendar</p
-      ></blockquote
-    ></div
-  ><div id="resource-properties-1"
-  ><h3
-    >Resource Properties</h3
-    ><table
-    ><caption
-      >Calendar day object properties</caption
-      ><col width="35%"
-       /><col width="56%"
-       /><thead
-      ><tr class="header"
-	><th align="left"
-	  >Property</th
-	  ><th align="left"
-	  >Description</th
-	  ></tr
-	></thead
-      ><tbody
-      ><tr class="odd"
-	><td align="left"
-	  >day</td
-	  ><td align="left"
-	  >The day this object represents, given in RFC 1132 format.</td
-	  ></tr
-	><tr class="even"
-	><td align="left"
-	  >summary</td
-	  ><td align="left"
-	  >The overall status for the given day. See the Statuses resource</td
-	  ></tr
-	></tbody
-      ></table
-    ></div
-  ><div id="http-methods-4"
-  ><h3
-    >HTTP Methods</h3
-    ><div id="get-5"
-    ><h4
-      >GET</h4
-      ><p
-      >Return a list of day objects. Two options are available to affect the number and type of results returned.</p
-      ><table
-      ><caption
-	>Calendar Resource Query options</caption
-	><col width="11%"
-	 /><col width="20%"
-	 /><col width="40%"
-	 /><thead
-	><tr class="header"
-	  ><th align="left"
-	    >Option</th
-	    ><th align="left"
-	    >Default</th
-	    ><th align="left"
-	    >Description</th
-	    ></tr
-	  ></thead
-	><tbody
-	><tr class="odd"
-	  ><td align="left"
-	    >start</td
-	    ><td align="left"
-	    >Current Date</td
-	    ><td align="left"
-	    >First day returned in the list. Must be in the format YYYY-MM-DD</td
-	    ></tr
-	  ><tr class="even"
-	  ><td align="left"
-	    >days</td
-	    ><td align="left"
-	    >10</td
-	    ><td align="left"
-	    >The number of days to return prior to the start date (specified above)</td
-	    ></tr
-	  ></tbody
-	></table
-      ><div id="example-11"
-      ><h5
-	>Example</h5
-	><blockquote
-	><p
-	  >GET /api/v1/services/{service}/events/calendar?start=2010-6-22&amp;days=5</p
-	  ></blockquote
-	><pre
-	><code
-	  >{ &quot;days&quot;: [
-    {
-        &quot;date&quot;: &quot;Tue, 22 Jun 2010 00:00:00 GMT&quot;, 
-        &quot;summary&quot;: {
-            &quot;description&quot;: &quot;This web service is up&quot;, 
-            &quot;url&quot;: &quot;/api/v1/statuses/up&quot;, 
-            &quot;image&quot;: &quot;/images/status/tick-circle.png&quot;, 
-            &quot;name&quot;: &quot;Up&quot;, 
-            &quot;id&quot;: &quot;up&quot;, 
-            &quot;level&quot;: &quot;NORMAL&quot;,
-        }
-    },         
-
-    ........
-
-    ]
-}
-</code
-	  ></pre
-	></div
-      ></div
-    ><div id="post-put-2"
-    ><h4
-      >POST / PUT</h4
-      ><p
-      >Not supported</p
-      ></div
-    ><div id="delete-4"
-    ><h4
-      >DELETE</h4
-      ><p
-      >Not supported</p
-      ></div
-    ></div
-  ></div
 ><div id="status-list-resource"
 ><h2
   >Status List Resource</h2
   ><p
   >The Status List resource represents all possible systems statuses.</p
-  ><div id="resource-url-6"
+  ><div id="resource-url-5"
   ><h3
     >Resource URL</h3
     ><blockquote
@@ -877,14 +747,14 @@
       >api/v1/statuses</p
       ></blockquote
     ></div
-  ><div id="resource-properties-2"
+  ><div id="resource-properties-1"
   ><h3
     >Resource Properties</h3
     ><table
     ><caption
       >Status resource properties</caption
-      ><col width="20%"
-       /><col width="56%"
+      ><col width="16%"
+       /><col width="46%"
        /><thead
       ><tr class="header"
 	><th align="left"
@@ -933,15 +803,15 @@
 	></tbody
       ></table
     ></div
-  ><div id="http-methods-5"
+  ><div id="http-methods-4"
   ><h3
     >HTTP Methods</h3
-    ><div id="get-6"
+    ><div id="get-5"
     ><h4
       >GET</h4
       ><p
       >Returns all possible service statuses</p
-      ><div id="example-12"
+      ><div id="example-11"
       ><h5
 	>Example</h5
 	><blockquote
@@ -957,7 +827,7 @@
             &quot;id&quot;: &quot;available&quot;,
             &quot;description&quot;: &quot;An explanation of what this status represents&quot;,
             &quot;level&quot;: &quot;NORMAL&quot;,
-            &quot;image&quot;: &quot;/static/images/status/tick-circle.png&quot;,
+            &quot;image&quot;: &quot;/images/status/tick-circle.png&quot;,
             &quot;url&quot;: &quot;api/v1/statuses/up&quot;,
         },
         {
@@ -965,7 +835,7 @@
             &quot;id&quot;: &quot;down&quot;,
             &quot;description&quot;: &quot;An explanation of what this status represents&quot;,
             &quot;level&quot;: &quot;ERROR&quot;,
-            &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
+            &quot;image&quot;: &quot;/images/status/cross-circle.png&quot;,
             &quot;url&quot;: &quot;api/v1/statuses/down&quot;,
         },
     ]
@@ -982,9 +852,9 @@
       ><table
       ><caption
 	>Status Instance POST parameters</caption
-	><col width="20%"
-	 /><col width="15%"
-	 /><col width="40%"
+	><col width="16%"
+	 /><col width="12%"
+	 /><col width="32%"
 	 /><thead
 	><tr class="header"
 	  ><th align="left"
@@ -1030,7 +900,7 @@
 	    ></tr
 	  ></tbody
 	></table
-      ><div id="example-13"
+      ><div id="example-12"
       ><h5
 	>Example</h5
 	><blockquote
@@ -1057,7 +927,7 @@
       ><p
       >Not Supported</p
       ></div
-    ><div id="delete-5"
+    ><div id="delete-4"
     ><h4
       >DELETE</h4
       ><p
@@ -1070,7 +940,7 @@
   >Status Instance Resource</h2
   ><p
   >The Status Instance resource represents a single service status</p
-  ><div id="resource-url-7"
+  ><div id="resource-url-6"
   ><h3
     >Resource Url</h3
     ><blockquote
@@ -1078,12 +948,12 @@
       >/api/v1/statuses/{name}</p
       ></blockquote
     ></div
-  ><div id="get-7"
+  ><div id="get-6"
   ><h3
     >GET</h3
     ><p
     >Returns a status object</p
-    ><div id="example-14"
+    ><div id="example-13"
     ><h4
       >Example</h4
       ><pre
@@ -1093,7 +963,7 @@
     &quot;id&quot;: &quot;down&quot;,
     &quot;description&quot;: &quot;A new status&quot;,
     &quot;level&quot;: &quot;ERROR&quot;,
-    &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
+    &quot;image&quot;: &quot;/images/status/cross-circle.png&quot;,
     &quot;url&quot;: &quot;/api/v1/statuses/down&quot;,
 }
 </code
@@ -1106,9 +976,9 @@
     ><table
     ><caption
       >Status Instance POST parameters</caption
-      ><col width="20%"
-       /><col width="15%"
-       /><col width="40%"
+      ><col width="16%"
+       /><col width="12%"
+       /><col width="32%"
        /><thead
       ><tr class="header"
 	><th align="left"
@@ -1156,7 +1026,7 @@
       ></table
     ><p
     >Returns the newly updated status</p
-    ><div id="example-15"
+    ><div id="example-14"
     ><h4
       >Example</h4
       ><blockquote
@@ -1170,19 +1040,19 @@
     &quot;id&quot;: &quot;down&quot;,
     &quot;description&quot;: &quot;A new status&quot;,
     &quot;level&quot;: &quot;ERROR&quot;,
-    &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
+    &quot;image&quot;: &quot;/images/status/cross-circle.png&quot;,
     &quot;url&quot;: &quot;/api/v1/statuses/down&quot;,
 }
 </code
 	></pre
       ></div
     ></div
-  ><div id="delete-6"
+  ><div id="delete-5"
   ><h3
     >DELETE</h3
     ><p
     >Delete the given status and return the deleted status</p
-    ><div id="example-16"
+    ><div id="example-15"
     ><h4
       >Example</h4
       ><blockquote
@@ -1196,7 +1066,7 @@
     &quot;id&quot;: &quot;down&quot;,
     &quot;description&quot;: &quot;A new status&quot;,
     &quot;level&quot;: &quot;ERROR&quot;,
-    &quot;image&quot;: &quot;/static/images/status/cross-circle.png&quot;,
+    &quot;image&quot;: &quot;/images/status/cross-circle.png&quot;,
     &quot;url&quot;: &quot;/api/v1/statuses/down&quot;,
 }
 </code
@@ -1215,7 +1085,7 @@
   >Status Levels Resource</h2
   ><p
   >The Status Levels resource is a read-only resource which lists the possible levels for a status.</p
-  ><div id="resource-url-8"
+  ><div id="resource-url-7"
   ><h3
     >Resource Url</h3
     ><blockquote
@@ -1223,12 +1093,12 @@
       >/api/v1/levels</p
       ></blockquote
     ></div
-  ><div id="get-8"
+  ><div id="get-7"
   ><h3
     >GET</h3
     ><p
     >Returns a list of possible status levels in increasing severity</p
-    ><div id="example-17"
+    ><div id="example-16"
     ><h4
       >Example</h4
       ><blockquote
@@ -1250,13 +1120,13 @@
 	></pre
       ></div
     ></div
-  ><div id="post-put-3"
+  ><div id="post-put-2"
   ><h3
     >POST / PUT</h3
     ><p
     >Not supported</p
     ></div
-  ><div id="delete-7"
+  ><div id="delete-6"
   ><h3
     >DELETE</h3
     ><p
@@ -1268,7 +1138,7 @@
   >Status Images Resource</h2
   ><p
   >The Status Images resource is a read-only resource which lists the icons available to use for statuses</p
-  ><div id="resource-url-9"
+  ><div id="resource-url-8"
   ><h3
     >Resource Url</h3
     ><blockquote
@@ -1276,12 +1146,12 @@
       >/api/v1/status-images</p
       ></blockquote
     ></div
-  ><div id="get-9"
+  ><div id="get-8"
   ><h3
     >GET</h3
     ><p
     >Returns a list of status images.</p
-    ><div id="example-18"
+    ><div id="example-17"
     ><h4
       >Example</h4
       ><blockquote
@@ -1306,13 +1176,13 @@
 	></pre
       ></div
     ></div
-  ><div id="post-put-4"
+  ><div id="post-put-3"
   ><h3
     >POST / PUT</h3
     ><p
     >Not supported</p
     ></div
-  ><div id="delete-8"
+  ><div id="delete-7"
   ><h3
     >DELETE</h3
     ><p

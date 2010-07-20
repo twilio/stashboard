@@ -18,32 +18,34 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import os
-import logging
+from google.appengine.ext import db
+from models import Status, Service, Event
+from datetime import datetime, timedelta, date
 
-from google.appengine.dist import use_library
-use_library('django', '1.1')
+#foo = Service(name="Service Foo", slug="service-foo",
+#              description="Scalable and reliable foo service across the globe")
+#foo.put()
+#bar = Service(name="Service Bar", slug="service-bar",
+              description="Scalable and reliable foo service")
+#bar.put()
+#delete = Service(name="Delete Me", slug="delete", 
+                 description="Delete Me Please")
+#delete.put()
 
-APP_ROOT_DIR = os.path.abspath(os.path.dirname(__file__))
+bar = Service.get_by_slug("bar")
+cat = Status.get_by_slug("down")        
 
-#Stashboard version
-VERSION = "1.1.0"
+dates = [
+    datetime(2010, 6, 5), 
+    datetime(2010, 6, 10),
+    datetime(2010, 7, 16), 
+    datetime(2010, 7, 17),
+    datetime(2010, 7, 18, 7),
+]
 
-# If we're debugging, turn the cache off, etc.
-# Set to true if we want to have our webapp print stack traces, etc
-DEBUG = os.environ['SERVER_SOFTWARE'].startswith('Dev')
-logging.info("Starting application in DEBUG mode: %s", DEBUG)
+for d in dates:
+    e = Event(service=bar, status=cat, 
+          message="Error fine", start=d)
+    e.put()
 
-SITE = {
-    "html_type": "text/html",
-    "charset": "utf-8",
-    "title": "Stashboard",
-    "author": "Kyle Conroy",
-    # This must be the email address of a registered administrator for the 
-    # application due to mail api restrictions.
-    "email": "kyle.j.conroy@gmail.com",
-    "description": "A RESTful Status Tracker on top of App Engine.",
-    "root_url": "http://stashboard.appspot.com",
-    "template_path": os.path.join(APP_ROOT_DIR, "views/default"),
-    "rich_client": True, #If false, the website will go into a simplified read-only view
-}
+

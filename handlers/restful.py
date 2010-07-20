@@ -42,6 +42,7 @@ import jsonpickle
 import logging
 import os
 import config
+import cgi
 
 # Some useful module methods
 def send_successful_response(handler, response):
@@ -128,7 +129,10 @@ def methods_via_query_allowed(handler_method):
     return redirect_if_needed
     
 class Controller(webapp.RequestHandler):
+    """Responsible for handling all API requests"""
+
     def base_url(self, version):
+        "Returns the base url for the given host and version"
         host = self.request.headers.get('host', 'nohost')
         return self.request.scheme + "://" + host + "/api/" + version
         
@@ -136,6 +140,7 @@ class Controller(webapp.RequestHandler):
         return version == "v1"
     
     def error(self, code, message=None):
+        "Returns the JSON representation of an error message"
         self.response.set_status(code)
         
         error = { "error": True, "code": code}
@@ -145,6 +150,7 @@ class Controller(webapp.RequestHandler):
         self.json(error)
         
     def success(self, message=None):
+        "Returns the JSON representation of a success message"
         self.response.set_status(200)
         
         success = { "error": False, "code": 200}
@@ -161,6 +167,7 @@ class Controller(webapp.RequestHandler):
         pass
         
     def render(self, templateparams, *args):
+        "Writes templateparams to a given template"
         path = config.SITE["template_path"]
 
         for p in args:
@@ -169,9 +176,13 @@ class Controller(webapp.RequestHandler):
         self.response.out.write(template.render(path, templateparams))
         
     def json(self, data):
+        """
+        Renders the given data as json. 
+        If callback is valid, renders data as jsonp
+        """
         callback = self.request.get('callback', default_value=None)
         
-        data = jsonpickle.encode(data)
+        data = cgi.escape(jsonpickle.encode(data))
         
         if callback:
             self.response.headers.add_header("Content-Type", "application/javascript")
@@ -182,9 +193,13 @@ class Controller(webapp.RequestHandler):
         self.response.out.write(data)
         
     def text(self, data):
+        "Renders the given data as text/plain"
         self.response.headers.add_header("Content-Type", "text/plain")
         self.response.out.write(data)
         
     def xml(self, data):
-        self.response.headers.add_header("Content-Type", "application/xml")
-        self.response.out.write(data)
+        """
+        Renders the given data as XML
+        Currently unsupported
+        """
+        pass

@@ -48,10 +48,12 @@ import cgi
 import urllib
 import logging
 import urlparse
+from wsgiref.handlers import format_date_time
+from time import mktime
+
 from google.appengine.ext import webapp
 from google.appengine.ext import db
 from google.appengine.api import users
-from google.appengine.api import oauth
 
 import oauth2 as oauth
 from handlers import restful
@@ -95,6 +97,7 @@ def default_template_data():
     ]
     
     data = {
+        "title": config.SITE["title"],
         "user": user,
         "user_is_admin": users.is_current_user_admin(),
         "login_link": greeting, 
@@ -154,8 +157,6 @@ class ServiceHandler(restful.Controller):
             self.render({}, "404.html")
             return
         
-        show_admin = False
-            
         try: 
             if day:
                 start_date = date(int(year),int(month),int(day))
@@ -170,15 +171,23 @@ class ServiceHandler(restful.Controller):
             else:
                 start_date = None
                 end_date = None
-                show_admin = True
         except ValueError:
             self.render({},'404.html')
             return
             
         td = default_template_data()
         td["service"] = service_slug
-        td["start_date"] = start_date
-        td["end_date"] = end_date
+        
+        if start_date and end_date:
+            start_stamp = mktime(start_date.timetuple())
+            end_stamp = mktime(end_date.timetuple())
+            # Remove GMT from the string so that the date is
+            # is parsed in user's time zone
+            td["start_date"] = format_date_time(start_stamp)[:-4]
+            td["end_date"] = format_date_time(end_stamp)[:-4]
+        else:
+            td["start_date"] = None
+            td["end_date"] = None
 
         self.render(td, 'service.html')
         
@@ -205,13 +214,11 @@ class BasicRootHandler(restful.Controller):
         
         past = get_past_days(5)
         
-        for service in services:
-            events = service.events.filter('start <=', past[0]).filter('start >=', past[4]).fetch(100)
-
         td = default_template_data()
         td["services"] = q.fetch(100)
         td["statuses"] = p.fetch(100)
         td["past"] = past
+        td["default"] = Status.default()
 
         self.render(td, 'basic','index.html')
 
@@ -251,7 +258,9 @@ class BasicServiceHandler(restful.Controller):
             return
             
         if start_date and end_date:
-            events.filter('start > ', start_date).filter('start <', end_date)
+            events.filter('start >= ', start_date).filter('start <', end_date)
+
+        events.order("-start")
 
         td = default_template_data()
         td["service"] = service

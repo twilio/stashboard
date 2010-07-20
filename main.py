@@ -26,6 +26,8 @@ __author__ = 'Kyle Conroy'
 import config
 import os
 import sys
+import logging
+import wsgiref.handlers
 
 # Force sys.path to have our own directory first, so we can import from it.
 sys.path.insert(0, config.APP_ROOT_DIR)
@@ -33,12 +35,13 @@ sys.path.insert(1, os.path.join(config.APP_ROOT_DIR, 'utils/external'))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 
 
-import logging
-import wsgiref.handlers
+from google.appengine.api import memcache
 from google.appengine.ext import webapp
 from google.appengine.api import users
 
 from handlers import site, api
+from models import Status, Setting
+
 
 # Log a message each time this module get loaded.
 logging.info('Loading %s, app version = %s',
@@ -62,7 +65,6 @@ ROUTES = [
     (r'/api/(.+)/services', api.ServicesListHandler),
     (r'/api/(.+)/services/(.+)/events', api.EventsListHandler),
     (r'/api/(.+)/services/(.+)/events/current', api.CurrentEventHandler),
-    (r'/api/(.+)/services/(.+)/events/calendar', api.EventCalendarHandler),
     (r'/api/(.+)/services/(.+)/events/(.+)', api.EventInstanceHandler),
     (r'/api/(.+)/services/(.+)', api.ServiceInstanceHandler),
     (r'/api/(.+)/statuses', api.StatusesListHandler),
@@ -86,6 +88,16 @@ ROUTES = [
 ]
 
 def main():
+    # Check if defaults have been installed
+    installed_defaults = memcache.get("installed_defaults")
+    if installed_defaults is None:
+        installed_defaults = Setting.all().filter('name = ', 'installed_defaults').get()
+        if installed_defaults is None:
+            logging.info("Installing default statuses")
+            Status.install_defaults()
+        if not memcache.add("installed_defaults", True):
+            logging.error("Memcache set failed.")
+
     application = webapp.WSGIApplication(ROUTES, debug=config.DEBUG)
     wsgiref.handlers.CGIHandler().run(application)
 

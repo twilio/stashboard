@@ -30,6 +30,10 @@ __author__ = 'Kyle Conroy'
 
 import datetime
 from datetime import timedelta
+from datetime import date
+from datetime import datetime
+from datetime import time
+from dateutil.parser import parse
 import string
 import re
 import os
@@ -52,6 +56,14 @@ from utils import slugify
 from models import Status, Event, Service, Level
 import config
 
+def aware_to_naive(d):
+    """Convert an aware date to an naive date, in UTC"""
+    offset = d.utcoffset()
+    if offset:
+        d = d.replace(tzinfo=None)
+        d = d - offset
+    return d
+
 class NotFoundHandler(restful.Controller):
     def get(self):
         logging.debug("NotFoundAPIHandler#get")
@@ -64,6 +76,7 @@ class ServicesListHandler(restful.Controller):
             
             query = Service.all().order('name')
             data = []
+
 
             for s in query:
                 data.append(s.rest(self.base_url(version)))
@@ -105,11 +118,11 @@ class ServicesListHandler(restful.Controller):
 
             
 class ServiceInstanceHandler(restful.Controller):
-    def get(self, version, service):
+    def get(self, version, service_slug):
         logging.debug("ServiceInstanceHandler#get")
         
         if (self.valid_version(version)):
-            service = Service.get_by_slug(service)
+            service = Service.get_by_slug(service_slug)
 
             if (service):
                 self.json(service.rest(self.base_url(version)))
@@ -152,6 +165,12 @@ class ServiceInstanceHandler(restful.Controller):
             service = Service.get_by_slug(service_slug)
             
             if service:
+                query = Event.all()
+                query.filter('service =', service)
+                if query:
+                    for e in query:
+                        e.delete()
+
                 service.delete()
                 self.json(service.rest(self.base_url(version)))
             else:
@@ -171,26 +190,26 @@ class EventsListHandler(restful.Controller):
             service = Service.get_by_slug(service_slug)
 
             if service:
-                after = self.request.get('after', default_value=None)
-                before = self.request.get('before', default_value=None)
-                
+                start = self.request.get('start', default_value=None)
+                end = self.request.get('end', default_value=None)
+                                 
                 query = Event.all()
                 query.filter('service =', service)
                         
-                if after:
+                if start:
                     try:
-                        aft = datetime.datetime.strptime(after, "%Y-%m-%d")
-                        query.filter("start > ", aft)
+                        _start = aware_to_naive(parse(start))
+                        query.filter("start >= ", _start)
                     except:
-                        self.error(400, "Invalid Date: %s" % after)
+                        self.error(400, "Invalid Date: %s" % start)
                         return
 
-                if before:
+                if end:
                     try:
-                        bef = datetime.datetime.strptime(before, "%Y-%m-%d")
-                        query.filter("start <", bef)
+                        _end  = aware_to_naive(parse(end))
+                        query.filter("start <=", _end)
                     except:
-                        self.error(400, "Invalid Date: %s" % before)
+                        self.error(400, "Invalid Date: %s" % end)
                         return
                         
                 query.order('-start')
@@ -219,19 +238,27 @@ class EventsListHandler(restful.Controller):
         if (self.valid_version(version)):
             status_slug = self.request.get("status", default_value=None)
             message = self.request.get("message", default_value=None)
+            informational = self.request.get("informational", default_value=None)
             
             if message:
                 service = Service.get_by_slug(service_slug)
                 if service:
                     
                     if not status_slug:
-                        status = service.current_event().status
+                        event = service.current_event()
+                        if event:
+                            status = event.status
+                        else:
+                            status = Status.default()
                     else:
                         status = Status.get_by_slug(status_slug)
-                        
+
                     if status:
-                        e = Event(status=status, service=service, \
+                        e = Event(status=status, service=service,
                                 message=message)
+
+                        e.informational = informational and informational == "true"
+
                         e.put()
                         self.json(e.rest(self.base_url(version)))
                     else:
@@ -264,55 +291,6 @@ class CurrentEventHandler(restful.Controller):
                 self.error(404, "Service %s not found" % service_slug)
         else:
             self.error(404, "Version %s not supported" % version)
-            
-            
-class EventCalendarHandler(restful.Controller):
-    def get(self, version, service_slug):
-        logging.debug("EventCalenderHandler#get")
-
-        if (self.valid_version(version)):
-
-            service = Service.get_by_slug(service_slug)
-            status = Status.default()
-
-            if service:
-                if status:
-                    today = datetime.datetime.now()
-                    start = self.request.get('start', default_value=today.strftime("%Y-%m-%d"))
-                    days = int(self.request.get('days', default_value="10"))
-                
-                    if start and days:
-                        try:
-                            aft = datetime.datetime.strptime(start, "%Y-%m-%d")
-                        except:
-                            self.error(400, "Invalid Date: %s" % start)
-                            return
-                        
-                    calendar = []
-                        
-                    for i in range(days):
-                        summary = status
-
-                        for e in service.events_for_day(aft):
-                            if e.status.severity > summary.severity:
-                                summary = e.status
-                            
-                        stamp = mktime(aft.timetuple())
-                    
-                        calendar.append({
-                            "date": format_date_time(stamp),
-                            "summary": summary.rest(self.base_url(version)),
-                        })
-                    
-                        aft = aft - timedelta(days=1)
-
-                    self.json({"days": calendar})
-                else:
-                    self.error(404, "No status with level %s, please make one" % Level.normal)
-            else:
-                self.error(404, "Service %s not found" % service_slug)
-        else:
-            self.error(404, "Version %s not supported" % version)            
     
 class EventInstanceHandler(restful.Controller):
     def get(self, version, service_slug, sid):
@@ -457,6 +435,27 @@ class StatusInstanceHandler(restful.Controller):
                 self.error(404, "Status %s not found" % status_slug)
         else:
             self.error(404, "API Version %s not supported" % version)
+
+    @authorized.api("admin")
+    def delete(self, version, status_slug):
+        logging.debug("StatusInstanceHandler#delete slug=%s" % status_slug)
+        
+        if (self.valid_version(version)):
+
+            status = Status.get_by_slug(status_slug)            
+
+            if status:
+                # We may want to think more about this
+                events = Event.all().filter('status =', status).fetch(1000)
+                for event in events:
+                    event.delete()
+                status.delete()
+                self.json(status.rest(self.base_url(version)))
+            else:
+                self.error(404, "Status %s not found" % service_slug)
+        else:
+            self.error(404, "API Version %s not supported" % version)
+
             
 
             

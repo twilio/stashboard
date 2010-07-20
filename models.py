@@ -1,3 +1,23 @@
+# Copyright (c) 2010 Twilio Inc.
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+
 from google.appengine.ext import db
 import datetime
 from wsgiref.handlers import format_date_time
@@ -61,7 +81,9 @@ class Service(db.Model):
         return Service.all().filter('slug = ', service_slug).get()
         
     def current_event(self):
-        return self.events.order('-start').get()
+        event = self.events.order('-start').get()
+        return event
+
 
     #Specialty function for front page
     def last_five_days(self):
@@ -89,12 +111,16 @@ class Service(db.Model):
             if event.status.severity > severity:
                 stats[event.start.day]["image"] = "information"
                 stats[event.start.day]["information"] = True
+
         results = []
-        for k in stats.keys():
+
+        keys = stats.keys()
+        keys.sort()
+        keys.reverse()
+
+        for k in keys:
             results.append(stats[k])
             
-        results.reverse()
-        
         return results
         
         
@@ -109,7 +135,7 @@ class Service(db.Model):
         
         next_day = day + timedelta(days=1)
         
-        return self.events.filter('start >', day) \
+        return self.events.filter('start >=', day) \
             .filter('start <', next_day).fetch(40)
             
     def compare(self, other_status):
@@ -149,7 +175,7 @@ class Status(db.Model):
         name        -- string: The friendly name of this status
         slug        -- stirng: The identifier for the status
         description -- string: The state this status represents
-        image       -- string: Image in /static/images/status
+        image       -- string: Image in /images/status
         severity    -- int: The serverity of this status
 
     """
@@ -164,6 +190,31 @@ class Status(db.Model):
         """
         normal = Level.get_severity(Level.normal)
         return Status.all().filter('severity == ', normal).get()
+
+    @staticmethod
+    def install_defaults():
+        """
+        Install the default statuses. I am not sure where these should live just yet
+        """
+        # This should be Level.normal.severity and Level.normal.text
+        normal = Level.get_severity(Level.normal)
+        warning = Level.get_severity(Level.warning)
+        error = Level.get_severity(Level.error)
+
+        d = Status(name="Down", slug="down", image="cross-circle", severity=error, \
+                       description="The service is currently down")
+        u = Status(name="Up", slug="up", image="tick-circle", severity=normal, \
+                       description="The service is up")
+        w = Status(name="Warning", slug="warning", image="exclamation", severity=warning, \
+                       description="The service is experiencing intermittent problems")
+
+        d.put()
+        u.put()
+        w.put()
+
+        s = Setting(name="installed_defaults")
+        s.put()
+        
         
     name = db.StringProperty(required=True)
     slug = db.StringProperty(required=True)
@@ -197,6 +248,7 @@ class Status(db.Model):
 class Event(db.Model):
 
     start = db.DateTimeProperty(required=True, auto_now_add=True)
+    informational = db.BooleanProperty(default=False)
     status = db.ReferenceProperty(Status, required=True)
     message = db.TextProperty(required=True)
     service = db.ReferenceProperty(Service, required=True, 
@@ -221,7 +273,7 @@ class Event(db.Model):
 
         stamp = mktime(self.start.timetuple())
         m["timestamp"] = format_date_time(stamp)
-        
+        m["informational"] = self.informational
         m["status"] = self.status.rest(base_url)
         m["message"] = str(self.message)
         m["url"] = base_url + self.resource_url()
@@ -236,4 +288,7 @@ class Profile(db.Model):
 class AuthRequest(db.Model):
     owner = db.UserProperty(required=True)
     request_secret = db.StringProperty()
+
+class Setting(db.Model):
+    name = db.StringProperty(required=True)
 

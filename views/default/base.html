@@ -2,31 +2,22 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Is My Web Service Up?</title>
-    <link rel="stylesheet" href="/static/css/reset.css" type="text/css" media="screen" />
-    <link rel="stylesheet" href="/static/css/style.css" type="text/css" media="screen" />    
-    <link rel="stylesheet" href="/static/css/jqueryui.css" type="text/css" media="screen" />
-    <link rel="stylesheet" href="/static/css/prettify.css" type="text/css" media="screen" />    
-    <script type="text/javascript"      src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="/css/reset.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/css/style.css" type="text/css" media="screen" />    
+    <link rel="stylesheet" href="/css/jqueryui.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/css/prettify.css" type="text/css" media="screen" />    
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
     <script type="text/javascript"
 src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></script>
-  <!--[if lt IE 9]>
-  <script>
-    var e = ("abbr,article,aside,audio,canvas,datalist,details," +
-      "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
-      "progress,section,time,video").split(',');
-    for (var i = 0; i < e.length; i++) {
-      document.createElement(e[i]);
-    }
-  </script>
-  <![endif]-->
+    <script type="text/javascript" src="/js/common.js"></script>
     <script type="text/javascript">
-    //Global Script
-    $(document).ready(function(){
-      $(".button").button();
-      $("code").addClass("prettyprint");
-      prettyPrint();
-    });
+      $(document).ready(function(){
+        $(".button").button();
+        $("#notice a").click(function(){
+          $("#notice").hide();
+        });
+      });
     </script>
     {% block js %}
     {% endblock %}
@@ -34,7 +25,9 @@ src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></sc
   <body>
     <div id="wrapper">
       <div id="header">
-        <a href="/"><h1 id="logo">Status Dashboard</h1></a>
+	<div id="notice"><span></span><a href="#">X</a></div>
+        <img id="logo" src="/images/logo.png" alt="Logo"/>
+        <a href="/"><h1 id="title">{{ title }}</h1></a>
       </div>
       <div id="content">
         {% block content %}
@@ -46,10 +39,14 @@ src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></sc
     <div id="footer">
       <ul class="left">
         <li>
-          {% if user %}
-            <a href="{{ login_link }}">Logout</a>
-          {% else %}
-            <a href="{{ login_link }}">Login</a>
+          {% if login_link %}
+            <a href="{{ login_link }}">
+              {% if user %}
+                Logout
+              {% else %}
+                Login
+              {% endif %}
+            </a>
           {% endif %}
         </li>
 	<li>-</li>
@@ -60,13 +57,15 @@ src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></sc
 	</li>
         <li>-</li>
         <li>Copyright (c)  {% now "Y" %}</li>
+       <li>-</li>
+       <li id="icons">Icons by <a href="http://p.yusukekamiyamane.com/">Yusuke Kamiyamane</a></li>
       </ul>
       <ul class="right">
-        <li>Icons by <a href="http://p.yusukekamiyamane.com/">Yusuke Kamiyamane</a></li>
-      </ul>
+	<li id="powered">POWERED BY <img src="/images/poweredbystash.png" alt="stash!" /> STASHBOARD</li>
+       </ul>
     </div>
     {% block js_end %}
     {% endblock %}
-    <script type="text/javascript" src="/static/js/prettify.js"></script>
+    <script type="text/javascript" src="/js/prettify.js"></script>
   </body>
 </html>

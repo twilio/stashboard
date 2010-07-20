@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Is My Web Service Up?</title>
+    <title>{{ title }}</title>
     <link rel="stylesheet" href="/static/css/reset.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="/static/css/style.css" type="text/css" media="screen" />    
     <link rel="stylesheet" href="/static/css/jqueryui.css" type="text/css" media="screen" />    
@@ -22,7 +22,8 @@
   <body>
     <div id="wrapper">
       <div id="header">
-        <a href="/"><h1 id="logo">Status Dashboard</h1></a>
+        <img id="logo" src="/images/logo.png" alt="Logo"/>
+        <a href="/"><h1 id="title">{{ title }}</h1></a>
       </div>
       <div id="content">
         {% block content %}
@@ -48,11 +49,13 @@
 	</li>
         <li>-</li>
         <li>Copyright (c)  {% now "Y" %}</li>
+        <li>-</li>
+       <li id="icons">Icons by <a href="http://p.yusukekamiyamane.com/">Yusuke Kamiyamane</a></li>
       </ul>
       <ul class="right">
-        <li>Icons by <a href="http://p.yusukekamiyamane.com/">Yusuke Kamiyamane</a></li>
-      </ul>
-    </div>
+	<li id="powered">POWERED BY <img src="/images/poweredbystash.png" alt="stash!" /> STASHBOARD</li>
+       </ul>
+     </div>
     {% block js_end %}
     {% endblock %}
   </body>
