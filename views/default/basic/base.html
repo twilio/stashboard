@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8" />
     <title>{{ title }}</title>
-    <link rel="stylesheet" href="/static/css/reset.css" type="text/css" media="screen" />
-    <link rel="stylesheet" href="/static/css/style.css" type="text/css" media="screen" />    
-    <link rel="stylesheet" href="/static/css/jqueryui.css" type="text/css" media="screen" />    
+    <link rel="stylesheet" href="/css/reset.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/css/style.css" type="text/css" media="screen" />    
+    <link rel="stylesheet" href="/css/jqueryui.css" type="text/css" media="screen" />    
   <!--[if lt IE 9]>
   <script>
     var e = ("abbr,article,aside,audio,canvas,datalist,details," +
@@ -48,12 +48,12 @@
 	  </a>
 	</li>
         <li>-</li>
-        <li>Copyright (c)  {% now "Y" %}</li>
+        <li>Copyright (c) {% now "Y" %} <a href="http://www.twilio.com">Twilio Inc.</a></li>
         <li>-</li>
        <li id="icons">Icons by <a href="http://p.yusukekamiyamane.com/">Yusuke Kamiyamane</a></li>
       </ul>
       <ul class="right">
-	<li id="powered">POWERED BY <img src="/images/poweredbystash.png" alt="stash!" /> STASHBOARD</li>
+	<li id="powered"><a href="http://www.stashboard.org">POWERED BY <img src="/images/poweredbystash.png" alt="stash!" /> STASHBOARD</a></li>
        </ul>
      </div>
     {% block js_end %}
