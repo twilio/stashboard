@@ -183,8 +183,10 @@ class ServiceHandler(restful.Controller):
             end_stamp = mktime(end_date.timetuple())
             # Remove GMT from the string so that the date is
             # is parsed in user's time zone
-            td["start_date"] = format_date_time(start_stamp)[:-4]
-            td["end_date"] = format_date_time(end_stamp)[:-4]
+            td["start_date"] = start_date
+            td["end_date"] = end_date
+            td["start_date_stamp"] = format_date_time(start_stamp)[:-4]
+            td["end_date_stamp"] = format_date_time(end_stamp)[:-4]
         else:
             td["start_date"] = None
             td["end_date"] = None
