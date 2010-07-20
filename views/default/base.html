@@ -3,58 +3,21 @@
   <head>
     <meta charset="utf-8" />
     <title>{{ title }}</title>
-    <link rel="stylesheet" href="/static/css/reset.css" type="text/css" media="screen" />
-    <link rel="stylesheet" href="/static/css/style.css" type="text/css" media="screen" />    
-    <link rel="stylesheet" href="/static/css/jqueryui.css" type="text/css" media="screen" />
-    <link rel="stylesheet" href="/static/css/prettify.css" type="text/css" media="screen" />    
+    <link rel="stylesheet" href="/css/reset.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/css/style.css" type="text/css" media="screen" />    
+    <link rel="stylesheet" href="/css/jqueryui.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/css/prettify.css" type="text/css" media="screen" />    
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
     <script type="text/javascript"
 src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></script>
     <script type="text/javascript" src="/js/common.js"></script>
-  <!--[if lt IE 9]>
-  <script>
-    var e = ("abbr,article,aside,audio,canvas,datalist,details," +
-      "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
-      "progress,section,time,video").split(',');
-    for (var i = 0; i < e.length; i++) {
-      document.createElement(e[i]);
-    }
-  </script>
-  <![endif]-->
     <script type="text/javascript">
-    //Global Script
-    $(document).ready(function(){
-      $(".button").button();
-      $("code").addClass("prettyprint");
-      prettyPrint();
-    });
-	  function rfc1123(date){
-	    rfc = $.datepicker.formatDate("D, d M yy", date);
-            rfc = rfc + " " + date.getHours() + ":";
-	    rfc = rfc + date.getMinutes() + ":" + date.getSeconds();
-	    offset = date.getTimezoneOffset();
-	    minutes = offset % 60;
-	    hours = (offset - minutes) / 60;
-
-	    if (offset < 0) {
-		off = "+";
-	    } else {
-		off = "-";
-	    }
-	    
-	    if (hours < 10) {
-		off += "0";
-	    } 
-	    off += hours.toString();
-
-	    if (minutes < 10) {
-		off += "0";
-	    }
-	    off += minutes.toString();
-	
-	    return rfc + " " + off;
-	  }
-
+      $(document).ready(function(){
+        $(".button").button();
+        $("#notice a").click(function(){
+          $("#notice").hide();
+        });
+      });
     </script>
     {% block js %}
     {% endblock %}
@@ -103,6 +66,6 @@ src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></sc
     </div>
     {% block js_end %}
     {% endblock %}
-    <script type="text/javascript" src="/static/js/prettify.js"></script>
+    <script type="text/javascript" src="/js/prettify.js"></script>
   </body>
 </html>
