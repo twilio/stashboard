@@ -175,7 +175,7 @@ class Status(db.Model):
         name        -- string: The friendly name of this status
         slug        -- stirng: The identifier for the status
         description -- string: The state this status represents
-        image       -- string: Image in /static/images/status
+        image       -- string: Image in /images/status
         severity    -- int: The serverity of this status
 
     """

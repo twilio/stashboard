@@ -16,14 +16,17 @@ handlers:
 #  script: runner.py
 #  login: required
 
-- url: /static
-  static_dir: static
+- url: /css
+  static_dir: static/css
 
 - url: /images
   static_dir: static/images
 
 - url: /js
   static_dir: static/js
+  
+- url: /widget
+  static_dir: static/widget
 
 - url: /favicon\.ico
   static_files: static/favicon.ico

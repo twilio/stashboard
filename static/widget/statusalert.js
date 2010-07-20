@@ -1,7 +1,7 @@
 // StashBoard :{
 stashboard = {};
 
-stashboard.host = "http://status.twilio.com";
+stashboard.host = "http://stashboard.appspot.com";
 
 stashboard.start = function(){
   var previous = document.getElementById("stashboardJavascript");
@@ -101,8 +101,7 @@ stashboard.callback = function(data){
   }
   
   
-  //setTimeout(stashboard.start, 4000);
-  
+  setTimeout(stashboard.start, 6000);
 
 };
 
