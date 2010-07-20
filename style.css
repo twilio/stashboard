@@ -1,0 +1,200 @@
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  background: transparent;
+}
+body { line-height: 1; }
+ol, ul { list-style: none; }
+blockquote, q { quotes: none; }
+blockquote:before {
+  content: '';
+  content: none;
+}
+blockquote:after {
+  content: '';
+  content: none;
+}
+q:before {
+  content: '';
+  content: none;
+}
+q:after {
+  content: '';
+  content: none;
+}
+:focus { outline: 0; }
+ins { text-decoration: none; }
+del { text-decoration: line-through; }
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+.footerpush-height { height: 100%; }
+html, body {
+  font-family: arial, sans-serif;
+  background: #222222;
+}
+#wrapper {
+  width: 850px;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+  position: relative;
+  margin: 0 auto;
+}
+header {
+  background: #cfdff9;
+  display: block;
+  height: 235px;
+}
+h1 { font-family: 'Yanone Kaffeesatz', arial, serif; }
+header h1 {
+  font-family: 'Yanone Kaffeesatz', arial, serif;
+  font-size: 88px;
+  text-shadow: 1px 1px 0px #ffffff;
+  position: absolute;
+  top: 25px;
+  left: 175px;
+}
+header h2 {
+  color: #666666;
+  font-size: 24px;
+  left: 35px;
+  position: absolute;
+  top: 165px;
+  width: 450px;
+}
+header a { color: #3f9cfa; }
+#screenshot {
+  position: absolute;
+  top: 20px;
+  left: 490px;
+  width: 325px;
+  -moz-box-shadow: 0px 0px 3px #000000;
+  -webkit-box-shadow: 0px 0px 3px #000000;
+  box-shadow: 0px 0px 3px #000000;
+}
+#logo {
+  position: absolute;
+  top: 15px;
+  left: 20px;
+  width: 150px;
+}
+#stash {
+  display: none;
+  left: 309px;
+  position: absolute;
+  top: 105px;
+}
+#menu {
+  display: block;
+  background: #3f9cfa;
+  border-top: 2px solid #2e8be9;
+  border-bottom: 2px solid #2e8be9;
+  width: 100%;
+  position: relative;
+}
+#menu a {
+  color: #eef1f1;
+  display: inline-block;
+  padding: 20px 10px;
+  text-decoration: none;
+  text-shadow: -1px -1px 1px #0c69c7;
+}
+nav a:hover { background: #2e8be9; }
+section {
+  display: block;
+  padding: 20px;
+}
+section h1 {
+  font-size: 48px;
+  padding: 10px 10px 20px 70px;
+}
+section h2 {
+  margin-bottom: 15px;
+  margin-top: 20px;
+  font-size: 20px;
+}
+section h3 {
+  color: #0c69c7;
+  margin-bottom: 12px;
+  margin-top: 18px;
+  font-size: 18px;
+}
+section p {
+  font-size: 16px;
+  line-height: 22px;
+  margin-bottom: 10px;
+}
+#why {
+  background: #8ccd3e;
+  border-bottom: 5px solid #6aab1c;
+}
+#why a { color: white; }
+#installing {
+  background: #cfdff9;
+  border-bottom: 5px solid #3f9cfa;
+}
+#installing h1 { background: url("images/stash-tie.png") no-repeat; }
+section a { color: #2e8be9; }
+section li {
+  margin: 10px 15px;
+  list-style-type: circle;
+}
+section ul { margin: 20px; }
+#documentation {
+  background: #ffffff;
+  border-bottom: 5px solid #222222;
+}
+#documentation h1 { background: url("images/stash-hat.png") no-repeat; }
+#download {
+  background: black;
+  color: white;
+  min-height: 145px;
+  border-bottom: 5px solid #222222;
+}
+#download h1 { background: url("images/stash-side.png") no-repeat; }
+#download p { width: 300px; }
+#download a { float: right; }
+#about {
+  background: #ffffff;
+  border-bottom: 5px solid #eef1f1;
+}
+#about h1 { background: url("images/stash-crazy.png") no-repeat; }
+#attribution { background: #cfdff9; }
+#twilio {
+  display: block;
+  float: right;
+  width: 200px;
+}
+#twilio img {
+  border: 0;
+  width: 200px;
+}
+footer {
+  background: #3f9cfa;
+  display: block;
+  width: 850px;
+  margin: auto;
+}
+footer nav {
+  display: block;
+  background: #3f9cfa;
+  border-top: 2px solid #2e8be9;
+  border-bottom: 2px solid #2e8be9;
+  width: 100%;
+  position: relative;
+  height: 22px;
+}
+footer nav a {
+  color: #eef1f1;
+  display: inline-block;
+  padding: 5px;
+  float: right;
+  font-size: 12px;
+  text-decoration: none;
+  text-shadow: -1px -1px 1px #0c69c7;
+}
