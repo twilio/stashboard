@@ -112,7 +112,7 @@ h3.date-range {color: #999; margin-top: 20px}
 #footer ul.left { float: left;}
 #footer ul.right { float: right;}
 #footer ul li {display: inline;}
-#icons li, #icons li a{ color: #ccc; }
+#icons, #icons a{ color: #ccc; }
 
 td.status a{position: relative;}
 td.status a .information {position: absolute; top: 0px; left: 1px; z-index: 500;}
@@ -205,6 +205,10 @@ td.status a .information {position: absolute; top: 0px; left: 1px; z-index: 500;
     margin: 0;
 }
 
+#powered {
+    font-family: courier, monospace;
+    font-size: 10px;
+}
 
 
 

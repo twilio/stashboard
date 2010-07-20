@@ -25,5 +25,5 @@ SITE = {
     "description": "A RESTful Status Tracker on top of App Engine.",
     "root_url": "http://stashboard.appspot.com",
     "template_path": os.path.join(APP_ROOT_DIR, "views/default"),
-    "rich_client": False, #If false, the website will go into a simplified read-only view
+    "rich_client": True, #If false, the website will go into a simplified read-only view
 }

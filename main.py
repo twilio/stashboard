@@ -65,7 +65,6 @@ ROUTES = [
     (r'/api/(.+)/services', api.ServicesListHandler),
     (r'/api/(.+)/services/(.+)/events', api.EventsListHandler),
     (r'/api/(.+)/services/(.+)/events/current', api.CurrentEventHandler),
-    (r'/api/(.+)/services/(.+)/events/calendar', api.EventCalendarHandler),
     (r'/api/(.+)/services/(.+)/events/(.+)', api.EventInstanceHandler),
     (r'/api/(.+)/services/(.+)', api.ServiceInstanceHandler),
     (r'/api/(.+)/statuses', api.StatusesListHandler),

@@ -80,10 +80,14 @@
               }
           });
           
-          rightNow = new Date();
-          endDate = new Date(rightNow.getTime() -  86400000);
-	  startDate = new Date(endDate.getTime() - 86400000 * 4);
-          var url = "/api/v1/services/" + data.id + "/events/calendar";
+          var rightNow = new Date();
+	  rightNow.setHours(0);
+	  rightNow.setMinutes(0);
+	  rightNow.setMilliseconds(0);
+          
+	  var endDate = new Date(rightNow.getTime() -  86400000);
+	  var startDate = new Date(endDate.getTime() - 86400000 * 4);
+          var url = "/api/v1/services/" + data.id + "/events";
           url += "?start=" + rfc1123(startDate);
 	  url += "&end=" + rfc1123(endDate);
           
@@ -92,24 +96,40 @@
             url: url,
             dataType: 'json', 
             success: function(results){ 
-              
-	      results.days.reverse();
-              for (var i=0; i < results.days.length; i++) {
-                var day = results.days[i];
-                var d = new Date(day.date);
+	      var calendar = {};
+	      var days = [];
+
+              for (var i=0; i < 5; i++) {
+		days.push(endDate);
+		calendar[endDate.getDate()] = false;
+		endDate = new Date(endDate.getTime() - 86400000);
+              }
+
+	      var events = results.events;
+
+              for (var i=0; i < events.length; i++) {
+		var e = events[i];
+		var evtDate = new Date(e.timestamp);
+		calendar[evtDate.getDate()] = e.informatoinal || e.status.level !== "NORMAL";
+	      }
+
+	      console.log(calendar);
+
+              for (var i= days.length-1; i >= 0; i--) {
+                var d = days[i];
                 var td = $("#" + data.id).children("td").eq(i+2);
 
-                url = "/services/" + data.id + "/" + d.getUTCFullYear() + "/";
-                url += (d.getUTCMonth() + 1) + "/" + d.getUTCDate();
-                
-                if (day.information) {
+                url = "/services/" + data.id + "/" + d.getFullYear() + "/";
+                url += (d.getMonth() + 1) + "/" + d.getDate();
+              
+                if (calendar[d.getDate()]) {
                   td.html($("<a />", {href: url}).append(
                     $("<img />",{src: "/images/status/information.png"})));
                 } else {
                   td.html($("<a />", {href: url}).append(
-                    $("<img />",{src: day.summary.image})));
+                    $("<img />",{src: defaultImage})));
                 }
-              }
+	      }	
               
             },
             error: function(){ 
