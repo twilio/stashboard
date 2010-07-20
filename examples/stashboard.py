@@ -3,8 +3,8 @@ import json
 import urllib
 import unittest
 
-oauth_key = '1/PGS5Fvp5hmtUTlHnLyWDVHc8mPrev6IGwa7kicolTT8'
-oauth_secret = 'MnqTu_kS47zCs0p0xr9w3H02'
+oauth_key = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+oauth_secret = 'YYYYYYYYYYYYYYYYYYYYYYYY'
 
 # Create your consumer with the proper key/secret.
 # If you register your application with google, these values won't be
@@ -13,7 +13,7 @@ consumer = oauth.Consumer(key='anonymous', secret='anonymous')
 token = oauth.Token(oauth_key, oauth_secret)
 
 # Fill in your website
-base_url = "https://ismywebservicedown.appspot.com/api/v1"
+base_url = "https://stashboard.appspot.com/api/v1"
 
 # Create our client.
 client = oauth.Client(consumer, token=token)
