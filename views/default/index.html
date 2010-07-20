@@ -71,7 +71,7 @@
                     src: "/images/small-information.png", 
                     "class": "information"
                     })
-                  )
+                  );
                 }
             },
             error: function(evt){ 
@@ -107,7 +107,7 @@
 
 	      var events = results.events;
 
-              for (var i=0; i < events.length; i++) {
+              for (i=0; i < events.length; i++) {
 		var e = events[i];
 		var evtDate = new Date(e.timestamp);
 		calendar[evtDate.getDate()] = e.informatoinal || e.status.level !== "NORMAL";
@@ -115,7 +115,7 @@
 
 	      console.log(calendar);
 
-              for (var i= days.length-1; i >= 0; i--) {
+              for (i= days.length-1; i >= 0; i--) {
                 var d = days[i];
                 var td = $("#" + data.id).children("td").eq(i+2);
 
@@ -134,7 +134,7 @@
             },
             error: function(){ 
 
-            },
+            }
           });
           
         }

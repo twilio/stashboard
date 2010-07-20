@@ -95,16 +95,16 @@
                   for (var i=0; i < statuses.length; i++) {
                     
                     var selected = false;
-                    if (current === statuses[i].name)
+                    if (current === statuses[i].name){
                       selected = true;
-                    
+                    }
                     $("<option />", {
                       "name": "severity",
                       val: statuses[i].id,
                       text: statuses[i].name,
                       selected: selected
                     }).appendTo($(this));
-                  };
+                  }
 
                 },
                 error: function(){
@@ -141,7 +141,7 @@
                   for (var i=0; i < length; i++) {
                     var tr = createRow(events[i]);
                     $(this).append(tr);  
-                  };
+                  }
                 } else {
                   populatStatuses();
                 }
@@ -190,7 +190,7 @@
 			url: "/api/v1/services/" + service.id + "/events",
 			data: {
 			  status: $("#statusValue").val(),
-			  message: $("#eventMessage").val(),
+			  message: $("#eventMessage").val()
 			},
 			dataType: "json",
 			context:$("#add-event-modal"), 
@@ -202,7 +202,7 @@
 			error: function(){
 			    this.dialog('close');
 			    stashboard.error("Could not create event due to missing form data");
-			},
+			}
 		        });
                       },
                       'Cancel': function(){
@@ -238,7 +238,7 @@
 			error: function(){
 			    this.dialog('close');
 			    stashboard.error("Could not create note due to missing message");
-			},
+			}
 		        });
                       },
                       'Cancel': function(){
@@ -248,8 +248,8 @@
 		});
             });
 
-        $("#service-name").val(service.name), 
-        $("#service-description").val(service.description)
+        $("#service-name").val(service.name);
+        $("#service-description").val(service.description);
 
 
 	$("#edit-service").click(function(e){
@@ -311,7 +311,7 @@
                 },
             error: function(){
                   stashboard.error("Could not deleted event. Please try again");
-                },
+                }
             });
         });
       });

@@ -119,7 +119,7 @@
                 error: function(){ 
                   $("#add-status-modal").dialog('close');
 		  stashboard.error("Could not save status");
-                },
+                }
               });
                 
             },
@@ -134,7 +134,7 @@
     {% endif %}
     
     $("#legend-body").append(tr);
-  }
+  };
   
   $(document).ready(function(){
 
@@ -165,7 +165,7 @@
         },
       error: function(){ 
         
-        },
+        }
       });
       
       $.ajax({
@@ -185,7 +185,7 @@
                 val: levels[i],
                 text: levels[i]
               }).appendTo($(this));
-            };
+            }
           
           }
 
@@ -221,7 +221,7 @@
                 error: function(){ 
                   $("#add-status-modal").dialog('close');
 		  stashboard.error("Could not create new status due to missing information");
-                },
+                }
               });
                 
             },
@@ -234,7 +234,7 @@
     
     $(".delete-status").live('click', function(e){
       e.preventDefault();			      
-      var a = $(e.target); 			     
+      var a = $(e.target);
       $("#delete-status-modal").dialog({
         resizable: false,
         modal: true,
@@ -252,7 +252,7 @@
             error: function(){
              this.dialog('close');			     
 	     stashboard.error("Unable to delete status");
-            },			      
+            }	      
            });
           },
         'Cancel': function(){
