@@ -91,12 +91,16 @@ class Service(db.Model):
             if event.status.severity > severity:
                 stats[event.start.day]["image"] = "information"
                 stats[event.start.day]["information"] = True
+
         results = []
-        for k in stats.keys():
+
+        keys = stats.keys()
+        keys.sort()
+        keys.reverse()
+
+        for k in keys:
             results.append(stats[k])
             
-        results.reverse()
-        
         return results
         
         

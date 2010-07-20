@@ -97,6 +97,7 @@ def default_template_data():
     ]
     
     data = {
+        "title": config.SITE["title"],
         "user": user,
         "user_is_admin": users.is_current_user_admin(),
         "login_link": greeting, 
@@ -213,13 +214,11 @@ class BasicRootHandler(restful.Controller):
         
         past = get_past_days(5)
         
-        for service in services:
-            events = service.events.filter('start <=', past[0]).filter('start >=', past[4]).fetch(100)
-
         td = default_template_data()
         td["services"] = q.fetch(100)
         td["statuses"] = p.fetch(100)
         td["past"] = past
+        td["default"] = Status.default()
 
         self.render(td, 'basic','index.html')
 
@@ -259,7 +258,9 @@ class BasicServiceHandler(restful.Controller):
             return
             
         if start_date and end_date:
-            events.filter('start > ', start_date).filter('start <', end_date)
+            events.filter('start >= ', start_date).filter('start <', end_date)
+
+        events.order("-start")
 
         td = default_template_data()
         td["service"] = service

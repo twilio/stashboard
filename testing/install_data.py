@@ -17,6 +17,8 @@ cat = Status.get_by_slug("down")
 dates = [
     datetime(2010, 6, 5), 
     datetime(2010, 6, 10),
+    datetime(2010, 7, 16), 
+    datetime(2010, 7, 17),
 ]
 
 for d in dates:

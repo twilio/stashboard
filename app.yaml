@@ -1,14 +1,21 @@
-application: ismywebservicedown
-version: 3
+application: stashboard
+version: 1
 runtime: python
 api_version: 1
 
 derived_file_type:
 - python_precompiled
 
-
-
 handlers:
+# URLS for testing
+#- url: /tests
+#  static_dir: testing
+#  login: required
+
+#- url: /runner
+#  script: runner.py
+#  login: required
+
 - url: /static
   static_dir: static
 

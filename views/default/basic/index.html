@@ -8,7 +8,7 @@
             <thead>
               <tr>
                 <th>Service</th>
-                <th class="today">Today</th>
+                <th class="today">Current</th>
               
                 {% for day in past %}
                   <th class="date">{{ day|date:"N j" }}</th>
@@ -25,20 +25,23 @@
                   </td>
                   
                   <td class="status highlight">
+		    <a href="/services/{{ service.slug }}">
+		    {% if service.current_event.status %}
                     <img src="/images/status/{{ service.current_event.status.image }}.png"
                       alt="{{ service.current_event.name }}"/>
+		    {% else %}
+                    <img src="/images/status/{{ default.image }}.png"
+                      alt="{{ default.name }}"/>
+		    {% endif %}
+		    </a>
                   </td>
                   
                   {% for status in service.last_five_days %}
                     <td class="status">
-                      {% if status.information %}
                       <a href="/services/{{service.slug}}/{{ status.day|date:"Y/n/j" }}">
-                      {% endif %}
-                      
                       <img src="/images/status/{{ status.image }}.png"
                         alt="{{ status.image }}"/>
-                        
-                      {% if status.information %} </a> {% endif %}
+		      </a>
                     </td>
                   {% endfor %}
                       
