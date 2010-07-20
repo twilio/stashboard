@@ -9,8 +9,8 @@
         var service = "{{ service }}";
       
         {% if start_date %}
-          var startDate = new Date("{{ start_date }}");
-          var endDate = new Date("{{ end_date }}");
+          var startDate = new Date("{{ start_date_stamp }}");
+          var endDate = new Date("{{ end_date_stamp }}");
         {% endif %}
       
         {% if user_is_admin %}
@@ -43,8 +43,8 @@
 
         {% if start_date %}        
           <h3 class="date-range">
-            {{ start_date|date:"n/j/Y"  }}
-          </h3>  
+            {{ start_date|date:"n/j/Y" }}
+          </h3>
         {% endif %}      
 
         <table class="event-log" cellpadding="10">
