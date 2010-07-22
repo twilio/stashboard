@@ -34,6 +34,7 @@ stashboard.rfc1123 = function(date){
 
     if (offset < 0) {
         off = "+";
+	hours = -hours;
     } else {
         off = "-";
     }
@@ -252,7 +253,7 @@ stashboard.fillIndex = function() {
     for (var i=0; i < 5; i++) {
         $("<th />", {
             "class": "date",
-            text: (d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear()
+            text: d.toLocaleDateString()
         }).appendTo(thead);
         d = new Date(d.getTime() - 86400000);
     }
