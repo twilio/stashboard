@@ -248,7 +248,11 @@ class Status(db.Model):
 class Event(db.Model):
 
     start = db.DateTimeProperty(required=True, auto_now_add=True)
+
+    # We want this to be required, but it would break all current installs
+    # Instead, we handle it in the rest method
     informational = db.BooleanProperty(default=False)
+
     status = db.ReferenceProperty(Status, required=True)
     message = db.TextProperty(required=True)
     service = db.ReferenceProperty(Service, required=True, 
@@ -273,10 +277,14 @@ class Event(db.Model):
 
         stamp = mktime(self.start.timetuple())
         m["timestamp"] = format_date_time(stamp)
-        m["informational"] = self.informational
         m["status"] = self.status.rest(base_url)
         m["message"] = str(self.message)
         m["url"] = base_url + self.resource_url()
+
+        if self.informational:
+            m["informational"] = self.informational
+        else:
+            m["informational"] = False
         
         return m
         
