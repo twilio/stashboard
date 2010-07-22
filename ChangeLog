@@ -1,0 +1,10 @@
+2010.07.22, Version 1.1.4
+* Changed the front page to use the proper date range for events
+
+* Fix the rfc1123() to handle -ve timezone offset (Barnaby Gray)
+
+* Prevent the REST API from return events with a null informatoinal boolean flag
+
+* Fix small spelling error in common.js
+
+* Added a favicon
