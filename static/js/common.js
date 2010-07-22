@@ -253,7 +253,7 @@ stashboard.fillIndex = function() {
     for (var i=0; i < 5; i++) {
         $("<th />", {
             "class": "date",
-            text: d.toLocaleDateString()
+            text: (d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear()
         }).appendTo(thead);
         d = new Date(d.getTime() - 86400000);
     }
