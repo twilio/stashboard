@@ -335,6 +335,8 @@ stashboard.fillIndex = function() {
             url += "?start=" + stashboard.rfc1123(startDate);
             url += "&end=" + stashboard.rfc1123(endDate);
 
+	    console.log(url);
+
             $.ajax({ 
                 type: "GET",
                 url: url,
@@ -342,6 +344,9 @@ stashboard.fillIndex = function() {
                 success: function(results){ 
                     var calendar = {};
                     var days = [];
+
+		    // Make end date the correct date
+		    endDate = new Date(endDate.getTime() - 86400000);
 
                     for (var i=0; i < 5; i++) {
                         days.push(endDate);
