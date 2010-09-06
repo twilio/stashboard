@@ -335,8 +335,6 @@ stashboard.fillIndex = function() {
             url += "?start=" + stashboard.rfc1123(startDate);
             url += "&end=" + stashboard.rfc1123(endDate);
 
-	    console.log(url);
-
             $.ajax({ 
                 type: "GET",
                 url: url,
