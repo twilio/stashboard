@@ -147,7 +147,6 @@ section li {
 section ul { margin: 20px; }
 #documentation {
   background: #ffffff;
-  border-bottom: 5px solid #222222;
 }
 #documentation h1 { background: url("images/stash-hat.png") no-repeat; }
 #download {
@@ -156,6 +155,12 @@ section ul { margin: 20px; }
   min-height: 145px;
   border-bottom: 5px solid #222222;
 }
+#community {
+  background: #cfdff9;
+  border-bottom: 5px solid #222222;
+  border-top: 5px solid #b1caf5;
+}
+#community h1 { background: url("images/stash-german.png") no-repeat; }
 #download h1 { background: url("images/stash-side.png") no-repeat; }
 #download p { width: 300px; }
 #download a { float: right; }

@@ -7,148 +7,159 @@
     <link href=' http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:bold' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="style.css" />
     <!--[if lt IE 9]>
-	<script>
-	  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
-	  "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
-	  "progress,section,time,video").split(',');
-	  for (var i = 0; i < e.length; i++) { document.createElement(e[i]);}
-	</script>
+        <script>
+          var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+          "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+          "progress,section,time,video").split(',');
+          for (var i = 0; i < e.length; i++) { document.createElement(e[i]);}
+        </script>
     <![endif]-->
   </head>
   <body>
     <a href="http://github.com/twilio/stashboard"><img style="position: absolute; top: 0; right: 0; border: 0;z-index:999999" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
     <div id="wrapper">
       <header>
-	<h1>Stashboard</h1>
-	<h2>The open source status page for cloud services and APIs.</h2>
-	<img id="screenshot" src="images/screenshot.png" alt="Sweet screen shot of Stashboard" />
-	<img id="stash" src="images/stash.png" alt="Mustaches For Everyone" />
-	<img id="logo" src="images/logos.png" alt="Stashboard Logo"/>
+        <h1>Stashboard</h1>
+        <h2>The open source status page for cloud services and APIs.</h2>
+        <img id="screenshot" src="images/screenshot.png" alt="Sweet screen shot of Stashboard" />
+        <img id="stash" src="images/stash.png" alt="Mustaches For Everyone" />
+        <img id="logo" src="images/logos.png" alt="Stashboard Logo"/>
       </header>
       <nav id="menu">
-	<a href="#about">ABOUT</a>
-	<a href="#installing">INSTALLING</a>
-	<a href="#documentation">DOCUMENTATION</a>
-	<a href="#download">DOWNLOAD</a>
-	<a href="http://www.github.com/twilio/stashboard">GITHUB REPO</a>
+        <a href="#about">ABOUT</a>
+        <a href="#installing">INSTALLING</a>
+        <a href="#documentation">DOCUMENTATION</a>
+        <a href="#download">DOWNLOAD</a>
+        <a href="#community">COMMUNITY</a>
+        <a href="http://www.github.com/twilio/stashboard">GITHUB REPO</a>
       </nav>
       <section id="about">
-	<h1>About</h1>
+        <h1>About</h1>
 
-	<p>Stashboard is a status dashboard for APIs and software services.  It's similar to the Amazon <a href="http://status.aws.amazon.com/">AWS Status Page</a> or the Google <a href="http://www.google.com/appsstatus">Apps Status Page</a>.  
-	  
-	Stashboard was originally written by <a href="http://www.twilio.com">Twilio</a> to provide <a href="http://status.twilio.com">status information</a> on its Voice and SMS APIs.  Stashboard is designed to provide a generic status dashboard for any hosted service or API.  The code can be downloaded, customized, and run on any Google App Engine account.</p>
+        <p>Stashboard is a status dashboard for APIs and software services.  It's similar to the Amazon <a href="http://status.aws.amazon.com/">AWS Status Page</a> or the Google <a href="http://www.google.com/appsstatus">Apps Status Page</a>.
 
-	<ul>
-		<li>Track multiple different API or SaaS services</li>
-		<li>Set custom status messages and icons such as Up/Down</li>
-		<li>Show historical status for each service</li>
-		<li>Runs on Google App Engine so it's independent of your infrastructure (unless your app is on GAE)</li>
-		<li>Full REST API for both getting and setting status information</li>
-		<li>CNAME to http://status.yourapp.com</li>
-	</ul>
+          Stashboard was originally written by <a href="http://www.twilio.com">Twilio</a> to provide <a href="http://status.twilio.com">status information</a> on its Voice and SMS APIs.  Stashboard is designed to provide a generic status dashboard for any hosted service or API.  The code can be downloaded, customized, and run on any Google App Engine account.</p>
 
-	<p>Stashboard is written in Python and hosted on Google App Engine. </p>
+        <ul>
+          <li>Track multiple different API or SaaS services</li>
+          <li>Set custom status messages and icons such as Up/Down</li>
+          <li>Show historical status for each service</li>
+          <li>Runs on Google App Engine so it's independent of your infrastructure (unless your app is on GAE)</li>
+          <li>Full REST API for both getting and setting status information</li>
+          <li>CNAME to http://status.yourapp.com</li>
+        </ul>
 
-	<p>
-	  Head over to <a href="http://stashboard.appspot.com">stashboard.appspot.com</a> to play with the latest version.
-	</p>
+        <p>Stashboard is written in Python and hosted on Google App Engine. </p>
+
+        <p>
+          Head over to <a href="http://stashboard.appspot.com">stashboard.appspot.com</a> to play with the latest version.
+        </p>
 
 
       </section>
       <section id="installing">
-	<h1>Installation</h1>
-	
-	<p>If you are unfamiliar with App Engine, make sure to check out the <a href="http://code.google.com/appengine/docs/python/gettingstarted/">Getting Started</a> guide.</p>
+        <h1>Installation</h1>
 
-	<p>First, install the App Engine SDK for Python, <a href="http://code.google.com/appengine/downloads.html#Google_App_Engine_SDK_for_Python">available here</a>. The SDK makes it easy to run Stashboard locally or deploy it to appspot.com</p>
+        <p>If you are unfamiliar with App Engine, make sure to check out the <a href="http://code.google.com/appengine/docs/python/gettingstarted/">Getting Started</a> guide.</p>
 
-	<p>Next, download and extract Stashboard to your computer. The source is availble <a href="http://github.com/twilio/stashboard/tarball/master">for download</a> from Github.</p>
+        <p>First, install the App Engine SDK for Python, <a href="http://code.google.com/appengine/downloads.html#Google_App_Engine_SDK_for_Python">available here</a>. The SDK makes it easy to run Stashboard locally or deploy it to appspot.com</p>
 
-	<h2>Run Locally</h2>
+        <p>Next, download and extract Stashboard to your computer. The source is availble <a href="http://github.com/twilio/stashboard/tarball/master">for download</a> from Github.</p>
 
-	<p>Stashboard requires Django 1.1 for templating purposes. The App Engine SDK only ships with Django 0.96, so you will need to install (or upgrade) to version 1.1. Django's website provides <a href="http://docs.djangoproject.com/en/1.1/topics/install/#installing-an-official-release">a handy installtion guide</a>.</p>
+        <h2>Run Locally</h2>
 
-	<p>Open the SDK, choose File > Add Existing Application..., select the stashboard folder you downloaded above and choose a port. Press Run and navigate to <code>http://localhost:{port}</code> to see your Stashboard installation.</p>
+        <p>Stashboard requires Django 1.1 for templating purposes. The App Engine SDK only ships with Django 0.96, so you will need to install (or upgrade) to version 1.1. Django's website provides <a href="http://docs.djangoproject.com/en/1.1/topics/install/#installing-an-official-release">a handy installtion guide</a>.</p>
 
-	<h2>Deploy to AppSpot</h2>
+        <p>Open the SDK, choose File > Add Existing Application..., select the stashboard folder you downloaded above and choose a port. Press Run and navigate to <code>http://localhost:{port}</code> to see your Stashboard installation.</p>
 
-	<p>Before you can deploy Stashboard, you will need to create an application on App Engine. Google has <a href="http://code.google.com/appengine/docs/python/gettingstarted/uploading.html">a simple tutorial</a> for registering applications with App Engine.</p>
+<h2>Deploy to AppSpot</h2>
 
-	<p>Once your application is registered, open <code>app.yaml</code> in the Stashboard directory and change <code>application-id</code> to the name of your newly created application.</p>
+<p>Before you can deploy Stashboard, you will need to create an application on App Engine. Google has <a href="http://code.google.com/appengine/docs/python/gettingstarted/uploading.html">a simple tutorial</a> for registering applications with App Engine.</p>
 
-	<p>Hit the 'Deploy' button, wait a couple of seconds, and then navigate to <code>http://{app-name}.appspot.com</code> to enjoy your new status dashboard</p>
+<p>Once your application is registered, open <code>app.yaml</code> in the Stashboard directory and change <code>application-id</code> to the name of your newly created application.</p>
 
-	<h2>Go To Prod</h2>
+<p>Hit the 'Deploy' button, wait a couple of seconds, and then navigate to <code>http://{app-name}.appspot.com</code> to enjoy your new status dashboard</p>
 
-	<p>Stashboard can live at http://status.your-company.com. Simply log into Google Apps to manage your domains. Learn more <a href="http://code.google.com/appengine/articles/domains.html">here</a>. </p>
+<h2>Go To Prod</h2>
 
-      </section>
+<p>Stashboard can live at http://status.your-company.com. Simply log into Google Apps to manage your domains. Learn more <a href="http://code.google.com/appengine/articles/domains.html">here</a>. </p>
 
-      <section id="documentation">
+</section>
 
-	<h1>Documentation</h1>
-	
-	<p><em>Full documentation of the REST API can be found at <a href="http://stashboard.appspot.com/documentation/rest">http://stashboard.appspot.com/documentation/rest</a></em></p>
-	
-	<h2>Authentication</h2>
-	
-	<p>
-	  To access information through the REST API, no authentication is required. However, to change any information via the REST API (POST/PUT/DELETE), authentication and SSL are required.
-	</p>
-	
-	<h2>Resources</h2>
+<section id="documentation">
 
-	<p>The Stashboard REST API is broken down into three resources: Services, Events, and Statuses.</p>
-	
-	<h3><a href="http://stashboard.appspot.com/documentation/rest#services-list-resource">Services</a></h3>
-      
-	<p>Services are the basic unit of Stashboard. A service is any web service that can be consumed, and more importantly, can fail. Using Stashboard, you can easily inform your users of the current service status. To handle system status, Stashboard uses the concept of events.</p>
+  <h1>Documentation</h1>
 
-	<h3><a href="http://stashboard.appspot.com/documentation/rest#events-list-resource">Events</a></h3>
-	<p>A service has a list of events, listed in reverse chronological order, which represent the state of that service. To track the state of a web service, an administrator creates events for a given service.</p>
+  <p><em>Full documentation of the REST API can be found at <a href="http://stashboard.appspot.com/documentation/rest">http://stashboard.appspot.com/documentation/rest</a></em></p>
 
-	<p>For example, if a service is currently down, create an event with a &quot;DOWN&quot; status, explaining why the service isn't working. Once the service is up again, simply create a new event with an attached &quot;UP&quot; status.</p>
-	
-	<h3><a href="http://stashboard.appspot.com/documentation/rest#status-list-resource">Statuses</a></h3>
-	
-	<p>A status represents the state of a web service. Instead of being directly attached to services, a status is attached to a service event (described above). Therefore, the current system status is simply the status attached to the most recent event.</p>
-	
+  <h2>Authentication</h2>
 
-      </section>
+  <p>
+    To access information through the REST API, no authentication is required. However, to change any information via the REST API (POST/PUT/DELETE), authentication and SSL are required.
+  </p>
 
-      <section id="download">	
-	<a href="http://github.com/twilio/stashboard/tarball/master">
-          <img border="0" src="http://github.com/images/modules/download/tar.png"></a>
-	<a href="http://github.com/twilio/stashboard/zipball/master">
-          <img border="0" src="http://github.com/images/modules/download/zip.png"></a>
-	<h1>Download</h1>
-	<p>
-	  You can download this project in either zip  or tar  formats.
-	  </p>
-      </section>
+  <h2>Resources</h2>
 
-      <section id="attribution">
-	<a id="twilio" href="http://www.twilio.com">
-	  <img src="images/twilio.png" alt="Twilio" />
-	</a>
+  <p>The Stashboard REST API is broken down into three resources: Services, Events, and Statuses.</p>
 
-	<p>Stashboard was created by <a href="http://www.kyleconroy.com">Kyle Conroy</a> at <a href="http://www.twilio.com">Twilio</a>.  
-	
-	<p>Stashboard is licensed under the <a href="http://en.wikipedia.org/wiki/MIT_License">MIT License</a></p>
+  <h3><a href="http://stashboard.appspot.com/documentation/rest#services-list-resource">Services</a></h3>
 
-      </section>
+  <p>Services are the basic unit of Stashboard. A service is any web service that can be consumed, and more importantly, can fail. Using Stashboard, you can easily inform your users of the current service status. To handle system status, Stashboard uses the concept of events.</p>
 
-      <footer>
-	<nav>
-	  <a href="#installing">INSTALLING</a>
-	  <a href="#documentation">DOCUMENTATION</a>
-	  <a href="#download">DOWNLOAD</a>
-	  <a href="#about">ABOUT</a>
-	  <a href="http://www.github.com/twilio/stashboard">GITHUB REPO</a>
-	</nav>
-      </footer>
-    </div>
+  <h3><a href="http://stashboard.appspot.com/documentation/rest#events-list-resource">Events</a></h3>
+  <p>A service has a list of events, listed in reverse chronological order, which represent the state of that service. To track the state of a web service, an administrator creates events for a given service.</p>
+
+  <p>For example, if a service is currently down, create an event with a &quot;DOWN&quot; status, explaining why the service isn't working. Once the service is up again, simply create a new event with an attached &quot;UP&quot; status.</p>
+
+  <h3><a href="http://stashboard.appspot.com/documentation/rest#status-list-resource">Statuses</a></h3>
+
+  <p>A status represents the state of a web service. Instead of being directly attached to services, a status is attached to a service event (described above). Therefore, the current system status is simply the status attached to the most recent event.</p>
+
+
+</section>
+
+<section id="community">
+  <h1>Community</h1>
+
+  <p>All Stashboard development and discussion happens in the <a href="https://groups.google.com/forum/#!forum/stashboard">Stashboard google group</a>.</p>
+
+  <p>To keep up to date, you can follow <a href="http://twitter.com/stashboard">@stashboard</a> on Twitter or join the <a href="irc://irc.freenode.net/stashboard">#stashboard</a> channel on <a href="irc.freenode.net">freenode</a>.</p>
+
+</section>
+
+<section id="download">
+  <a href="http://github.com/twilio/stashboard/tarball/master">
+    <img border="0" src="http://github.com/images/modules/download/tar.png"></a>
+  <a href="http://github.com/twilio/stashboard/zipball/master">
+    <img border="0" src="http://github.com/images/modules/download/zip.png"></a>
+  <h1>Download</h1>
+  <p>
+    You can download this project in either zip  or tar  formats.
+  </p>
+</section>
+
+<section id="attribution">
+  <a id="twilio" href="http://www.twilio.com">
+    <img src="images/twilio.png" alt="Twilio" />
+  </a>
+
+  <p>Stashboard was created at <a href="http://www.twilio.com">Twilio</a>.
+
+  <p>Stashboard is licensed under the <a href="http://en.wikipedia.org/wiki/MIT_License">MIT License</a></p>
+
+</section>
+
+<footer>
+  <nav>
+    <a href="#installing">INSTALLING</a>
+    <a href="#documentation">DOCUMENTATION</a>
+    <a href="#download">DOWNLOAD</a>
+    <a href="#about">ABOUT</a>
+    <a href="#community">COMMUNITY</a>
+    <a href="http://www.github.com/twilio/stashboard">GITHUB REPO</a>
+  </nav>
+</footer>
+</div>
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
