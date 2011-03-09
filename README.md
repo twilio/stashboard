@@ -30,6 +30,12 @@ By default, Stashboard exposes a rich client, utilizing AJAX and jQuery. If inst
 
 Full documentation of the REST API can be found at <http://stashboard.appspot.com/documentation/rest>
 
+## Community
+
+All Stashboard development and discussion happens in the [Stashboard google group](https://groups.google.com/forum/#!forum/stashboard)
+
+To keep up to date, you can follow [@stashboard](http://twitter.com/stashboard) on Twitter or join the [#stashboard](irc://irc.freenode.net/stashboard) channel on freenode
+
 ## Future
 
 Future plans include RSS feeds, Web Hook integration, and a richer support for different status page views.
