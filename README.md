@@ -40,6 +40,7 @@ To keep up to date, you can follow [@stashboard](http://twitter.com/stashboard) 
 
 Future plans include RSS feeds, Web Hook integration, and a richer support for different status page views.
 
-## Attribution
+## Acknowledgements
+* Buttons by [Necolas](https://github.com/necolas/css3-github-buttons)
 * Fugue icons from [Yusuke Kamiyamane](http://p.yusukekamiyamane.com/)
 * Iconic icons from [P.J. Onori](http://somerandomdude.com/projects/iconic/)
