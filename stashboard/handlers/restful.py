@@ -22,12 +22,11 @@
 
 __author__ = 'William T. Katz'
 
+from django.utils import simplejson as json
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
-import jsonpickle
 import logging
 import os
-import cgi
 
 # Some useful module methods
 def send_successful_response(handler, response):
@@ -165,9 +164,9 @@ class Controller(webapp.RequestHandler):
         Renders the given data as json.
         If callback is valid, renders data as jsonp
         """
-        callback = self.request.get('callback', default_value=None)
+        callback = self.request.get('callback', default_value=False)
 
-        data = cgi.escape(jsonpickle.encode(data))
+        data = json.dumps(data)
 
         if callback:
             self.response.headers.add_header("Content-Type", "application/javascript")
