@@ -24,7 +24,7 @@ Hit the 'Deploy' button, wait a couple of seconds, and then naviagate to http://
 
 ## Basic View
 
-By default, Stashboard exposes a rich client, utilizing AJAX and jQuery. If instead you just want a basic read only view, change the `rich_client` attribute to `False` in `config.py`.
+By default, Stashboard exposes a rich client, utilizing AJAX and jQuery.
 
 ## REST API
 
@@ -40,4 +40,6 @@ To keep up to date, you can follow [@stashboard](http://twitter.com/stashboard) 
 
 Future plans include RSS feeds, Web Hook integration, and a richer support for different status page views.
 
-
+## Attribution
+* Fugue icons from [Yusuke Kamiyamane](http://p.yusukekamiyamane.com/)
+* Iconic icons from [P.J. Onori](http://somerandomdude.com/projects/iconic/)
