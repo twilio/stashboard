@@ -11,7 +11,7 @@
 {% block content %}
 
       <div id="webservices" class="frame">
-        
+
           <table id="service-list">
             <thead>
               <tr>
@@ -22,17 +22,17 @@
             <tbody id="services-body">
             </tbody>
           </table>
-        
+
         {% if user_is_admin %}
           <a id="add-service" class="button" href="#">Add New Service</a>
         {% endif %}
-        
+
         {% include "_legend.html" %}
-        
+
       </div>
-      
+
       {% if user_is_admin %}
-      
+
       <div class="dialog" id="add-service-modal" title="Add New Service">
         <label  for="service-name">Name</label>
         <input type="text" id="service-name"name="service-name">
@@ -40,9 +40,9 @@
         <textarea
           id="service-description" name="service-description"></textarea>
       </div>
-      
+
       {% endif %}
-      
-      
+
+
 {% endblock %}
 
