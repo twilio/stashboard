@@ -53,6 +53,7 @@ def default_template_data():
         greeting = users.create_login_url("/")
 
 
+
     status_images = [
         [
             "tick-circle",
