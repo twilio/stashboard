@@ -323,6 +323,7 @@ dl.form textarea {
 }
 
 .error {
+  display: none;
   background: #EFA8AA;
   width: 500px;
   padding: 7px;

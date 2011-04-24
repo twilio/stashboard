@@ -1,11 +1,9 @@
 {% extends "admin/admin.html" %}
 
 {% block section %}
-<form action="{{ url }}" method="post">
+<form class="admin" action="{{ url }}" method="post">
 
-  {% if error %}
   <div class="error">{{ error }}</div>
-  {% endif %}
 
   <dl class="form">
     <dt><label for="name">Service Name</label></dt>
@@ -15,7 +13,7 @@
   </dl>
 
   <button type="submit" class="button pill big primary">
-    {{ button_text }}
+    {{ action|title }}
   </button>
 
 </form>

@@ -2,7 +2,6 @@ from google.appengine.api import users
 from handlers import site
 from models import Service
 from utils import slugify
-from forms import ServiceForm
 
 def default_template_data():
     td = site.default_template_data()
@@ -28,18 +27,8 @@ class ServiceHandler(site.BaseHandler):
     def get(self):
         td = default_template_data()
         td["services_selected"] = True
-        td["services"] = Service.all().fetch(1000)
+        td["services"] = Service.all().order("name").fetch(1000)
         self.render(td, 'admin/services.html')
-
-    def post(self):
-        form = ServiceForm(self.request)
-        if form.validate():
-            s = form.create()
-            self.redirect("/admin/services/" + s.slug)
-        else:
-            self.error(400)
-            self.render(form.td("create"), form.template)
-
 
 class ServiceInstanceHandler(site.BaseHandler):
 
@@ -56,20 +45,24 @@ class ServiceInstanceHandler(site.BaseHandler):
         else:
             self.not_found()
 
-    def post(self, slug):
+
+class DeleteServiceHandler(site.BaseHandler):
+
+    def get(self, slug):
         service = Service.get_by_slug(slug)
         if not service:
             self.not_found()
             return
 
-        form = ServiceForm(self.request, instance=service)
-        if form.validate():
-            form.edit()
-            self.redirect("/admin/services/" + service.slug)
-        else:
-            self.error(400)
-            self.render(form.td("edit"), form.template)
+        td = {
+            "services_selected": True,
+            "url": "/api/v1/services/" + slug,
+            "description": service.description,
+            "name": service.name,
+            }
 
+        td.update(site.default_template_data())
+        self.render(td, 'admin/services_delete.html')
 
 class EditServiceHandler(site.BaseHandler):
 
@@ -79,12 +72,26 @@ class EditServiceHandler(site.BaseHandler):
             self.not_found()
             return
 
-        form = ServiceForm(self.request, instance=service)
-        self.render(form.td("edit"), form.template)
+        td = {
+            "services_selected": True,
+            "url": "/api/v1/services/" + slug,
+            "description": service.description,
+            "name": service.name,
+            "action": "edit",
+            }
+
+        td.update(site.default_template_data())
+        self.render(td, 'admin/services_create.html')
 
 
 class CreateServiceHandler(site.BaseHandler):
 
     def get(self):
-        form = ServiceForm(self.request)
-        self.render(form.td("create"), form.template)
+        td = {
+            "services_selected": True,
+            "url": "/api/v1/services",
+            "action": "create",
+            }
+
+        td.update(site.default_template_data())
+        self.render(td, 'admin/services_create.html')

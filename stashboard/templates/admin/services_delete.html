@@ -1,0 +1,15 @@
+{% extends "admin/admin.html" %}
+
+{% block section %}
+<form class="delete" action="{{ url }}" method="post">
+
+  <div class="error">{{ error }}</div>
+
+  <h3>Are you sure you want to delete {{ name }}? </h3>
+
+  <button type="submit" class="button pill big primary danger">
+    Delete
+  </button>
+
+</form>
+{% endblock %}

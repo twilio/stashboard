@@ -97,15 +97,12 @@ class ServicesListHandler(restful.Controller):
                 existing_s = Service.get_by_slug(slug)
 
                 # Update existing resource
-                if existing_s:
-                    existing_s.description = description
-                    existing_s.put()
-                    self.json(existing_s.rest(self.base_url(version)))
-                # Create new service
-                else:
+                if not existing_s:
                     s = Service(name=name, slug=slug, description=description)
                     s.put()
                     self.json(s.rest(self.base_url(version)))
+                else:
+                    self.error(404, "A sevice with this name already exists")
             else:
                 self.error(400, "Bad Data: Name: %s, Description: %s" % (name, description))
         else:

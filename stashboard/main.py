@@ -66,6 +66,7 @@ ROUTES = [
     (r'/admin/api', admin.SetupHandler),
     (r'/admin/setup', admin.SetupHandler),
     (r'/admin/services/create', admin.CreateServiceHandler),
+    (r'/admin/services/(.*)/delete', admin.DeleteServiceHandler),
     (r'/admin/services/(.*)/edit', admin.EditServiceHandler),
     (r'/admin/services/(.*)', admin.ServiceInstanceHandler),
     (r'/admin/services', admin.ServiceHandler),
