@@ -28,10 +28,10 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'contrib'))
 
 import logging
-import wsgiref.handlers
 from google.appengine.api import memcache
-from google.appengine.ext import webapp
 from google.appengine.api import users
+from google.appengine.ext import webapp
+from google.appengine.ext.webapp.util import run_wsgi_app
 from handlers import site, api, admin
 from models import Status, Setting
 
@@ -75,16 +75,7 @@ def application():
     return webapp.WSGIApplication(ROUTES, debug=True)
 
 def main():
-    # Check if defaults have been installed
-    # installed_defaults = memcache.get("installed_defaults")
-    # if installed_defaults is None:
-    #     installed_defaults = Setting.all().filter('name = ', 'installed_defaults').get()
-    #     if installed_defaults is None:
-    #         logging.info("Installing default statuses")
-    #         Status.install_defaults()
-    #     if not memcache.add("installed_defaults", True):
-    #         logging.error("Memcache set failed.")
-    wsgiref.handlers.CGIHandler().run(application())
+    run_wsgi_app(application())
 
 if __name__ == "__main__":
     main()

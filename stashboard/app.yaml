@@ -6,16 +6,10 @@ api_version: 1
 derived_file_type:
 - python_precompiled
 
+builtins:
+- appstats: on
+
 handlers:
-# URLS for testing
-#- url: /tests
-#  static_dir: testing
-#  login: required
-
-#- url: /runner
-#  script: runner.py
-#  login: required
-
 - url: /css
   static_dir: static/css
 

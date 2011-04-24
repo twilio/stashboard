@@ -37,6 +37,7 @@ from datetime import date, timedelta
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils import simplejson as json
+from google.appengine.api import memcache
 from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext import db
@@ -76,6 +77,17 @@ class BaseHandler(webapp.RequestHandler):
     def render(self, template_values, filename):
         self.response.out.write(render_to_string(filename, template_values))
 
+    def retrieve(self, key):
+        """ Helper for loading data from memcache """
+        item = memcache.get(key)
+        if item is not None:
+            return item
+        else:
+            item = self.data()
+            if not memcache.add(key, item):
+                logging.error("Memcache set failed on %s" % key)
+        return item
+
 
 class NotFoundHandler(BaseHandler):
 
@@ -90,17 +102,40 @@ class UnauthorizedHandler(webapp.RequestHandler):
 
 class RootHandler(BaseHandler):
 
-    def get(self):
+    def data(self):
+        td = {}
         q = Service.all()
-        services = q.order("name").fetch(100)
 
-        td = default_template_data()
+        services = []
+        dstatus = Status.default()
+
+        for s in q.order("name").fetch(100):
+            event = s.current_event()
+            if event:
+                status = event.status
+            else:
+                status = dstatus
+
+            service = {
+                "slug": s.slug,
+                "name": s.name,
+                "url": s.url(),
+                "status": status,
+                "history": s.history(5, dstatus)
+                }
+            services.append(service)
+
         td["days"] = get_past_days(5)
-        td["services"] = services
-        td["services_json"] = json.dumps([ {"slug": s.slug} for s in services])
         td["statuses"] = Status.all().fetch(100)
+        td["services"] = services
+        return td
 
+    def get(self):
+        td = default_template_data()
+        # td.update(self.retrieve("frontpage"))
+        td.update(self.data())
         self.render(td, 'index.html')
+
 
 class ServiceHandler(BaseHandler):
 
