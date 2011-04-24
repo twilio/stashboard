@@ -1,0 +1,22 @@
+{% extends "admin/admin.html" %}
+
+{% block section %}
+<form action="{{ url }}" method="post">
+
+  {% if error %}
+  <div class="error">{{ error }}</div>
+  {% endif %}
+
+  <dl class="form">
+    <dt><label for="name">Service Name</label></dt>
+    <dd><input id="name" name="name" size="30" type="text" value="{{name}}"></dd>
+    <dt><label for="description">Service Description</label></dt>
+    <dd><textarea id="description" name="description" size="30" type="text">{{description}}</textarea></dd>
+  </dl>
+
+  <button type="submit" class="button pill big primary">
+    {{ button_text }}
+  </button>
+
+</form>
+{% endblock %}
