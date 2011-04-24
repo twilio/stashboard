@@ -1,13 +1,5 @@
 {% extends "base.html" %}
 
-{% block js %}
-<script type="text/javascript">
-$(document).ready(function() {
-  stashboard.services.refresh({{ services_json|safe }});
-});
-</script>
-{% endblock %}
-
 {% block content %}
 <table id="service-list">
   <thead>
