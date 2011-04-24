@@ -22,13 +22,28 @@ from google.appengine.ext import db
 from models import Status, Service, Event
 from datetime import datetime, timedelta, date
 
+# Create the default statuses
+Status.install_defaults()
+
+# Create Services
 service = {
     "name": "Service Foo",
     "slug": "service-foo",
     "description": "Scalable and reliable foo service across the globe",
     }
 
+services = []
 for i in "ABCDEFGHIJ":
     foo = Service(name=service["name"] + i, slug=service["slug"] + i,
                   description=service["description"])
     foo.put()
+    services.append(foo)
+
+
+# Given one service a bunch of events
+foo = services[0]
+
+bad = Status.get_by_slug("down")
+
+for i in range(10):
+    Event(service=foo, status=bad, message="Event %s" % i).put()

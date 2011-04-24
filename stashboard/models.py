@@ -79,6 +79,10 @@ class Service(db.Model):
     def get_by_slug(service_slug):
         return Service.all().filter('slug = ', service_slug).get()
 
+    slug = db.StringProperty(required=True)
+    name = db.StringProperty(required=True)
+    description = db.StringProperty(required=True)
+
     def current_event(self):
         event = self.events.order('-start').get()
         return event
@@ -120,26 +124,8 @@ class Service(db.Model):
         return [ stats[k] for k in keys]
 
 
-    def events_for_day(self, day):
-        """ Return the largest seveirty (of events) for a given day. If no
-        events occured, return the lowest severity rating.
-
-        Arguments:
-        day         -- Date object: The day to summarize
-
-        """
-
-        next_day = day + timedelta(days=1)
-
-        return self.events.filter('start >=', day) \
-            .filter('start <', next_day).fetch(40)
-
     def compare(self, other_status):
         return 0
-
-    slug = db.StringProperty(required=True)
-    name = db.StringProperty(required=True)
-    description = db.StringProperty(required=True)
 
     def sid(self):
         return str(self.key())
@@ -197,20 +183,18 @@ class Status(db.Model):
         warning = Level.get_severity(Level.warning)
         error = Level.get_severity(Level.error)
 
-        d = Status(name="Down", slug="down", image="cross-circle", severity=error, \
-                       description="The service is currently down")
-        u = Status(name="Up", slug="up", image="tick-circle", severity=normal, \
-                       description="The service is up")
-        w = Status(name="Warning", slug="warning", image="exclamation", severity=warning, \
-                       description="The service is experiencing intermittent problems")
-
+        d = Status(name="Down", slug="down", severity=error,
+                   image="icons/fugue/cross-circle.png",
+                   description="The service is currently down")
+        u = Status(name="Up", slug="up", severity=normal,
+                   image="icons/fugue/tick-circle.png",
+                   description="The service is up")
+        w = Status(name="Warning", slug="warning", severity=warning,
+                   image="icons/fugue/exclamation.png",
+                   description="The service is experiencing intermittent problems")
         d.put()
         u.put()
         w.put()
-
-        s = Setting(name="installed_defaults")
-        s.put()
-
 
     name = db.StringProperty(required=True)
     slug = db.StringProperty(required=True)
@@ -248,7 +232,6 @@ class Event(db.Model):
     # We want this to be required, but it would break all current installs
     # Instead, we handle it in the rest method
     informational = db.BooleanProperty(default=False)
-
     status = db.ReferenceProperty(Status, required=True)
     message = db.TextProperty(required=True)
     service = db.ReferenceProperty(Service, required=True,

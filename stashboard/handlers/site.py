@@ -103,15 +103,12 @@ class UnauthorizedHandler(webapp.RequestHandler):
 class RootHandler(BaseHandler):
 
     def data(self):
-        td = {}
-        q = Service.all()
-
         services = []
         dstatus = Status.default()
 
-        for s in q.order("name").fetch(100):
+        for s in Service.all().order("name").fetch(100):
             event = s.current_event()
-            if event:
+            if event is not None:
                 status = event.status
             else:
                 status = dstatus
@@ -125,29 +122,26 @@ class RootHandler(BaseHandler):
                 }
             services.append(service)
 
-        td["days"] = get_past_days(5)
-        td["statuses"] = Status.all().fetch(100)
-        td["services"] = services
-        return td
+        return {
+            "days": get_past_days(5),
+            "statuses": Status.all().fetch(100),
+            "services": services,
+            }
 
     def get(self):
         td = default_template_data()
-        # td.update(self.retrieve("frontpage"))
+        #td.update(self.retrieve("frontpage"))
         td.update(self.data())
         self.render(td, 'index.html')
 
 
 class ServiceHandler(BaseHandler):
 
-    @authorized.force_ssl(only_admin=True)
     def get(self, service_slug, year=None, month=None, day=None):
-        user = users.get_current_user()
-        logging.debug("ServiceHandler#get")
-
         service = Service.get_by_slug(service_slug)
 
         if not service:
-            self.render({}, "404.html")
+            self.error(404)
             return
 
         try:
@@ -165,105 +159,20 @@ class ServiceHandler(BaseHandler):
                 start_date = None
                 end_date = None
         except ValueError:
-            self.render({},'404.html')
-            return
-
-        td = default_template_data()
-        td["service"] = service_slug
-
-        if start_date and end_date:
-            start_stamp = mktime(start_date.timetuple())
-            end_stamp = mktime(end_date.timetuple())
-            # Remove GMT from the string so that the date is
-            # is parsed in user's time zone
-            td["start_date"] = start_date
-            td["end_date"] = end_date
-            td["start_date_stamp"] = format_date_time(start_stamp)[:-4]
-            td["end_date_stamp"] = format_date_time(end_stamp)[:-4]
-        else:
-            td["start_date"] = None
-            td["end_date"] = None
-
-        self.render(td, 'service.html')
-
-class DebugHandler(BaseHandler):
-
-    @authorized.force_ssl()
-    def get(self):
-        logging.debug("DebugHandler %s", self.request.scheme)
-        td = default_template_data()
-        self.render(td,'base.html')
-
-
-class BasicRootHandler(BaseHandler):
-    def get(self):
-        user = users.get_current_user()
-        logging.debug("BasicRootHandler#get")
-
-        q = Service.all()
-        q.order("name")
-        services = q.fetch(100)
-
-        p = Status.all()
-        p.order("severity")
-
-        past = get_past_days(5)
-
-        td = default_template_data()
-        td["services"] = q.fetch(100)
-        td["statuses"] = p.fetch(100)
-        td["past"] = past
-        td["default"] = Status.default()
-
-        self.render(td, 'basic','index.html')
-
-class BasicServiceHandler(BaseHandler):
-
-    def get(self, service_slug, year=None, month=None, day=None):
-        user = users.get_current_user()
-        logging.debug("BasicServiceHandler#get")
-
-        service = Service.get_by_slug(service_slug)
-
-
-        if not service:
-            self.render({}, "404.html")
+            self.error(404)
             return
 
         events = service.events
-        show_admin = False
-
-        try:
-            if day:
-                start_date = date(int(year),int(month),int(day))
-                end_date = start_date + timedelta(days=1)
-            elif month:
-                start_date = date(int(year),int(month),1)
-                days = calendar.monthrange(start_date.year, start_date.month)[1]
-                end_date = start_date + timedelta(days=days)
-            elif year:
-                start_date = date(int(year),1,1)
-                end_date = start_date + timedelta(days=365)
-            else:
-                start_date = None
-                end_date = None
-                show_admin = True
-        except ValueError:
-            self.render({},'404.html')
-            return
 
         if start_date and end_date:
             events.filter('start >= ', start_date).filter('start <', end_date)
 
-        events.order("-start")
-
         td = default_template_data()
         td["service"] = service
-        td["events"] = events.fetch(100)
-        td["start_date"] = start_date
-        td["end_date"] = end_date
+        td["events"] = events.order("-start").fetch(500)
 
-        self.render(td, 'basic','service.html')
+        self.render(td, 'service.html')
+
 
 class DocumentationHandler(BaseHandler):
 
@@ -281,7 +190,6 @@ class DocumentationHandler(BaseHandler):
             self.render(td, 'examples.html')
         else:
             self.render({},'404.html')
-
 
 
 class VerifyAccessHandler(BaseHandler):
