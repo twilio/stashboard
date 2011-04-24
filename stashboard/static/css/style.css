@@ -42,6 +42,7 @@ header .button {float: right; margin-top: 20px;}
   border: 1px solid rgb(228, 228, 228);
   background: white;
   padding: 20px;
+  position: relative;
 }
 
 .dialog { display: none; }
@@ -58,13 +59,16 @@ header .button {float: right; margin-top: 20px;}
   padding:4px 0 4px 16px;
 }
 
-nav ul {
-    height: 50px; background: #4476b5;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    broder-radius: 10px;
-    margin-bottom: 20px;
+nav {
+  height: 50px;
+}
 
+nav ul {
+  background: #4476b5;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
 }
 
 nav li {
@@ -275,7 +279,7 @@ td.status a .information {position: absolute; top: 0px; left: 1px; z-index: 500;
 
 ul.admin .button {
   float: right;
-  margin-left: 10px;
+  margin-left: 5px;
 }
 
 ul.admin li {
@@ -292,8 +296,38 @@ ul.admin .service:hover {
   text-decoration: underline;
 }
 
-
 #create {
   margin-top: 10px;
 }
 
+dl.form dd{
+  margin-bottom: 20px;
+}
+
+dl.form dt{
+  font-size: 14px;
+  margin-bottom: 3px;
+}
+
+dl.form input[type=text] {
+  width: 500px;
+  padding: 5px;
+  font-size: 16px;
+}
+
+dl.form textarea {
+  width: 500px;
+  padding: 5px;
+  font-size: 16px;
+  height: 100px;
+}
+
+.error {
+  background: #EFA8AA;
+  width: 500px;
+  padding: 7px;
+  border: 1px solid #D62A11;
+  color: #D62A11;
+  font-weight: bold;
+  margin-bottom: 20px;
+}

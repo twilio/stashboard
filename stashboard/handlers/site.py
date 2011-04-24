@@ -70,10 +70,6 @@ def get_past_days(num):
 
 class BaseHandler(webapp.RequestHandler):
 
-    def error(self, code):
-        super(BaseHandler, self).error(code)
-        self.render(default_template_data(), "404.html")
-
     def render(self, template_values, filename):
         self.response.out.write(render_to_string(filename, template_values))
 
@@ -88,16 +84,22 @@ class BaseHandler(webapp.RequestHandler):
                 logging.error("Memcache set failed on %s" % key)
         return item
 
+    def not_found(self):
+        self.error(404)
+        self.render(default_template_data(), "404.html")
+
 
 class NotFoundHandler(BaseHandler):
 
     def get(self):
         self.error(404)
+        self.render(default_template_data(), "404.html")
 
 
 class UnauthorizedHandler(webapp.RequestHandler):
     def get(self):
         self.error(403)
+        self.render(default_template_data(), "404.html")
 
 
 class RootHandler(BaseHandler):
@@ -141,7 +143,7 @@ class ServiceHandler(BaseHandler):
         service = Service.get_by_slug(service_slug)
 
         if not service:
-            self.error(404)
+            self.not_found()
             return
 
         try:
@@ -159,7 +161,7 @@ class ServiceHandler(BaseHandler):
                 start_date = None
                 end_date = None
         except ValueError:
-            self.error(404)
+            self.not_found(404)
             return
 
         events = service.events
