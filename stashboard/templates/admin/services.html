@@ -1,55 +1,7 @@
-{% extends "base.html" %}
+{% extends "admin/admin.html" %}
 
-{% block js_end %}
-<script type="text/javascript">
-  $(document).ready(function(){
-    //stashboard.fillIndex();
-  });
-</script>
-{% endblock %}
+{% block section %}
 
-{% block content %}
-
-<table id="service-list">
-  <thead>
-    <tr>
-      <th>Service</th>
-      <th class="today">Current</th>
-      {% for day in days %}
-      <th> {{ day|date:"N d" }} </th>
-      {% endfor %}
-  </thead>
-
-  <tbody id="services-body">
-    {% for service in services %}
-    <tr id="{{ service.slug}}">
-      <td>
-	<a href="{{ service.url }}">{{ service.name }}</a>
-      </td>
-      <td class="status highlight">
-      </td>
-      {% for day in days %}
-      <td class="status">
-      </td>
-      {% endfor %}
-    {% endfor %}
-  </tbody>
-</table>
-
-{% if user_is_admin %}
-<a id="add-service" class="button" href="#">Add New Service</a>
-{% endif %}
-
-{% include "_legend.html" %}
-
-{% if user_is_admin %}
-<div class="dialog" id="add-service-modal" title="Add New Service">
-  <label  for="service-name">Name</label>
-  <input type="text" id="service-name"name="service-name">
-  <label for="service-description">Description</label>
-  <textarea
-     id="service-description" name="service-description"></textarea>
-</div>
-{% endif %}
+HEY
 
 {% endblock %}

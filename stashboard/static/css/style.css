@@ -58,6 +58,39 @@ header .button {float: right; margin-top: 20px;}
   padding:4px 0 4px 16px;
 }
 
+nav ul {
+    height: 50px; background: #4476b5;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    broder-radius: 10px;
+    margin-bottom: 20px;
+
+}
+
+nav li {
+    float: left;
+    height: 50px;
+    margin: 0 20px;
+    line-height: 50px;
+}
+
+nav li a {
+    display:block;
+    font-size:15px;
+    font-weight:bold;
+    text-decoration:none;
+    color: #F3FBEC;
+}
+
+nav li a:hover {
+    color: #F3FBEC;
+    text-decoration:underline;
+}
+
+nav .selected {
+    background:url("../images/sub-nav-selected-arrow.png") no-repeat scroll center bottom transparent;
+}
+
 /* DATA TABLES */
 .data {
   width: 100%;
@@ -225,33 +258,7 @@ td.status a .information {position: absolute; top: 0px; left: 1px; z-index: 500;
 #documentation table caption {font-style: italic; text-align: right;}
 
 
-#documentation nav ul {
-    height: 50px; background: #4476b5;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    broder-radius: 10px;
-    margin-bottom: 20px;
 
-}
-
-#documentation nav li {
-    float: left;
-    height: 50px;
-    margin: 0 20px;
-    line-height: 50px;
-}
-
-#documentation nav li a {
-    display:block;
-    font-size:15px;
-    font-weight:bold;
-    text-decoration:none;
-    color: #F3FBEC;
-}
-
-#documentation nav .selected {
-    background:url("../images/sub-nav-selected-arrow.png") no-repeat scroll center bottom transparent;
-}
 
 
 

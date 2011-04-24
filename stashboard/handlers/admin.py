@@ -9,12 +9,7 @@ def default_template_data():
 class RootHandler(site.BaseHandler):
 
     def get(self):
-        self.redirect("/admin/site")
-
-class SiteHandler(site.BaseHandler):
-
-    def get(self):
-        self.render(default_template_data(), 'index.html')
+        self.redirect("/admin/services")
 
 class SetupHandler(site.BaseHandler):
 
@@ -23,6 +18,11 @@ class SetupHandler(site.BaseHandler):
 
     def post(self):
         Status.install_defaults()
-        self.redirect("/admin/site")
+        self.redirect("/admin")
 
+class ServiceHandler(site.BaseHandler):
 
+    def get(self):
+        td = default_template_data()
+        td["services_selected"] = True
+        self.render(td, 'admin/services.html')

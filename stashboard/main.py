@@ -63,9 +63,9 @@ ROUTES = [
     (r'/documentation/(.+)', site.DocumentationHandler),
 
     #ADMIN
-    (r'/admin/api', admin.SiteHandler),
-    (r'/admin/site/setup', admin.SetupHandler),
-    (r'/admin/site', admin.SiteHandler),
+    (r'/admin/api', admin.SetupHandler),
+    (r'/admin/setup', admin.SetupHandler),
+    (r'/admin/services', admin.ServiceHandler),
     (r'/admin', admin.RootHandler),
 
     (r'/.*$', site.NotFoundHandler),

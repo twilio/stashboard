@@ -27,11 +27,11 @@ handlers:
   static_files: static/robots.txt
   upload: static/robots.txt
 
-- url: /admin/api/.*
+- url: /admin/api.*
   script: main.py
   secure: always
 
-- url: /admin/site/.*
+- url: /admin.*
   script: main.py
   secure: always
   login: admin

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<nav>
+  <ul>
+    <li {% if services_selected %} class="selected" {% endif %}>
+      <a href="/admin/services">Services</a></li>
+
+    <li {% if statuses_selected %} class="selected" {% endif %}>
+      <a href="/admin/stauses">Statuses</a></li>
+  </ul>
+</nav>
+
+<div>
+
+  {% block section %}
+
+  {% endblock %}
+
+</div>
+ {% endblock %}
