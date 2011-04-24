@@ -37,11 +37,8 @@ class ServiceInstanceHandler(site.BaseHandler):
         if service:
             td = default_template_data()
             td["services_selected"] = True
-            td["url"] = "/admin/services/" + slug
-            td["button_text"] = "Edit"
-            td["description"] = service.description
-            td["name"] = service.name
-            self.render(td, 'admin/services_create.html')
+            td["service"] = service
+            self.render(td, 'admin/services_instance.html')
         else:
             self.not_found()
 

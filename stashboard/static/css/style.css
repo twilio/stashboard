@@ -322,6 +322,15 @@ dl.form textarea {
   height: 100px;
 }
 
+form.delete p {
+  margin-bottom: 20px;
+  font-size: 16px
+}
+
+form.delete strong {
+  font-weight: bold;
+}
+
 .error {
   display: none;
   background: #EFA8AA;
@@ -331,4 +340,8 @@ dl.form textarea {
   color: #D62A11;
   font-weight: bold;
   margin-bottom: 20px;
+}
+
+#editbar {
+  float: right;
 }
