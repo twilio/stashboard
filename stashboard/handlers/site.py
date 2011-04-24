@@ -45,46 +45,14 @@ from utils import authorized
 from wsgiref.handlers import format_date_time
 
 def default_template_data():
-    user = users.get_current_user()
-
-    if user:
-        greeting = users.create_logout_url("/")
-    else:
-        greeting = users.create_login_url("/")
-
-
-
-    status_images = [
-        [
-            "tick-circle",
-            "cross-circle",
-            "exclamation",
-            "wrench",
-            "flag",
-        ],
-        [
-            "clock",
-            "heart",
-            "hard-hat",
-            "information",
-            "lock",
-        ],
-        [
-            "plug",
-            "question",
-            "traffic-cone",
-            "bug",
-            "broom",
-        ],
-    ]
-
     data = {
         "title": settings.SITE_NAME,
-        "user": user,
-        "user_is_admin": users.is_current_user_admin(),
-        "login_link": greeting,
-        'common_statuses': status_images,
-    }
+        "report_url": settings.REPORT_URL,
+        }
+
+    data["user"] = users.get_current_user()
+    if data["user"]:
+        data["logout_url"] = users.create_logout_url("/")
 
     return data
 
@@ -102,7 +70,7 @@ class BaseHandler(webapp.RequestHandler):
 
     def error(self, code):
         super(BaseHandler, self).error(code)
-        self.render({}, "404.html")
+        self.render(default_template_data(), "404.html")
 
     def render(self, template_values, filename):
         self.response.out.write(render_to_string(filename, template_values))
@@ -121,16 +89,14 @@ class UnauthorizedHandler(webapp.RequestHandler):
 
 class RootHandler(BaseHandler):
 
-    @authorized.force_ssl(only_admin=True)
     def get(self):
-        user = users.get_current_user()
-        logging.debug("RootHandler#get")
-
         q = Service.all()
         q.order("name")
 
         td = default_template_data()
-        td["past"] = get_past_days(5)
+        td["days"] = get_past_days(5)
+        td["services"] = q.fetch(100)
+        td["statuses"] = Status.all().fetch(100)
 
         self.render(td, 'index.html')
 

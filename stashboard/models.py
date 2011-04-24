@@ -83,6 +83,8 @@ class Service(db.Model):
         event = self.events.order('-start').get()
         return event
 
+    def url(self):
+        return "/services/%s" % self.slug
 
     #Specialty function for front page
     def last_five_days(self):

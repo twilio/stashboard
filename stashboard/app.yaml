@@ -24,9 +24,6 @@ handlers:
 
 - url: /js
   static_dir: static/js
-  
-- url: /widget
-  static_dir: static/widget
 
 - url: /favicon\.ico
   static_files: static/favicon.ico
@@ -35,10 +32,18 @@ handlers:
 - url: /robots\.txt
   static_files: static/robots.txt
   upload: static/robots.txt
-  
+
+- url: /admin/api/.*
+  script: main.py
+  secure: always
+
+- url: /admin/site/.*
+  script: main.py
+  secure: always
+  login: admin
+
 - url: .*
   script: main.py
-  secure: optional
 
 skip_files: |
  ^(.*/)?(

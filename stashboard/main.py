@@ -32,47 +32,43 @@ import wsgiref.handlers
 from google.appengine.api import memcache
 from google.appengine.ext import webapp
 from google.appengine.api import users
-from handlers import site, api
+from handlers import site, api, admin
 from models import Status, Setting
 
-# if (config.SITE["rich_client"]):
-serviceHandler = site.ServiceHandler
-rootHandler = site.RootHandler
-# else
-    # rootHandler = site.BasicRootHandler
-    # serviceHandler = site.BasicServiceHandler
-
 ROUTES = [
-    ('/*$', rootHandler),
-    ('/debug', site.DebugHandler),
     #('/*[^/]', site.) redirect pages without slashed to pages with slashes
 
     #API
-    ('/403.html', site.UnauthorizedHandler),
-    ('/404.html', site.NotFoundHandler),
-    (r'/api/(.+)/services', api.ServicesListHandler),
-    (r'/api/(.+)/services/(.+)/events', api.EventsListHandler),
     (r'/api/(.+)/services/(.+)/events/current', api.CurrentEventHandler),
+    (r'/api/(.+)/services/(.+)/events', api.EventsListHandler),
     (r'/api/(.+)/services/(.+)/events/(.+)', api.EventInstanceHandler),
     (r'/api/(.+)/services/(.+)', api.ServiceInstanceHandler),
-    (r'/api/(.+)/statuses', api.StatusesListHandler),
+    (r'/api/(.+)/services', api.ServicesListHandler),
     (r'/api/(.+)/statuses/(.+)', api.StatusInstanceHandler),
+    (r'/api/(.+)/statuses', api.StatusesListHandler),
     (r'/api/(.+)/status-images', api.ImagesListHandler),
     (r'/api/(.+)/levels', api.LevelsListHandler),
     (r'/api/.*', api.NotFoundHandler),
 
     #SITE
-    (r'/services/(.+)/(.+)/(.+)/(.+)', serviceHandler),
-    (r'/services/(.+)/(.+)/(.+)', serviceHandler),
-    (r'/services/(.+)/(.+)', serviceHandler),
-    (r'/services/(.+)', serviceHandler),
+    (r'/*$', site.RootHandler),
+    (r'/403.html', site.UnauthorizedHandler),
+    (r'/404.html', site.NotFoundHandler),
+    (r'/services/(.+)/(.+)/(.+)/(.+)', site.ServiceHandler),
+    (r'/services/(.+)/(.+)/(.+)', site.ServiceHandler),
+    (r'/services/(.+)/(.+)', site.ServiceHandler),
+    (r'/services/(.+)', site.ServiceHandler),
     (r'/documentation/credentials', site.ProfileHandler),
     (r'/documentation/verify', site.VerifyAccessHandler),
     (r'/documentation/(.+)', site.DocumentationHandler),
 
-    ('/.*$', site.NotFoundHandler),
+    #ADMIN
+    (r'/admin/api', admin.SiteHandler),
+    (r'/admin/site/setup', admin.SetupHandler),
+    (r'/admin/site', admin.SiteHandler),
+    (r'/admin', admin.RootHandler),
 
-
+    (r'/.*$', site.NotFoundHandler),
     ]
 
 def application():

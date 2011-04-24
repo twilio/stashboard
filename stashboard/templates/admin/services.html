@@ -1,5 +1,13 @@
 {% extends "base.html" %}
 
+{% block js_end %}
+<script type="text/javascript">
+  $(document).ready(function(){
+    //stashboard.fillIndex();
+  });
+</script>
+{% endblock %}
+
 {% block content %}
 
 <table id="service-list">
@@ -28,6 +36,20 @@
   </tbody>
 </table>
 
+{% if user_is_admin %}
+<a id="add-service" class="button" href="#">Add New Service</a>
+{% endif %}
+
 {% include "_legend.html" %}
+
+{% if user_is_admin %}
+<div class="dialog" id="add-service-modal" title="Add New Service">
+  <label  for="service-name">Name</label>
+  <input type="text" id="service-name"name="service-name">
+  <label for="service-description">Description</label>
+  <textarea
+     id="service-description" name="service-description"></textarea>
+</div>
+{% endif %}
 
 {% endblock %}

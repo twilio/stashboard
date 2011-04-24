@@ -6,64 +6,40 @@
     <link rel="stylesheet" href="/css/reset.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="/css/style.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="/css/gh-buttons.css" type="text/css" media="screen" />
-    <link rel="stylesheet" href="/css/prettify.css" type="text/css" media="screen" />
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
-    <script type="text/javascript"
-src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="/js/common.js"></script>
-    <script type="text/javascript">
-      $(document).ready(function(){
-        $(".button").button();
-        $("#notice a").click(function(){
-          $("#notice").hide();
-        });
-      });
-    </script>
     {% block js %}
     {% endblock %}
   </head>
   <body>
     <div id="wrapper">
-      <div id="header">
-	<div id="notice"><span></span><a href="#">X</a></div>
+      <header>
+	<a href="{{ report_url }}" class="button pill big">Report an Issue</a>
         <img id="logo" src="/images/logo.png" alt="Logo"/>
         <a href="/"><h1 id="title">{{ title }}</h1></a>
-      </div>
-      <div id="content">
+      </header>
+      <section id="content">
         {% block content %}
-
         {% endblock %}
-      </div>
+      </section>
       <div id="push"></div>
     </div>
-    <div id="footer">
+    <footer>
       <ul class="left">
-        <li>
-          {% if login_link %}
-            <a href="{{ login_link }}">
-              {% if user %}
-                Logout
-              {% else %}
-                Login
-              {% endif %}
-            </a>
-          {% endif %}
-        </li>
-	<li>-</li>
+	{% if user %}
 	<li>
-	  <a href="/documentation/overview">
-            API Documentation
-          </a>
+	  <a href="{{ logout_url }}">Logout</a>
 	</li>
-        <li>-</li>
+	{% endif %}
+	<li>
+	  <a href="/documentation/overview">API</a>
+	</li>
         <li>Copyright (c) {% now "Y" %} <a href="http://www.twilio.com">Twilio Inc.</a></li>
       </ul>
       <ul class="right">
 	<li id="powered"><a href="http://www.stashboard.org">POWERED BY <img src="/images/poweredbystash.png" alt="stash!" /> STASHBOARD</a></li>
        </ul>
-    </div>
+    </footer>
     {% block js_end %}
     {% endblock %}
-    <script type="text/javascript" src="/js/prettify.js"></script>
   </body>
 </html>

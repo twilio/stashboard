@@ -4,24 +4,27 @@ body{font:12px arial,helvetica,verdana,sans-serif;background: rgb(247, 247, 247)
 a{color:#333;text-decoration:none;}
 a:hover{color:#666;}
 
-#wrapper { width: 900px; min-height: 100%;
-           height: auto !important; height: 100%; margin: 0 auto -3em;
-         }
-         
-h1 {font-size: 32px;}
+#wrapper {
+  width: 900px; min-height: 100%;
+  height: auto !important; height: 100%;
+  margin: 0 auto -3em;
+}
+
+h1 {font-size: 32px; font-weight: bold;}
 h2 {font-size: 32px;}
 h3 {font-size: 24px;}
 h3.date-range {color: #999; margin-top: 20px}
-         
-#header {height: 70px;}
 
-#header h1 {margin: 15px; float: left; height: 40px; line-height: 40px;}
-#header h1 span {font-weight: normal;}
-#header h2 {margin: 15px 0; float: left; line-height: 67px;}
+header {height: 70px;}
+
+header h1 {margin: 15px; float: left; height: 40px; line-height: 40px;}
+header h1 span {font-weight: normal;}
+header h2 {margin: 15px 0; float: left; line-height: 67px;}
+header .button {float: right; margin-top: 20px;}
 #logo { height: 40px; float: left; margin: 15px 0;}
 
-#notice { 
-    float: right; margin-top:17px; 
+#notice {
+    float: right; margin-top:17px;
     border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;
     padding: 10px; display: none;
 }
@@ -35,11 +38,11 @@ h3.date-range {color: #999; margin-top: 20px}
 #status h2 { font-size: 60px; color: #FFF; text-align: center; padding-top: 65px;text-shadow: 2px 2px 0px #000;}
 
 #content {
-  border: 1px solid rgb(228, 228, 228); 
+  border: 1px solid rgb(228, 228, 228);
   background: white;
+  padding: 20px;
 }
 
-.frame { padding: 20px;}
 .dialog { display: none; }
 
 #sidebar { float: right; margin: 20px; width: 250px; }
@@ -60,13 +63,15 @@ h3.date-range {color: #999; margin-top: 20px}
 
 
 /* wordpress entries styling - main content column */
-#webservices table { width: 100%; border-spacing:10; font-size: 1.1em;}
-#webservices th {text-align: left;font-size: 20px;padding: 10px;border-bottom: 1px solid rgb(228, 228, 228);border-right: 1px solid rgb(228, 228, 228);}
-#webservices tr {font-size: 16px;}
-#webservices td {padding: 10px;border-bottom: 1px solid rgb(228, 228, 228);border-right: 1px solid rgb(228, 228, 228); vertical-align: middle;}
-#webservices .today {background: rgb(228, 228, 228);}
-#webservices .highlight {background: rgb(247, 247, 247);}
-#webservices .status, #webservices .date, #webservices .today, .delete {text-align: center;}
+#service-list { width: 100%; border-spacing:10; font-size: 1.1em;}
+#service-list th {font-weight: bold; font-size: 20px;padding: 10px;border-bottom: 1px solid rgb(228, 228, 228);border-right: 1px solid rgb(228, 228, 228);}
+#service-list th:first-child {text-align: left;}
+
+#service-list tr {font-size: 16px;}
+#service-list td {padding: 10px;border-bottom: 1px solid rgb(228, 228, 228);border-right: 1px solid rgb(228, 228, 228); vertical-align: middle; height: 25px }
+#service-list .today {background: rgb(228, 228, 228);}
+#service-list .highlight {background: rgb(247, 247, 247);}
+#service-list .status, #webservices .date, #webservices .today, .delete {text-align: center;}
 #webservices table a {text-decoration: underline;}
 
 #webservices .event-log {margin-top: 20px; border-collapse: separate; border-left:1px solid #E4E4E4;border-top:1px solid #E4E4E4;}
@@ -78,7 +83,7 @@ h3.date-range {color: #999; margin-top: 20px}
 .time-header {width: 20%;}
 .delete-header {width: 8%;}
 
-#submit { 
+#submit {
   background: rgb(228, 228, 228);
   border: 1px solid #ccc;
   margin: 20px 0px;
@@ -99,29 +104,28 @@ h3.date-range {color: #999; margin-top: 20px}
 #submit .update-status { float: left; margin: 10px 0px;}
 #submit .update-submit { clear: left; display: block; margin-left: auto; width: 150px;}
 
-#legend table tr, #legend table th {font-size: 12px}
 #legend h4 { color: #999; font-size: 18px; margin: 20px 0 5px 0;}
-#legend table {border: solid 2px rgb(228, 228, 228);width: auto}
-#legend table tr td:first-child {width: 16px;}
-#legend td {padding: 5px}
+#legend ul {font-size: 12px}
+#legend li {margin-right: 10px; display: inline-block;}
+#legend img, #legend p {vertical-align: middle; display: inline-block;}
 
-
-#footer, #push {height: 3em;}
-#footer {padding: 0 30px; width: 900px; margin: auto;}
-#footer ul {padding: 10px 0px;}
-#footer ul.left { float: left;}
-#footer ul.right { float: right;}
-#footer ul li {display: inline;}
+footer, #push {height: 3em;}
+footer {width: 900px; margin: auto;}
+footer ul {padding: 10px 0px;}
+footer ul li {display: inline-block;}
+footer ul.left { float: left;}
+footer ul.left li {margin-right: 7px}
+footer ul.right { float: right;}
 #icons, #icons a{ color: #ccc; }
 
 td.status a{position: relative;}
 td.status a .information {position: absolute; top: 0px; left: 1px; z-index: 500;}
 
-.dialog label, .dialog textarea, .dialog input 
+.dialog label, .dialog textarea, .dialog input
     { margin: 10px; clear: right;}
-    
+
 .dialog label {display: block;}
-    
+
 .dialog textarea { width: 400px; height: 75px;}
 
 .breadcrumb { font-weight: normal;}
@@ -133,9 +137,9 @@ td.status a .information {position: absolute; top: 0px; left: 1px; z-index: 500;
 #delete-service {float: right}
 #delete-service-modal {display: none}
 
-#documentation { 
+#documentation {
     font-size: 14px;
-}  
+}
 
 #documentation a { color: #4476B5; text-decoration: underline;}
 
