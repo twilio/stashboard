@@ -6,11 +6,12 @@ var stashboard = (function (parent, $) {
       e.preventDefault();
       $.post($("form.admin").attr("action"),
         $("form.admin").serialize(), function(data){
-          location.href = "/admin/services";
+          location.href = $("form.admin link").attr("href");
       }, "json")
       .error(function(jqXHR){
         var data = JSON.parse(jqXHR.responseText);
-        $(".error").html(data.message).show();
+        $(".error").html(data.message);
+        $(".error").show();
       });
     });
     
@@ -22,10 +23,11 @@ var stashboard = (function (parent, $) {
         dataType: "json",
         url: $("form.delete").attr("action"),
         success: function(data){
-          location.href = "/admin/services";
+          location.href = $("form.delete link").attr("href");
         },
         error: function(data){
-          $(".error").html(data.message).show();
+          $(".error").html(data.message);
+          $(".error").show();
         }
       });
     });

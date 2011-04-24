@@ -16,6 +16,10 @@ a:hover {
   color:#666;
 }
 
+em {
+  font-style: italic;
+}
+
 #wrapper {
   width: 900px; min-height: 100%;
   height: auto !important; height: 100%;
@@ -139,6 +143,7 @@ nav .selected {
 .data .today { background: rgb(228, 228, 228); }
 .data .highlight { background: rgb(247, 247, 247); }
 .data .status, .data .date, .data .today { text-align: center; }
+.data .action { width: 5px; }
 
 /* Front page table */
 
@@ -331,6 +336,10 @@ form.delete strong {
   font-weight: bold;
 }
 
+form.admin h1{
+  margin-bottom: 20px;
+}
+
 .error {
   display: none;
   background: #EFA8AA;
@@ -344,4 +353,29 @@ form.delete strong {
 
 #editbar {
   float: right;
+}
+
+#notfound {
+  text-align: center;
+}
+
+#notfound img, #notfound section {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+#notfound p {
+  font-size: 16px;
+}
+
+#notfound img {
+  width: 350px;
+}
+
+#setup h1, #setup p {
+  margin-bottom: 20px;
+}
+
+#setup p {
+  font-size: 16px;
 }

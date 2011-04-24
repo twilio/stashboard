@@ -1,6 +1,8 @@
+import logging
 from google.appengine.api import users
+from google.appengine.ext import db
 from handlers import site
-from models import Service
+from models import Service, Status, Event
 from utils import slugify
 
 def default_template_data():
@@ -38,6 +40,7 @@ class ServiceInstanceHandler(site.BaseHandler):
             td = default_template_data()
             td["services_selected"] = True
             td["service"] = service
+            td["events"] = service.events.order("-start").fetch(1000)
             self.render(td, 'admin/services_instance.html')
         else:
             self.not_found()
@@ -53,9 +56,10 @@ class DeleteServiceHandler(site.BaseHandler):
 
         td = {
             "services_selected": True,
-            "url": "/api/v1/services/" + slug,
+            "url": "/admin/api/v1/services/" + slug,
             "description": service.description,
             "name": service.name,
+            "slug": service.slug,
             }
 
         td.update(site.default_template_data())
@@ -71,8 +75,9 @@ class EditServiceHandler(site.BaseHandler):
 
         td = {
             "services_selected": True,
-            "url": "/api/v1/services/" + slug,
+            "url": "/admin/api/v1/services/" + slug,
             "description": service.description,
+            "slug": service.slug,
             "name": service.name,
             "action": "edit",
             }
@@ -86,9 +91,63 @@ class CreateServiceHandler(site.BaseHandler):
     def get(self):
         td = {
             "services_selected": True,
-            "url": "/api/v1/services",
+            "url": "/admin/api/v1/services",
             "action": "create",
             }
 
         td.update(site.default_template_data())
         self.render(td, 'admin/services_create.html')
+
+
+class UpdateStatusHandler(site.BaseHandler):
+
+    def get(self, slug):
+        service = Service.get_by_slug(slug)
+        if not service:
+            self.not_found()
+            return
+
+        td = {
+            "services_selected": True,
+            "service": service,
+            "statuses": Status.all().fetch(100),
+            }
+
+        td.update(site.default_template_data())
+        self.render(td, 'admin/events_create.html')
+
+class NoteHandler(site.BaseHandler):
+
+    def get(self, slug):
+        service = Service.get_by_slug(slug)
+        if not service:
+            self.not_found()
+            return
+
+        td = {
+            "services_selected": True,
+            "service": service,
+            }
+
+        td.update(site.default_template_data())
+        self.render(td, 'admin/events_note.html')
+
+
+class DeleteEventHandler(site.BaseHandler):
+
+    def get(self, slug, key_str):
+        service = Service.get_by_slug(slug)
+        event = db.get(key_str)
+        if not service or not isinstance(event, Event):
+            self.not_found()
+            return
+
+        td = {
+            "services_selected": True,
+            "service": service,
+            "event": event,
+            }
+
+        td.update(site.default_template_data())
+        self.render(td, 'admin/events_delete.html')
+

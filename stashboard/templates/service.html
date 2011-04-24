@@ -25,8 +25,13 @@
     {% for e in events %}
     <tr>
       <td class="time">{{ e.start|timesince }} ago</td>
+      {% if e.informational %}
+      <td class="status highlight"><img src="/images/icons/fugue/information.png" alt="Information" /></td>
+      <td>{{ e.message }}</td>
+      {% else %}
       <td class="status highlight"><img src="/images/{{ e.status.image }}" alt="{{ e.status.title }}" /></td>
       <td>{{ e.message }}</td>
+      {% endif %}
     </tr>
     {% endfor %}
   </tbody>
