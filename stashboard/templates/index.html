@@ -1,48 +1,42 @@
 {% extends "base.html" %}
 
-{% block js_end %}
-    <script type="text/javascript">
-      $(document).ready(function(){
-        stashboard.fillIndex();
-      });
-    </script>
-{% endblock %}
-
 {% block content %}
+<table id="services" class="data">
+  <thead>
+    <tr>
+      <th>Service</th>
+      <th class="today">Current</th>
+      {% for day in days %}
+      <th> {{ day|date:"N d" }} </th>
+      {% endfor %}
+  </thead>
 
-      <div id="webservices" class="frame">
+  <tbody>
+    {% for service in services %}
+    <tr id="{{ service.slug}}">
+      <td>
+	<a href="{{ service.url }}">{{ service.name }}</a>
+      </td>
+      <td class="status highlight">
+	<a href="{{ service.url }}">
+	  <img src="/images/{{ service.status.image }}" alt="{{ service.status.title }}"/>
+	</a>
+      </td>
+      {% for h in service.history %}
+      <td class="status">
+	{% if h.information %}
+	<a href="{{ service.url }}/{{ h.day|date:"Y/m/j" }}">
+	  <img src="/images/{{ h.image }}" alt="{{ h.title }}"/>
+	</a>
+	{% else %}
+	<img src="/images/{{ h.image }}" alt="{{ h.title }}"/>
+	{% endif %}
+      </td>
+      {% endfor %}
+    {% endfor %}
+  </tbody>
+</table>
 
-          <table id="service-list">
-            <thead>
-              <tr>
-                <th>Service</th>
-                <th class="today">Current</th>
-            </thead>
-
-            <tbody id="services-body">
-            </tbody>
-          </table>
-
-        {% if user_is_admin %}
-          <a id="add-service" class="button" href="#">Add New Service</a>
-        {% endif %}
-
-        {% include "_legend.html" %}
-
-      </div>
-
-      {% if user_is_admin %}
-
-      <div class="dialog" id="add-service-modal" title="Add New Service">
-        <label  for="service-name">Name</label>
-        <input type="text" id="service-name"name="service-name">
-        <label for="service-description">Description</label>
-        <textarea
-          id="service-description" name="service-description"></textarea>
-      </div>
-
-      {% endif %}
-
+{% include "_legend.html" %}
 
 {% endblock %}
-

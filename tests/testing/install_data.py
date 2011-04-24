@@ -1,15 +1,15 @@
 # Copyright (c) 2010 Twilio Inc.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -22,30 +22,28 @@ from google.appengine.ext import db
 from models import Status, Service, Event
 from datetime import datetime, timedelta, date
 
-#foo = Service(name="Service Foo", slug="service-foo",
-#              description="Scalable and reliable foo service across the globe")
-#foo.put()
-#bar = Service(name="Service Bar", slug="service-bar",
-              description="Scalable and reliable foo service")
-#bar.put()
-#delete = Service(name="Delete Me", slug="delete", 
-                 description="Delete Me Please")
-#delete.put()
+# Create the default statuses
+Status.install_defaults()
 
-bar = Service.get_by_slug("bar")
-cat = Status.get_by_slug("down")        
+# Create Services
+service = {
+    "name": "Service Foo",
+    "slug": "service-foo",
+    "description": "Scalable and reliable foo service across the globe",
+    }
 
-dates = [
-    datetime(2010, 6, 5), 
-    datetime(2010, 6, 10),
-    datetime(2010, 7, 16), 
-    datetime(2010, 7, 17),
-    datetime(2010, 7, 18, 7),
-]
-
-for d in dates:
-    e = Event(service=bar, status=cat, 
-          message="Error fine", start=d)
-    e.put()
+services = []
+for i in "ABCDEFGHIJ":
+    foo = Service(name=service["name"] + i, slug=service["slug"] + i,
+                  description=service["description"])
+    foo.put()
+    services.append(foo)
 
 
+# Given one service a bunch of events
+foo = services[0]
+
+bad = Status.get_by_slug("down")
+
+for i in range(10):
+    Event(service=foo, status=bad, message="Event %s" % i).put()

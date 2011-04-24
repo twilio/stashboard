@@ -28,67 +28,54 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'contrib'))
 
 import logging
-import wsgiref.handlers
 from google.appengine.api import memcache
-from google.appengine.ext import webapp
 from google.appengine.api import users
-from handlers import site, api
+from google.appengine.ext import webapp
+from google.appengine.ext.webapp.util import run_wsgi_app
+from handlers import site, api, admin
 from models import Status, Setting
 
-# if (config.SITE["rich_client"]):
-serviceHandler = site.ServiceHandler
-rootHandler = site.RootHandler
-# else
-    # rootHandler = site.BasicRootHandler
-    # serviceHandler = site.BasicServiceHandler
-
 ROUTES = [
-    ('/*$', rootHandler),
-    ('/debug', site.DebugHandler),
     #('/*[^/]', site.) redirect pages without slashed to pages with slashes
 
     #API
-    ('/403.html', site.UnauthorizedHandler),
-    ('/404.html', site.NotFoundHandler),
-    (r'/api/(.+)/services', api.ServicesListHandler),
-    (r'/api/(.+)/services/(.+)/events', api.EventsListHandler),
     (r'/api/(.+)/services/(.+)/events/current', api.CurrentEventHandler),
+    (r'/api/(.+)/services/(.+)/events', api.EventsListHandler),
     (r'/api/(.+)/services/(.+)/events/(.+)', api.EventInstanceHandler),
     (r'/api/(.+)/services/(.+)', api.ServiceInstanceHandler),
-    (r'/api/(.+)/statuses', api.StatusesListHandler),
+    (r'/api/(.+)/services', api.ServicesListHandler),
     (r'/api/(.+)/statuses/(.+)', api.StatusInstanceHandler),
+    (r'/api/(.+)/statuses', api.StatusesListHandler),
     (r'/api/(.+)/status-images', api.ImagesListHandler),
     (r'/api/(.+)/levels', api.LevelsListHandler),
     (r'/api/.*', api.NotFoundHandler),
 
     #SITE
-    (r'/services/(.+)/(.+)/(.+)/(.+)', serviceHandler),
-    (r'/services/(.+)/(.+)/(.+)', serviceHandler),
-    (r'/services/(.+)/(.+)', serviceHandler),
-    (r'/services/(.+)', serviceHandler),
+    (r'/*$', site.RootHandler),
+    (r'/403.html', site.UnauthorizedHandler),
+    (r'/404.html', site.NotFoundHandler),
+    (r'/services/(.+)/(.+)/(.+)/(.+)', site.ServiceHandler),
+    (r'/services/(.+)/(.+)/(.+)', site.ServiceHandler),
+    (r'/services/(.+)/(.+)', site.ServiceHandler),
+    (r'/services/(.+)', site.ServiceHandler),
     (r'/documentation/credentials', site.ProfileHandler),
     (r'/documentation/verify', site.VerifyAccessHandler),
     (r'/documentation/(.+)', site.DocumentationHandler),
 
-    ('/.*$', site.NotFoundHandler),
+    #ADMIN
+    (r'/admin/api', admin.SiteHandler),
+    (r'/admin/site/setup', admin.SetupHandler),
+    (r'/admin/site', admin.SiteHandler),
+    (r'/admin', admin.RootHandler),
 
-
+    (r'/.*$', site.NotFoundHandler),
     ]
 
 def application():
     return webapp.WSGIApplication(ROUTES, debug=True)
 
 def main():
-    # Check if defaults have been installed
-    # installed_defaults = memcache.get("installed_defaults")
-    # if installed_defaults is None:
-    #     installed_defaults = Setting.all().filter('name = ', 'installed_defaults').get()
-    #     if installed_defaults is None:
-    #         logging.info("Installing default statuses")
-    #         Status.install_defaults()
-    #     if not memcache.add("installed_defaults", True):
-    #         logging.error("Memcache set failed.")
-    wsgiref.handlers.CGIHandler().run(application())
+    run_wsgi_app(application())
 
 if __name__ == "__main__":
     main()

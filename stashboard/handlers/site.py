@@ -36,6 +36,8 @@ import urlparse
 from datetime import date, timedelta
 from django.conf import settings
 from django.template.loader import render_to_string
+from django.utils import simplejson as json
+from google.appengine.api import memcache
 from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext import db
@@ -45,46 +47,14 @@ from utils import authorized
 from wsgiref.handlers import format_date_time
 
 def default_template_data():
-    user = users.get_current_user()
-
-    if user:
-        greeting = users.create_logout_url("/")
-    else:
-        greeting = users.create_login_url("/")
-
-
-
-    status_images = [
-        [
-            "tick-circle",
-            "cross-circle",
-            "exclamation",
-            "wrench",
-            "flag",
-        ],
-        [
-            "clock",
-            "heart",
-            "hard-hat",
-            "information",
-            "lock",
-        ],
-        [
-            "plug",
-            "question",
-            "traffic-cone",
-            "bug",
-            "broom",
-        ],
-    ]
-
     data = {
         "title": settings.SITE_NAME,
-        "user": user,
-        "user_is_admin": users.is_current_user_admin(),
-        "login_link": greeting,
-        'common_statuses': status_images,
-    }
+        "report_url": settings.REPORT_URL,
+        }
+
+    data["user"] = users.get_current_user()
+    if data["user"]:
+        data["logout_url"] = users.create_logout_url("/")
 
     return data
 
@@ -102,10 +72,21 @@ class BaseHandler(webapp.RequestHandler):
 
     def error(self, code):
         super(BaseHandler, self).error(code)
-        self.render({}, "404.html")
+        self.render(default_template_data(), "404.html")
 
     def render(self, template_values, filename):
         self.response.out.write(render_to_string(filename, template_values))
+
+    def retrieve(self, key):
+        """ Helper for loading data from memcache """
+        item = memcache.get(key)
+        if item is not None:
+            return item
+        else:
+            item = self.data()
+            if not memcache.add(key, item):
+                logging.error("Memcache set failed on %s" % key)
+        return item
 
 
 class NotFoundHandler(BaseHandler):
@@ -121,30 +102,46 @@ class UnauthorizedHandler(webapp.RequestHandler):
 
 class RootHandler(BaseHandler):
 
-    @authorized.force_ssl(only_admin=True)
+    def data(self):
+        services = []
+        dstatus = Status.default()
+
+        for s in Service.all().order("name").fetch(100):
+            event = s.current_event()
+            if event is not None:
+                status = event.status
+            else:
+                status = dstatus
+
+            service = {
+                "slug": s.slug,
+                "name": s.name,
+                "url": s.url(),
+                "status": status,
+                "history": s.history(5, dstatus)
+                }
+            services.append(service)
+
+        return {
+            "days": get_past_days(5),
+            "statuses": Status.all().fetch(100),
+            "services": services,
+            }
+
     def get(self):
-        user = users.get_current_user()
-        logging.debug("RootHandler#get")
-
-        q = Service.all()
-        q.order("name")
-
         td = default_template_data()
-        td["past"] = get_past_days(5)
-
+        #td.update(self.retrieve("frontpage"))
+        td.update(self.data())
         self.render(td, 'index.html')
+
 
 class ServiceHandler(BaseHandler):
 
-    @authorized.force_ssl(only_admin=True)
     def get(self, service_slug, year=None, month=None, day=None):
-        user = users.get_current_user()
-        logging.debug("ServiceHandler#get")
-
         service = Service.get_by_slug(service_slug)
 
         if not service:
-            self.render({}, "404.html")
+            self.error(404)
             return
 
         try:
@@ -162,105 +159,20 @@ class ServiceHandler(BaseHandler):
                 start_date = None
                 end_date = None
         except ValueError:
-            self.render({},'404.html')
-            return
-
-        td = default_template_data()
-        td["service"] = service_slug
-
-        if start_date and end_date:
-            start_stamp = mktime(start_date.timetuple())
-            end_stamp = mktime(end_date.timetuple())
-            # Remove GMT from the string so that the date is
-            # is parsed in user's time zone
-            td["start_date"] = start_date
-            td["end_date"] = end_date
-            td["start_date_stamp"] = format_date_time(start_stamp)[:-4]
-            td["end_date_stamp"] = format_date_time(end_stamp)[:-4]
-        else:
-            td["start_date"] = None
-            td["end_date"] = None
-
-        self.render(td, 'service.html')
-
-class DebugHandler(BaseHandler):
-
-    @authorized.force_ssl()
-    def get(self):
-        logging.debug("DebugHandler %s", self.request.scheme)
-        td = default_template_data()
-        self.render(td,'base.html')
-
-
-class BasicRootHandler(BaseHandler):
-    def get(self):
-        user = users.get_current_user()
-        logging.debug("BasicRootHandler#get")
-
-        q = Service.all()
-        q.order("name")
-        services = q.fetch(100)
-
-        p = Status.all()
-        p.order("severity")
-
-        past = get_past_days(5)
-
-        td = default_template_data()
-        td["services"] = q.fetch(100)
-        td["statuses"] = p.fetch(100)
-        td["past"] = past
-        td["default"] = Status.default()
-
-        self.render(td, 'basic','index.html')
-
-class BasicServiceHandler(BaseHandler):
-
-    def get(self, service_slug, year=None, month=None, day=None):
-        user = users.get_current_user()
-        logging.debug("BasicServiceHandler#get")
-
-        service = Service.get_by_slug(service_slug)
-
-
-        if not service:
-            self.render({}, "404.html")
+            self.error(404)
             return
 
         events = service.events
-        show_admin = False
-
-        try:
-            if day:
-                start_date = date(int(year),int(month),int(day))
-                end_date = start_date + timedelta(days=1)
-            elif month:
-                start_date = date(int(year),int(month),1)
-                days = calendar.monthrange(start_date.year, start_date.month)[1]
-                end_date = start_date + timedelta(days=days)
-            elif year:
-                start_date = date(int(year),1,1)
-                end_date = start_date + timedelta(days=365)
-            else:
-                start_date = None
-                end_date = None
-                show_admin = True
-        except ValueError:
-            self.render({},'404.html')
-            return
 
         if start_date and end_date:
             events.filter('start >= ', start_date).filter('start <', end_date)
 
-        events.order("-start")
-
         td = default_template_data()
         td["service"] = service
-        td["events"] = events.fetch(100)
-        td["start_date"] = start_date
-        td["end_date"] = end_date
+        td["events"] = events.order("-start").fetch(500)
 
-        self.render(td, 'basic','service.html')
+        self.render(td, 'service.html')
+
 
 class DocumentationHandler(BaseHandler):
 
@@ -278,7 +190,6 @@ class DocumentationHandler(BaseHandler):
             self.render(td, 'examples.html')
         else:
             self.render({},'404.html')
-
 
 
 class VerifyAccessHandler(BaseHandler):
