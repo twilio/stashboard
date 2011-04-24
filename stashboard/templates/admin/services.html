@@ -2,6 +2,18 @@
 
 {% block section %}
 
-HEY
+<ul class="admin">
+    {% for service in services %}
+    <li>
+	<a class="service" href="/admin/services/{{ service.slug }}">{{ service.name }}</a>
+	<a class="button danger" href="/admin/services/{{ service.slug }}/delete">Delete</a>
+	<a class="button" href="/admin/services/{{ service.slug }}/edit">Edit</a>
+    </li>
+    {% endfor %}
+</ul>
+
+<a id="create" href="/admin/services/create" class="button pill big primary">
+  Create a Service
+</a>
 
 {% endblock %}

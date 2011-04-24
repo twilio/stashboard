@@ -1,5 +1,6 @@
 from google.appengine.api import users
 from handlers import site
+from models import Service
 
 def default_template_data():
     td = site.default_template_data()
@@ -25,4 +26,5 @@ class ServiceHandler(site.BaseHandler):
     def get(self):
         td = default_template_data()
         td["services_selected"] = True
+        td["services"] = Service.all().fetch(1000)
         self.render(td, 'admin/services.html')

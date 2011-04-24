@@ -257,11 +257,6 @@ td.status a .information {position: absolute; top: 0px; left: 1px; z-index: 500;
 
 #documentation table caption {font-style: italic; text-align: right;}
 
-
-
-
-
-
 #documentation blockquote, pre {
     background: #F0F0F0;
     margin: 10px 0;
@@ -278,5 +273,27 @@ td.status a .information {position: absolute; top: 0px; left: 1px; z-index: 500;
     font-size: 10px;
 }
 
+ul.admin .button {
+  float: right;
+  margin-left: 10px;
+}
 
+ul.admin li {
+  padding: 5px;
+  border-bottom: 1px solid #CCC;
+}
+
+ul.admin .service {
+  font-size: 20px;
+}
+
+ul.admin .service:hover {
+  font-size: 20px;
+  text-decoration: underline;
+}
+
+
+#create {
+  margin-top: 10px;
+}
 
