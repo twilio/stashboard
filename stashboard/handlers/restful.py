@@ -112,8 +112,27 @@ def methods_via_query_allowed(handler_method):
             handler_method(self, *args, **kwargs)
     return redirect_if_needed
 
+
 class Controller(webapp.RequestHandler):
     """Responsible for handling all API requests"""
+
+    @classmethod
+    def readonly(cls):
+        class ReadOnlyHandler(Controller):
+
+            def post(self, *args):
+                self.error(405, "Method not supported")
+
+            def put(self, *args):
+                self.error(405, "Method not supported")
+
+            def delete(self, *args):
+                self.error(405, "Method not supported")
+
+        class ServiceListHandlerReadOnly(ReadOnlyHandler, cls):
+            pass
+
+        return ServiceListHandlerReadOnly
 
     def base_url(self, version):
         "Returns the base url for the given host and version"

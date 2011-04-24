@@ -35,10 +35,7 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 from handlers import site, api, admin
 from models import Status, Setting
 
-ROUTES = [
-    #('/*[^/]', site.) redirect pages without slashed to pages with slashes
-
-    #API
+API = [
     (r'/api/(.+)/services/(.+)/events/current', api.CurrentEventHandler),
     (r'/api/(.+)/services/(.+)/events', api.EventsListHandler),
     (r'/api/(.+)/services/(.+)/events/(.+)', api.EventInstanceHandler),
@@ -49,8 +46,9 @@ ROUTES = [
     (r'/api/(.+)/status-images', api.ImagesListHandler),
     (r'/api/(.+)/levels', api.LevelsListHandler),
     (r'/api/.*', api.NotFoundHandler),
+    ]
 
-    #SITE
+SITE = [
     (r'/*$', site.RootHandler),
     (r'/403.html', site.UnauthorizedHandler),
     (r'/404.html', site.NotFoundHandler),
@@ -58,22 +56,31 @@ ROUTES = [
     (r'/services/(.+)/(.+)/(.+)', site.ServiceHandler),
     (r'/services/(.+)/(.+)', site.ServiceHandler),
     (r'/services/(.+)', site.ServiceHandler),
-    (r'/documentation/credentials', site.ProfileHandler),
-    (r'/documentation/verify', site.VerifyAccessHandler),
     (r'/documentation/(.+)', site.DocumentationHandler),
+    ]
 
-    #ADMIN
+ADMIN = [
     (r'/admin/api', admin.SetupHandler),
     (r'/admin/setup', admin.SetupHandler),
     (r'/admin/services/create', admin.CreateServiceHandler),
+    (r'/admin/services/(.*)/events/(.*)/delete', admin.DeleteEventHandler),
+    (r'/admin/services/(.*)/note/create', admin.NoteHandler),
+    (r'/admin/services/(.*)/events/create', admin.UpdateStatusHandler),
     (r'/admin/services/(.*)/delete', admin.DeleteServiceHandler),
     (r'/admin/services/(.*)/edit', admin.EditServiceHandler),
     (r'/admin/services/(.*)', admin.ServiceInstanceHandler),
     (r'/admin/services', admin.ServiceHandler),
+    (r'/admin/credentials', site.ProfileHandler),
+    (r'/admin/verify', site.VerifyAccessHandler),
     (r'/admin', admin.RootHandler),
-
-    (r'/.*$', site.NotFoundHandler),
     ]
+
+ROUTES = []
+ROUTES.extend(SITE)
+ROUTES.extend(ADMIN)
+ROUTES.extend([ ("/admin" + a[0], a[1]) for a in API ])
+ROUTES.extend([ (a[0], a[1].readonly()) for a in API ])
+ROUTES.append((r'/.*$', site.NotFoundHandler))
 
 def application():
     return webapp.WSGIApplication(ROUTES, debug=True)

@@ -1,0 +1,30 @@
+{% extends "admin/admin.html" %}
+
+{% block section %}
+<form class="admin" action="/admin/api/v1/services/{{service.slug}}/events" method="post">
+
+  <h1>Update Status of {{ service.name }}</h1>
+
+  <div class="error">{{ error }}</div>
+
+  <dl class="form">
+    <dt><label for="status">Status</label></dt>
+    <dd>
+      <select name="status">
+	{% for s in statuses %}
+	<option value="{{ s.slug }}">{{ s.name }}</option>
+	{% endfor %}
+      </select>
+    </dd>
+    <dt><label for="message">Description</label></dt>
+    <dd><textarea id="message" name="message" size="30" type="text">{{description}}</textarea></dd>
+  </dl>
+
+  <link rel="redirect" href="/admin/services/{{service.slug}}" />
+
+  <button type="submit" class="button pill big primary">
+    Update Status
+  </button>
+
+</form>
+{% endblock %}

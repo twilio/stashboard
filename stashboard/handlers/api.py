@@ -64,29 +64,20 @@ class NotFoundHandler(restful.Controller):
         logging.debug("NotFoundAPIHandler#get")
         self.error(404, "Can't find resouce")
 
+
 class ServicesListHandler(restful.Controller):
+
     def get(self, version):
-        logging.debug("ServicesListHandler#get")
         if (self.valid_version(version)):
-
             query = Service.all().order('name')
-            data = []
-
-
-            for s in query:
-                data.append(s.rest(self.base_url(version)))
-
+            data = [ s.rest(self.base_url(version)) for s in query ]
             data = { "services": data }
-
             self.json(data)
-
         else:
             self.error(404, "API Version %s not supported" % version)
 
     @authorized.api("admin")
     def post(self, version):
-        logging.debug("ServicesListHandler#post")
-
         if (self.valid_version(version)):
 
             name = self.request.get('name', default_value=None)

@@ -196,7 +196,6 @@ class DocumentationHandler(BaseHandler):
 
 class VerifyAccessHandler(BaseHandler):
 
-    @authorized.force_ssl()
     @authorized.role("admin")
     def get(self):
         oauth_token = self.request.get('oauth_token', default_value=None)
@@ -236,7 +235,6 @@ class VerifyAccessHandler(BaseHandler):
 
 class ProfileHandler(BaseHandler):
 
-    @authorized.force_ssl()
     def get(self):
 
         consumer_key = 'anonymous'

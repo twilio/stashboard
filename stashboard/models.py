@@ -161,40 +161,46 @@ class Status(db.Model):
         severity    -- int: The serverity of this status
 
     """
-    @staticmethod
-    def get_by_slug(status_slug):
-        return Status.all().filter('slug = ', status_slug).get()
+    @classmethod
+    def get_by_slug(cls, status_slug):
+        return cls.all().filter('slug = ', status_slug).get()
 
-    @staticmethod
-    def default():
+    @classmethod
+    def default(cls):
         """
         Return the first status with a NORMAL level.
         """
         normal = Level.get_severity(Level.normal)
-        return Status.all().filter('severity == ', normal).get()
+        return cls.all().filter('severity == ', normal).get()
 
-    @staticmethod
-    def install_defaults():
+    @classmethod
+    def install_defaults(cls):
         """
-        Install the default statuses. I am not sure where these should live just yet
+        Install the default statuses. xI am not sure where these should live just yet
         """
         # This should be Level.normal.severity and Level.normal.text
         normal = Level.get_severity(Level.normal)
         warning = Level.get_severity(Level.warning)
         error = Level.get_severity(Level.error)
 
-        d = Status(name="Down", slug="down", severity=error,
-                   image="icons/fugue/cross-circle.png",
-                   description="The service is currently down")
-        u = Status(name="Up", slug="up", severity=normal,
-                   image="icons/fugue/tick-circle.png",
-                   description="The service is up")
-        w = Status(name="Warning", slug="warning", severity=warning,
-                   image="icons/fugue/exclamation.png",
-                   description="The service is experiencing intermittent problems")
-        d.put()
-        u.put()
-        w.put()
+
+        if not cls.get_by_slug("down"):
+            d = cls(name="Down", slug="down", severity=error,
+                    image="icons/fugue/cross-circle.png",
+                    description="The service is currently down")
+            d.put()
+
+        if not cls.get_by_slug("up"):
+            u = cls(name="Up", slug="up", severity=normal,
+                    image="icons/fugue/tick-circle.png",
+                    description="The service is up")
+            u.put()
+
+        if not cls.get_by_slug("warning"):
+            w = cls(name="Warning", slug="warning", severity=warning,
+                    image="icons/fugue/exclamation.png",
+                    description="The service is experiencing intermittent problems")
+            w.put()
 
     name = db.StringProperty(required=True)
     slug = db.StringProperty(required=True)
