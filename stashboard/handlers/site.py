@@ -36,6 +36,7 @@ import urlparse
 from datetime import date, timedelta
 from django.conf import settings
 from django.template.loader import render_to_string
+from django.utils import simplejson as json
 from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext import db
@@ -91,11 +92,12 @@ class RootHandler(BaseHandler):
 
     def get(self):
         q = Service.all()
-        q.order("name")
+        services = q.order("name").fetch(100)
 
         td = default_template_data()
         td["days"] = get_past_days(5)
-        td["services"] = q.fetch(100)
+        td["services"] = services
+        td["services_json"] = json.dumps([ {"slug": s.slug} for s in services])
         td["statuses"] = Status.all().fetch(100)
 
         self.render(td, 'index.html')
