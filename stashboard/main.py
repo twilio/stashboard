@@ -25,9 +25,11 @@ __author__ = 'Kyle Conroy'
 
 import os
 import sys
+import logging
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'contrib'))
 
-import logging
+import appengine_config # Make sure this happens
+
 from google.appengine.api import memcache
 from google.appengine.api import users
 from google.appengine.ext import webapp

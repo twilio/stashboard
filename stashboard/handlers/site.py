@@ -33,14 +33,15 @@ import string
 import urllib
 import urlparse
 
-from datetime import date, timedelta
-from django.conf import settings
-from django.template.loader import render_to_string
-from django.utils import simplejson as json
 from google.appengine.api import memcache
 from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext import db
+
+from datetime import date, timedelta
+from django.conf import settings
+from django.template.loader import render_to_string
+from django.utils import simplejson as json
 from models import Status, Service, Event, Profile, AuthRequest
 from time import mktime
 from utils import authorized

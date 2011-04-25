@@ -1,4 +1,8 @@
+import logging
 import os
+
+logging.info("IMPORTING SETTINGS")
+
 os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 
 from google.appengine.dist import use_library
