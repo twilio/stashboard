@@ -292,11 +292,11 @@ ul.admin li {
   border-bottom: 1px solid #CCC;
 }
 
-ul.admin .service {
+ul.admin .name {
   font-size: 20px;
 }
 
-ul.admin .service:hover {
+ul.admin .name:hover {
   font-size: 20px;
   text-decoration: underline;
 }

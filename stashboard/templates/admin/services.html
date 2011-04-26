@@ -5,7 +5,7 @@
 <ul class="admin">
     {% for service in services %}
     <li>
-	<a class="service" href="/admin/services/{{ service.slug }}">{{ service.name }}</a>
+	<a class="name" href="/admin/services/{{ service.slug }}">{{ service.name }}</a>
 	<a class="button danger icon trash" href="/admin/services/{{ service.slug }}/delete">Delete</a>
 	<a class="button icon edit" href="/admin/services/{{ service.slug }}/edit">Edit</a>
     </li>

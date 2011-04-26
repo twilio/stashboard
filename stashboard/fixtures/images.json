@@ -1,0 +1,562 @@
+[
+    {
+        "url": "icons/fugue/broom.png", 
+        "set": "fugue", 
+        "name": "broom"
+    }, 
+    {
+        "url": "icons/fugue/bug.png", 
+        "set": "fugue", 
+        "name": "bug"
+    }, 
+    {
+        "url": "icons/fugue/clock.png", 
+        "set": "fugue", 
+        "name": "clock"
+    }, 
+    {
+        "url": "icons/fugue/cross-circle.png", 
+        "set": "fugue", 
+        "name": "cross-circle"
+    }, 
+    {
+        "url": "icons/fugue/exclamation.png", 
+        "set": "fugue", 
+        "name": "exclamation"
+    }, 
+    {
+        "url": "icons/fugue/flag.png", 
+        "set": "fugue", 
+        "name": "flag"
+    }, 
+    {
+        "url": "icons/fugue/hard-hat.png", 
+        "set": "fugue", 
+        "name": "hard-hat"
+    }, 
+    {
+        "url": "icons/fugue/heart.png", 
+        "set": "fugue", 
+        "name": "heart"
+    }, 
+    {
+        "url": "icons/fugue/information-small.png", 
+        "set": "fugue", 
+        "name": "information-small"
+    }, 
+    {
+        "url": "icons/fugue/information-white.png", 
+        "set": "fugue", 
+        "name": "information-white"
+    }, 
+    {
+        "url": "icons/fugue/information.png", 
+        "set": "fugue", 
+        "name": "information"
+    }, 
+    {
+        "url": "icons/fugue/lock.png", 
+        "set": "fugue", 
+        "name": "lock"
+    }, 
+    {
+        "url": "icons/fugue/plug.png", 
+        "set": "fugue", 
+        "name": "plug"
+    }, 
+    {
+        "url": "icons/fugue/plus-circle.png", 
+        "set": "fugue", 
+        "name": "plus-circle"
+    }, 
+    {
+        "url": "icons/fugue/question-white.png", 
+        "set": "fugue", 
+        "name": "question-white"
+    }, 
+    {
+        "url": "icons/fugue/question.png", 
+        "set": "fugue", 
+        "name": "question"
+    }, 
+    {
+        "url": "icons/fugue/tick-circle.png", 
+        "set": "fugue", 
+        "name": "tick-circle"
+    }, 
+    {
+        "url": "icons/fugue/traffic-cone.png", 
+        "set": "fugue", 
+        "name": "traffic-cone"
+    }, 
+    {
+        "url": "icons/fugue/wrench.png", 
+        "set": "fugue", 
+        "name": "wrench"
+    }, 
+    {
+        "url": "icons/iconic/arrow_down.png", 
+        "set": "iconic", 
+        "name": "arrow_down"
+    }, 
+    {
+        "url": "icons/iconic/arrow_down_alt1.png", 
+        "set": "iconic", 
+        "name": "arrow_down_alt1"
+    }, 
+    {
+        "url": "icons/iconic/arrow_down_alt2.png", 
+        "set": "iconic", 
+        "name": "arrow_down_alt2"
+    }, 
+    {
+        "url": "icons/iconic/arrow_left.png", 
+        "set": "iconic", 
+        "name": "arrow_left"
+    }, 
+    {
+        "url": "icons/iconic/arrow_left_alt1.png", 
+        "set": "iconic", 
+        "name": "arrow_left_alt1"
+    }, 
+    {
+        "url": "icons/iconic/arrow_left_alt2.png", 
+        "set": "iconic", 
+        "name": "arrow_left_alt2"
+    }, 
+    {
+        "url": "icons/iconic/arrow_right.png", 
+        "set": "iconic", 
+        "name": "arrow_right"
+    }, 
+    {
+        "url": "icons/iconic/arrow_right_alt1.png", 
+        "set": "iconic", 
+        "name": "arrow_right_alt1"
+    }, 
+    {
+        "url": "icons/iconic/arrow_right_alt2.png", 
+        "set": "iconic", 
+        "name": "arrow_right_alt2"
+    }, 
+    {
+        "url": "icons/iconic/arrow_up.png", 
+        "set": "iconic", 
+        "name": "arrow_up"
+    }, 
+    {
+        "url": "icons/iconic/arrow_up_alt1.png", 
+        "set": "iconic", 
+        "name": "arrow_up_alt1"
+    }, 
+    {
+        "url": "icons/iconic/arrow_up_alt2.png", 
+        "set": "iconic", 
+        "name": "arrow_up_alt2"
+    }, 
+    {
+        "url": "icons/iconic/article.png", 
+        "set": "iconic", 
+        "name": "article"
+    }, 
+    {
+        "url": "icons/iconic/at.png", 
+        "set": "iconic", 
+        "name": "at"
+    }, 
+    {
+        "url": "icons/iconic/bolt.png", 
+        "set": "iconic", 
+        "name": "bolt"
+    }, 
+    {
+        "url": "icons/iconic/book.png", 
+        "set": "iconic", 
+        "name": "book"
+    }, 
+    {
+        "url": "icons/iconic/book_alt.png", 
+        "set": "iconic", 
+        "name": "book_alt"
+    }, 
+    {
+        "url": "icons/iconic/box.png", 
+        "set": "iconic", 
+        "name": "box"
+    }, 
+    {
+        "url": "icons/iconic/calendar.png", 
+        "set": "iconic", 
+        "name": "calendar"
+    }, 
+    {
+        "url": "icons/iconic/calendar_alt_fill.png", 
+        "set": "iconic", 
+        "name": "calendar_alt_fill"
+    }, 
+    {
+        "url": "icons/iconic/calendar_alt_stroke.png", 
+        "set": "iconic", 
+        "name": "calendar_alt_stroke"
+    }, 
+    {
+        "url": "icons/iconic/cd.png", 
+        "set": "iconic", 
+        "name": "cd"
+    }, 
+    {
+        "url": "icons/iconic/chat.png", 
+        "set": "iconic", 
+        "name": "chat"
+    }, 
+    {
+        "url": "icons/iconic/chat_alt_fill.png", 
+        "set": "iconic", 
+        "name": "chat_alt_fill"
+    }, 
+    {
+        "url": "icons/iconic/chat_alt_stroke.png", 
+        "set": "iconic", 
+        "name": "chat_alt_stroke"
+    }, 
+    {
+        "url": "icons/iconic/check_alt.png", 
+        "set": "iconic", 
+        "name": "check_alt"
+    }, 
+    {
+        "url": "icons/iconic/clock.png", 
+        "set": "iconic", 
+        "name": "clock_alt"
+    }, 
+    {
+        "url": "icons/iconic/cog.png", 
+        "set": "iconic", 
+        "name": "cog"
+    }, 
+    {
+        "url": "icons/iconic/cog_alt.png", 
+        "set": "iconic", 
+        "name": "cog_alt"
+    }, 
+    {
+        "url": "icons/iconic/comment_alt1_fill.png", 
+        "set": "iconic", 
+        "name": "comment_alt1_fill"
+    }, 
+    {
+        "url": "icons/iconic/comment_alt1_stroke.png", 
+        "set": "iconic", 
+        "name": "comment_alt1_stroke"
+    }, 
+    {
+        "url": "icons/iconic/compass.png", 
+        "set": "iconic", 
+        "name": "compass"
+    }, 
+    {
+        "url": "icons/iconic/cursor.png", 
+        "set": "iconic", 
+        "name": "cursor"
+    }, 
+    {
+        "url": "icons/iconic/denied.png", 
+        "set": "iconic", 
+        "name": "denied"
+    }, 
+    {
+        "url": "icons/iconic/denied_alt.png", 
+        "set": "iconic", 
+        "name": "denied_alt"
+    }, 
+    {
+        "url": "icons/iconic/dial.png", 
+        "set": "iconic", 
+        "name": "dial"
+    }, 
+    {
+        "url": "icons/iconic/document_fill.png", 
+        "set": "iconic", 
+        "name": "document_fill"
+    }, 
+    {
+        "url": "icons/iconic/document_stroke.png", 
+        "set": "iconic", 
+        "name": "document_stroke"
+    }, 
+    {
+        "url": "icons/iconic/eject.png", 
+        "set": "iconic", 
+        "name": "eject"
+    }, 
+    {
+        "url": "icons/iconic/equalizer.png", 
+        "set": "iconic", 
+        "name": "equalizer"
+    }, 
+    {
+        "url": "icons/iconic/eyedropper.png", 
+        "set": "iconic", 
+        "name": "eyedropper"
+    }, 
+    {
+        "url": "icons/iconic/first.png", 
+        "set": "iconic", 
+        "name": "first"
+    }, 
+    {
+        "url": "icons/iconic/folder_fill.png", 
+        "set": "iconic", 
+        "name": "folder_fill"
+    }, 
+    {
+        "url": "icons/iconic/folder_stroke.png", 
+        "set": "iconic", 
+        "name": "folder_stroke"
+    }, 
+    {
+        "url": "icons/iconic/fullscreen.png", 
+        "set": "iconic", 
+        "name": "fullscreen"
+    }, 
+    {
+        "url": "icons/iconic/fullscreen_alt.png", 
+        "set": "iconic", 
+        "name": "fullscreen_alt"
+    }, 
+    {
+        "url": "icons/iconic/fullscreen_exit.png", 
+        "set": "iconic", 
+        "name": "fullscreen_exit"
+    }, 
+    {
+        "url": "icons/iconic/fullscreen_exit_alt.png", 
+        "set": "iconic", 
+        "name": "fullscreen_exit_alt"
+    }, 
+    {
+        "url": "icons/iconic/home.png", 
+        "set": "iconic", 
+        "name": "home"
+    }, 
+    {
+        "url": "icons/iconic/image.png", 
+        "set": "iconic", 
+        "name": "image"
+    }, 
+    {
+        "url": "icons/iconic/key_fill.png", 
+        "set": "iconic", 
+        "name": "key_fill"
+    }, 
+    {
+        "url": "icons/iconic/key_stroke.png", 
+        "set": "iconic", 
+        "name": "key_stroke"
+    }, 
+    {
+        "url": "icons/iconic/last.png", 
+        "set": "iconic", 
+        "name": "last"
+    }, 
+    {
+        "url": "icons/iconic/left_quote.png", 
+        "set": "iconic", 
+        "name": "left_quote"
+    }, 
+    {
+        "url": "icons/iconic/left_quote_alt.png", 
+        "set": "iconic", 
+        "name": "left_quote_alt"
+    }, 
+    {
+        "url": "icons/iconic/link.png", 
+        "set": "iconic", 
+        "name": "link"
+    }, 
+    {
+        "url": "icons/iconic/loop.png", 
+        "set": "iconic", 
+        "name": "loop"
+    }, 
+    {
+        "url": "icons/iconic/magnifying_glass.png", 
+        "set": "iconic", 
+        "name": "magnifying_glass"
+    }, 
+    {
+        "url": "icons/iconic/magnifying_glass_alt.png", 
+        "set": "iconic", 
+        "name": "magnifying_glass_alt"
+    }, 
+    {
+        "url": "icons/iconic/map_pin_fill.png", 
+        "set": "iconic", 
+        "name": "map_pin_fill"
+    }, 
+    {
+        "url": "icons/iconic/map_pin_stroke.png", 
+        "set": "iconic", 
+        "name": "map_pin_stroke"
+    }, 
+    {
+        "url": "icons/iconic/minus_alt.png", 
+        "set": "iconic", 
+        "name": "minus_alt"
+    }, 
+    {
+        "url": "icons/iconic/moon_fill.png", 
+        "set": "iconic", 
+        "name": "moon_fill"
+    }, 
+    {
+        "url": "icons/iconic/moon_stroke.png", 
+        "set": "iconic", 
+        "name": "moon_stroke"
+    }, 
+    {
+        "url": "icons/iconic/move.png", 
+        "set": "iconic", 
+        "name": "move"
+    }, 
+    {
+        "url": "icons/iconic/move_alt1.png", 
+        "set": "iconic", 
+        "name": "move_alt1"
+    }, 
+    {
+        "url": "icons/iconic/move_alt2.png", 
+        "set": "iconic", 
+        "name": "move_alt2"
+    }, 
+    {
+        "url": "icons/iconic/move_horizontal_alt2.png", 
+        "set": "iconic", 
+        "name": "move_horizontal_alt2"
+    }, 
+    {
+        "url": "icons/iconic/move_vertical_alt2.png", 
+        "set": "iconic", 
+        "name": "move_vertical_alt2"
+    }, 
+    {
+        "url": "icons/iconic/movie.png", 
+        "set": "iconic", 
+        "name": "movie"
+    }, 
+    {
+        "url": "icons/iconic/new_window.png", 
+        "set": "iconic", 
+        "name": "new_window"
+    }, 
+    {
+        "url": "icons/iconic/pen.png", 
+        "set": "iconic", 
+        "name": "pen"
+    }, 
+    {
+        "url": "icons/iconic/pen_alt_fill.png", 
+        "set": "iconic", 
+        "name": "pen_alt_fill"
+    }, 
+    {
+        "url": "icons/iconic/pen_alt_stroke.png", 
+        "set": "iconic", 
+        "name": "pen_alt_stroke"
+    }, 
+    {
+        "url": "icons/iconic/pin.png", 
+        "set": "iconic", 
+        "name": "pin"
+    }, 
+    {
+        "url": "icons/iconic/play_alt.png", 
+        "set": "iconic", 
+        "name": "play_alt"
+    }, 
+    {
+        "url": "icons/iconic/plus.png", 
+        "set": "iconic", 
+        "name": "plus"
+    }, 
+    {
+        "url": "icons/iconic/plus_alt.png", 
+        "set": "iconic", 
+        "name": "plus_alt"
+    }, 
+    {
+        "url": "icons/iconic/read_more.png", 
+        "set": "iconic", 
+        "name": "read_more"
+    }, 
+    {
+        "url": "icons/iconic/right_quote.png", 
+        "set": "iconic", 
+        "name": "right_quote"
+    }, 
+    {
+        "url": "icons/iconic/right_quote_alt.png", 
+        "set": "iconic", 
+        "name": "right_quote_alt"
+    }, 
+    {
+        "url": "icons/iconic/rss.png", 
+        "set": "iconic", 
+        "name": "rss"
+    }, 
+    {
+        "url": "icons/iconic/rss_alt.png", 
+        "set": "iconic", 
+        "name": "rss_alt"
+    }, 
+    {
+        "url": "icons/iconic/spin_alt.png", 
+        "set": "iconic", 
+        "name": "spin_alt"
+    }, 
+    {
+        "url": "icons/iconic/star.png", 
+        "set": "iconic", 
+        "name": "star"
+    }, 
+    {
+        "url": "icons/iconic/stop.png", 
+        "set": "iconic", 
+        "name": "stop"
+    }, 
+    {
+        "url": "icons/iconic/sun.png", 
+        "set": "iconic", 
+        "name": "sun"
+    }, 
+    {
+        "url": "icons/iconic/tag_fill.png", 
+        "set": "iconic", 
+        "name": "tag_fill"
+    }, 
+    {
+        "url": "icons/iconic/tag_stroke.png", 
+        "set": "iconic", 
+        "name": "tag_stroke"
+    }, 
+    {
+        "url": "icons/iconic/trash_fill.png", 
+        "set": "iconic", 
+        "name": "trash_fill"
+    }, 
+    {
+        "url": "icons/iconic/trash_stroke.png", 
+        "set": "iconic", 
+        "name": "trash_stroke"
+    }, 
+    {
+        "url": "icons/iconic/undo.png", 
+        "set": "iconic", 
+        "name": "undo"
+    }, 
+    {
+        "url": "icons/iconic/x_alt.png", 
+        "set": "iconic", 
+        "name": "x_alt"
+    }
+]

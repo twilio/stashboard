@@ -2,7 +2,7 @@ import logging
 from google.appengine.api import users
 from google.appengine.ext import db
 from handlers import site
-from models import Service, Status, Event
+from models import Service, Status, Event, Level
 from utils import slugify
 
 def default_template_data():
@@ -150,4 +150,62 @@ class DeleteEventHandler(site.BaseHandler):
 
         td.update(site.default_template_data())
         self.render(td, 'admin/events_delete.html')
+
+class EditStatusHandler(site.BaseHandler):
+
+    def get(self, slug):
+        status = Status.get_by_slug(slug)
+        if not status:
+            self.not_found()
+            return
+
+        td = {
+            "statuses_selected": True,
+            "status": status,
+            "action": "edit",
+            "description": status.description,
+            "name": status.name,
+            # "images": Images.all(),
+            "levels": Level.all(),
+            }
+
+        td.update(site.default_template_data())
+        self.render(td, 'admin/status_edit.html')
+
+
+class DeleteStatusHandler(site.BaseHandler):
+
+    def get(self, slug):
+        status = Status.get_by_slug(slug)
+        if not status:
+            self.not_found()
+            return
+
+        td = {
+            "statuses_selected": True,
+            "status": status,
+            }
+
+        td.update(site.default_template_data())
+        self.render(td, 'admin/status_delete.html')
+
+class CreateServiceHandler(site.BaseHandler):
+
+    def get(self):
+        td = {
+            "statuses_selected": True,
+            "url": "/admin/api/v1/statuses",
+            "action": "create",
+            }
+
+        td.update(site.default_template_data())
+        self.render(td, 'admin/statuses_create.html')
+
+class StatusHandler(site.BaseHandler):
+
+    def get(self):
+        td = default_template_data()
+        td["statuses_selected"] = True
+        td["statuses"] = Status.all().order("name").fetch(1000)
+        self.render(td, 'admin/status.html')
 
