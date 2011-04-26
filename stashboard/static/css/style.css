@@ -296,7 +296,7 @@ ul.admin .name {
   font-size: 20px;
 }
 
-ul.admin .name:hover {
+ul.admin a  .name:hover {
   font-size: 20px;
   text-decoration: underline;
 }

@@ -163,9 +163,9 @@ class EditStatusHandler(site.BaseHandler):
             "statuses_selected": True,
             "status": status,
             "action": "edit",
+            "url": "/admin/api/v1/statuses/" + slug,
             "description": status.description,
             "name": status.name,
-            # "images": Images.all(),
             "levels": Level.all(),
             }
 

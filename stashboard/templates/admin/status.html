@@ -6,7 +6,7 @@
     {% for status in statuses %}
     <li>
       <span class="name">{{ status.name }}</span>
-      <a class="button danger icon trash" href="/admin/services/{{ status.slug }}/delete">Delete</a>
+      <a class="button danger icon trash" href="/admin/statuses/{{ status.slug }}/delete">Delete</a>
       <a class="button icon edit" href="/admin/statuses/{{ status.slug }}/edit">Edit</a>
     </li>
     {% endfor %}
