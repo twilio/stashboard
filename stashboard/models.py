@@ -18,52 +18,43 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+import os
 import datetime
 import urlparse
 from datetime import timedelta
 from datetime import date
 from google.appengine.ext import db
+from django.utils import simplejson as json
 from time import mktime
 from wsgiref.handlers import format_date_time
 
-class Level(object):
+class Image(db.Model):
+    """A service to track
+
+        Properties:
+        slug -- stirng: URL friendly version of the name
+        name -- string: The name of this service
+        path -- stirng: The path to the image
+
     """
-    A fake db.Model object, just in case we want to actually store things
-    in the future
-    """
-    levels = {
-        "NORMAL": 10,
-        "WARNING": 30,
-        "ERROR": 40,
-        "CRITICAL": 50,
-    }
+    slug = db.StringProperty(required=True)
+    set = db.StringProperty(required=True)
+    path = db.StringProperty(required=True)
 
-    normal  = "NORMAL"
-    warning = "WARNING"
-    critial = "CRITICAL"
-    error   = "ERROR"
+    @classmethod
+    def get_by_slug(cls, slug):
+        return cls.all().filter('slug = ', slug).get()
 
-    @staticmethod
-    def all():
-        llist = []
-        for k in Level.levels.keys():
-            llist.append((k, Level.levels[k]))
+    @classmethod
+    def load_defaults(cls):
+        path = os.path.join(os.path.dirname(__file__), "fixtures/images.json")
+        images = json.load(open(path))
+        for i in images:
+            image = Image(slug=i["name"], set=i["set"], path=i["url"])
+            image.put()
 
-        return map(lambda x: x[0], sorted(llist, key=lambda x: x[1]))
-
-    @staticmethod
-    def get_severity(level):
-        try:
-            return Level.levels[level]
-        except:
-            return False
-
-    @staticmethod
-    def get_level(severity):
-        for k in Level.levels.keys():
-            if Level.levels[k] == severity:
-                return k
-        return False
+    def absolute_url(self):
+        return "/images/" + self.path
 
 
 class Service(db.Model):
@@ -91,10 +82,7 @@ class Service(db.Model):
         return "/services/%s" % self.slug
 
     #Specialty function for front page
-    def history(self, days, lowest):
-        # Lowest severity of a status
-        severity = lowest.severity
-
+    def history(self, days, default):
         yesterday = date.today() - timedelta(days=1)
         ago = yesterday - timedelta(days=days)
 
@@ -105,14 +93,14 @@ class Service(db.Model):
 
         for i in range(5):
             stats[yesterday.day] = {
-                "image": lowest.image,
-                "name": lowest.name,
+                "image": default.image,
+                "name": default.name,
                 "day": yesterday,
             }
             yesterday = yesterday - timedelta(days=1)
 
         for event in events:
-            if event.status.severity > severity:
+            if event.status.slug != default.slug:
                 stats[event.start.day]["image"] = "icons/fugue/information.png"
                 stats[event.start.day]["information"] = True
                 stats[event.start.day]["name"] = "information"
@@ -121,7 +109,7 @@ class Service(db.Model):
         keys.sort()
         keys.reverse()
 
-        return [ stats[k] for k in keys]
+        return [ stats[k] for k in keys ]
 
 
     def compare(self, other_status):
@@ -158,7 +146,6 @@ class Status(db.Model):
         slug        -- stirng: The identifier for the status
         description -- string: The state this status represents
         image       -- string: Image in /images/status
-        severity    -- int: The serverity of this status
 
     """
     @classmethod
@@ -166,38 +153,28 @@ class Status(db.Model):
         return cls.all().filter('slug = ', status_slug).get()
 
     @classmethod
-    def default(cls):
-        """
-        Return the first status with a NORMAL level.
-        """
-        normal = Level.get_severity(Level.normal)
-        return cls.all().filter('severity == ', normal).get()
+    def get_default(cls):
+        return cls.all().filter('default = ', True).get()
 
     @classmethod
-    def install_defaults(cls):
+    def load_defaults(cls):
         """
         Install the default statuses. xI am not sure where these should live just yet
         """
-        # This should be Level.normal.severity and Level.normal.text
-        normal = Level.get_severity(Level.normal)
-        warning = Level.get_severity(Level.warning)
-        error = Level.get_severity(Level.error)
-
-
         if not cls.get_by_slug("down"):
-            d = cls(name="Down", slug="down", severity=error,
+            d = cls(name="Down", slug="down",
                     image="icons/fugue/cross-circle.png",
                     description="The service is currently down")
             d.put()
 
         if not cls.get_by_slug("up"):
-            u = cls(name="Up", slug="up", severity=normal,
+            u = cls(name="Up", slug="up", default=True,
                     image="icons/fugue/tick-circle.png",
                     description="The service is up")
             u.put()
 
         if not cls.get_by_slug("warning"):
-            w = cls(name="Warning", slug="warning", severity=warning,
+            w = cls(name="Warning", slug="warning",
                     image="icons/fugue/exclamation.png",
                     description="The service is experiencing intermittent problems")
             w.put()
@@ -206,7 +183,7 @@ class Status(db.Model):
     slug = db.StringProperty(required=True)
     description = db.StringProperty(required=True)
     image = db.StringProperty(required=True)
-    severity = db.IntegerProperty(required=True)
+    default= db.BooleanProperty(default=False)
 
     def image_url(self):
         return "/images/status/" + unicode(self.image) + ".png"
@@ -221,10 +198,7 @@ class Status(db.Model):
         m["name"] = str(self.name)
         m["id"] = str(self.slug)
         m["description"] = str(self.description)
-        m["level"] = Level.get_level(int(self.severity))
         m["url"] = base_url + self.resource_url()
-        # This link shouldn't be hardcoded
-
         o = urlparse.urlparse(base_url)
         m["image"] = o.scheme + "://" +  o.netloc + self.image_url()
 

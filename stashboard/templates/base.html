@@ -12,7 +12,12 @@
   <body>
     <div id="wrapper">
       <header>
-	<a href="{{ report_url }}" class="button pill big">Report an Issue</a>
+	<div class="actions button-container">
+	  {% if admin %}
+	  <a class="button pill big" href="/admin">Admin</a>
+	  {% endif %}
+	  <a href="{{ report_url }}" class="button pill big">Report an Issue</a>
+	</div>
         <img id="logo" src="/images/logo.png" alt="Logo"/>
         <a href="/"><h1 id="title">{{ title }}</h1></a>
       </header>

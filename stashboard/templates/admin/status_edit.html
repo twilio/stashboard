@@ -16,26 +16,25 @@
     <dd><textarea id="description" name="description" size="30" type="text">{{description}}</textarea></dd>
     <dt><label for="image">Image</label></dt>
     <dd>
-      <fieldset>
+      <ul class="images">
 	{% for i in images %}
-	<input type="checkbox" name="image" value="{{i}}" />{{i}}
+	<li>
+	<input type="radio" name="image" value="{{ i.slug }}" {% if image_url == i.path %}checked{% endif %}>
+	<img src="{{ i.absolute_url }}" alt="{{ i.slug }}">
+	</li>
 	{% endfor %}
-      </fieldset>
+      </ul>
     </dd>
-    <dt><label for="level">Level</label></dt>
+    <dt><label for="default">Default Status</label></dt>
     <dd>
-      <select name="level">
-	{% for l in levels %}
-	<option value="{{ l }}">{{ l }}</option>
-	{% endfor %}
-      </select>
+      <input type="checkbox" name="default" value="true" {% if default %}checked{%endif%}> Yes
     </dd>
   </dl>
 
   {% if slug %}
-  <link rel="redirect" href="/admin/statuses/{{slug}}" />
+  <link rel="redirect" href="/admin/statuses/{{slug}}">
   {% else %}
-  <link rel="redirect" href="/admin/statuses" />
+  <link rel="redirect" href="/admin/statuses">
   {% endif%}
 
   <button type="submit" class="button pill big primary">

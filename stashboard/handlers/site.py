@@ -53,9 +53,11 @@ def default_template_data():
         "report_url": settings.REPORT_URL,
         }
 
-    data["user"] = users.get_current_user()
-    if data["user"]:
+    user = users.get_current_user()
+    if user is not None:
+        data["user"] = user
         data["logout_url"] = users.create_logout_url("/")
+        data["admin"] = users.is_current_user_admin()
 
     return data
 
@@ -107,7 +109,7 @@ class RootHandler(BaseHandler):
 
     def data(self):
         services = []
-        dstatus = Status.default()
+        dstatus = Status.get_default()
 
         for s in Service.all().order("name").fetch(100):
             event = s.current_event()
