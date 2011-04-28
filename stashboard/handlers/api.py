@@ -34,7 +34,6 @@ import os
 import cgi
 import urllib
 import logging
-import status_images
 
 from datetime import timedelta
 from datetime import date
@@ -48,7 +47,7 @@ from handlers import restful
 from time import mktime
 from utils import authorized
 from utils import slugify
-from models import Status, Event, Service, Level
+from models import Status, Event, Service, Image
 from wsgiref.handlers import format_date_time
 
 def aware_to_naive(d):
@@ -342,27 +341,26 @@ class StatusesListHandler(restful.Controller):
             name = self.request.get('name', default_value=None)
             description = self.request.get('description', default_value=None)
             image = self.request.get('image', default_value=None)
-            level = self.request.get('level', default_value=None)
-            severity = Level.get_severity(level)
+            default = self.request.get('default', default_value="false")
+
+            if default not in ["true", "false"]:
+                self.error(400, "Default must be true or false")
+                return
 
             if name and description and severity and image:
                 slug = slugify.slugify(name)
                 status = Status.get_by_slug(slug)
+                image = Image.get_by_slug(image)
 
                 # Update existing resource
-                if status:
-                    status.description = description
-                    status.severity = severity
-                    status.image = image
-                    status.name = name
-                    status.put()
-                    self.json(status.rest(self.base_url(version)))
-                # Create new service
-                else:
+                if status is None and image is not None:
+                    default = default == "true"
                     status = Status(name=name, slug=slug, description=description,
-                        severity=severity, image=image)
+                                    image=image.path, default=default)
                     status.put()
                     self.json(status.rest(self.base_url(version)))
+                else:
+                    self.error(400, "Bad Data")
             else:
                 self.error(400, "Bad Data")
         else:
@@ -394,21 +392,21 @@ class StatusInstanceHandler(restful.Controller):
             if status:
                 name = self.request.get('name', default_value=None)
                 image = self.request.get('image', default_value=None)
+                default = self.request.get('default', default_value=None)
+                image = Image.get_by_slug(image)
                 description = self.request.get('description', default_value=None)
-                level = self.request.get('level', default_value=None)
-                severity = Level.get_severity(level)
 
-                if description:
+                if description is not None:
                     status.description = description
 
-                if image:
-                    status.image = image
+                if image is not None:
+                    status.image = image.path
 
-                if name:
+                if default is not None and default in ["false", "true"]:
+                    status.default = default == "true"
+
+                if name is not None:
                     status.name = name
-
-                if severity:
-                    status.severity = severity
 
                 if description or name or image or severity:
                     status.put()
@@ -449,27 +447,16 @@ class ImagesListHandler(restful.Controller):
 
         if (self.valid_version(version)):
 
-            query = status_images.images
+            images = []
 
-            for img in query:
-                img["url"] = "http://" + host + img["url"]
+            for img in Image.all().fetch(1000):
+                image = {
+                    "url": "http://" + host + "/images/" + img.path,
+                    "set": img.set,
+                    "slug": img.slug,
+                    }
+                images.append(image)
 
-            if (query):
-                self.json({"images": query})
-            else:
-                self.error(404, "No images")
+            self.json({"images": images})
         else:
             self.error(404, "API Version %s not supported" % version)
-
-class LevelsListHandler(restful.Controller):
-    def get(self, version):
-        logging.debug("LevelsListHandler#get")
-
-        if (self.valid_version(version)):
-
-            self.json({"levels": Level.all()})
-
-        else:
-
-            self.error(404, "API Version %s not supported" % version)
-

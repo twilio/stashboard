@@ -19,17 +19,17 @@
       </td>
       <td class="status highlight">
 	<a href="{{ service.url }}">
-	  <img src="/images/{{ service.status.image }}" alt="{{ service.status.title }}"/>
+	  <img class="sym" src="/images/{{ service.status.image }}" alt="{{ service.status.title }}"/>
 	</a>
       </td>
       {% for h in service.history %}
       <td class="status">
 	{% if h.information %}
 	<a href="{{ service.url }}/{{ h.day|date:"Y/m/j" }}">
-	  <img src="/images/{{ h.image }}" alt="{{ h.title }}"/>
+	  <img class="sym" src="/images/{{ h.image }}" alt="{{ h.title }}"/>
 	</a>
 	{% else %}
-	<img src="/images/{{ h.image }}" alt="{{ h.title }}"/>
+	<img class="sym" src="/images/{{ h.image }}" alt="{{ h.title }}"/>
 	{% endif %}
       </td>
       {% endfor %}

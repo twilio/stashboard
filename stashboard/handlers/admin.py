@@ -2,7 +2,7 @@ import logging
 from google.appengine.api import users
 from google.appengine.ext import db
 from handlers import site
-from models import Service, Status, Event, Level
+from models import Service, Status, Event, Image
 from utils import slugify
 
 def default_template_data():
@@ -21,7 +21,8 @@ class SetupHandler(site.BaseHandler):
         self.render(default_template_data(), 'admin/setup.html')
 
     def post(self):
-        Status.install_defaults()
+        Status.load_defaults()
+        Image.load_default()
         self.redirect("/admin")
 
 class ServiceHandler(site.BaseHandler):
@@ -166,7 +167,9 @@ class EditStatusHandler(site.BaseHandler):
             "url": "/admin/api/v1/statuses/" + slug,
             "description": status.description,
             "name": status.name,
-            "levels": Level.all(),
+            "image_url": status.image,
+            "images": Image.all().fetch(200),
+            "default": status.default,
             }
 
         td.update(site.default_template_data())
@@ -189,17 +192,6 @@ class DeleteStatusHandler(site.BaseHandler):
         td.update(site.default_template_data())
         self.render(td, 'admin/status_delete.html')
 
-class CreateServiceHandler(site.BaseHandler):
-
-    def get(self):
-        td = {
-            "statuses_selected": True,
-            "url": "/admin/api/v1/statuses",
-            "action": "create",
-            }
-
-        td.update(site.default_template_data())
-        self.render(td, 'admin/statuses_create.html')
 
 class StatusHandler(site.BaseHandler):
 
@@ -209,3 +201,15 @@ class StatusHandler(site.BaseHandler):
         td["statuses"] = Status.all().order("name").fetch(1000)
         self.render(td, 'admin/status.html')
 
+class CreateStatusHandler(site.BaseHandler):
+
+    def get(self):
+        td = {
+            "statuses_selected": True,
+            "action": "create",
+            "url": "/admin/api/v1/statuses/",
+            "images": Image.all().fetch(200),
+            }
+
+        td.update(site.default_template_data())
+        self.render(td, 'admin/status_edit.html')

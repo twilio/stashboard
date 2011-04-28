@@ -36,7 +36,7 @@ header {height: 70px;}
 header h1 {margin: 15px; float: left; height: 40px; line-height: 40px;}
 header h1 span {font-weight: normal;}
 header h2 {margin: 15px 0; float: left; line-height: 67px;}
-header .button {float: right; margin-top: 20px;}
+header .button-container { float: right; margin-top: 20px;}
 #logo { height: 40px; float: left; margin: 15px 0;}
 
 #status { height: 200px; }
@@ -144,6 +144,10 @@ nav .selected {
 .data .highlight { background: rgb(247, 247, 247); }
 .data .status, .data .date, .data .today { text-align: center; }
 .data .action { width: 5px; }
+
+.data .status img {
+  width: 20px;
+}
 
 /* Front page table */
 
@@ -351,6 +355,25 @@ form.admin h1{
   margin-bottom: 20px;
 }
 
+form.admin ul.images {
+  width: 550px;
+}
+
+form.admin ul.images li {
+  display: inline-block;
+  vertical-align: top;
+  margin: 5px;
+}
+
+form.admin ul.images li img, form.admin ul.images li input{
+  display: inline-block;
+  vertical-align: middle;
+}
+
+form.admin ul.images li img {
+  width: 20px;
+}
+
 #editbar {
   float: right;
 }
@@ -378,4 +401,8 @@ form.admin h1{
 
 #setup p {
   font-size: 16px;
+}
+
+.sym {
+  width: 20px;
 }

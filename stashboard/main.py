@@ -46,7 +46,6 @@ API = [
     (r'/api/(.+)/statuses/(.+)', api.StatusInstanceHandler),
     (r'/api/(.+)/statuses', api.StatusesListHandler),
     (r'/api/(.+)/status-images', api.ImagesListHandler),
-    (r'/api/(.+)/levels', api.LevelsListHandler),
     (r'/api/.*', api.NotFoundHandler),
     ]
 
@@ -74,6 +73,7 @@ ADMIN = [
     (r'/admin/services', admin.ServiceHandler),
     (r'/admin/statuses/(.*)/delete', admin.DeleteStatusHandler),
     (r'/admin/statuses/(.*)/edit', admin.EditStatusHandler),
+    (r'/admin/statuses/create', admin.CreateStatusHandler),
     (r'/admin/statuses', admin.StatusHandler),
     (r'/admin/credentials', site.ProfileHandler),
     (r'/admin/verify', site.VerifyAccessHandler),
