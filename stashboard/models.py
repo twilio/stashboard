@@ -20,6 +20,7 @@
 
 import os
 import datetime
+import logging
 import urlparse
 from datetime import timedelta
 from datetime import date
@@ -82,22 +83,22 @@ class Service(db.Model):
         return "/services/%s" % self.slug
 
     #Specialty function for front page
-    def history(self, days, default):
-        yesterday = date.today() - timedelta(days=1)
-        ago = yesterday - timedelta(days=days)
+    def history(self, days, default, start=None):
+        today = start or date.today()
+        ago = today - timedelta(days=days)
 
         events = self.events.filter('start >', ago) \
-            .filter('start <', yesterday).fetch(100)
+            .filter('start <', today).fetch(100)
 
         stats = {}
 
         for i in range(5):
-            stats[yesterday.day] = {
+            stats[today.day] = {
                 "image": default.image,
                 "name": default.name,
-                "day": yesterday,
+                "day": today,
             }
-            yesterday = yesterday - timedelta(days=1)
+            today = today - timedelta(days=1)
 
         for event in events:
             if event.status.slug != default.slug:
@@ -106,6 +107,7 @@ class Service(db.Model):
                 stats[event.start.day]["name"] = "information"
 
         keys = stats.keys()
+        logging.error(keys)
         keys.sort()
         keys.reverse()
 
