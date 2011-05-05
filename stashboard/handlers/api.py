@@ -67,101 +67,103 @@ class NotFoundHandler(restful.Controller):
 class ServicesListHandler(restful.Controller):
 
     def get(self, version):
-        if (self.valid_version(version)):
-            query = Service.all().order('name')
-            data = [ s.rest(self.base_url(version)) for s in query ]
-            data = { "services": data }
-            self.json(data)
-        else:
+        if not self.valid_version(version):
             self.error(404, "API Version %s not supported" % version)
+            return
+
+        query = Service.all().order('name')
+        data = [ s.rest(self.base_url(version)) for s in query ]
+        data = { "services": data }
+        self.json(data)
 
     @authorized.api("admin")
     def post(self, version):
-        if (self.valid_version(version)):
-
-            name = self.request.get('name', default_value=None)
-            description = self.request.get('description', default_value=None)
-
-            if name and description:
-                slug = slugify.slugify(name)
-                existing_s = Service.get_by_slug(slug)
-
-                # Update existing resource
-                if not existing_s:
-                    s = Service(name=name, slug=slug, description=description)
-                    s.put()
-                    self.json(s.rest(self.base_url(version)))
-                else:
-                    self.error(404, "A sevice with this name already exists")
-            else:
-                self.error(400, "Bad Data: Name: %s, Description: %s" % (name, description))
-        else:
+        if not self.valid_version(version):
             self.error(404, "API Version %s not supported" % version)
+            return
+
+        name = self.request.get('name', default_value=None)
+        description = self.request.get('description', default_value=None)
+
+        if not name or not description:
+            self.error(400, "Bad Data: Name: %s, Description: %s" \
+                           % (name, description))
+            return
+
+        slug = slugify.slugify(name)
+        existing_s = Service.get_by_slug(slug)
+
+        if existing_s:
+            self.error(404, "A sevice with this name already exists")
+            return
+
+        s = Service(name=name, slug=slug, description=description)
+        s.put()
+
+        if not memcache.delete("frontpage"):
+            logging.error("Memcache delete failed on frontpage")
+
+        self.json(s.rest(self.base_url(version)))
 
 
 class ServiceInstanceHandler(restful.Controller):
     def get(self, version, service_slug):
-        logging.debug("ServiceInstanceHandler#get")
-
-        if (self.valid_version(version)):
-            service = Service.get_by_slug(service_slug)
-
-            if (service):
-                self.json(service.rest(self.base_url(version)))
-            else:
-                self.error(404, "Service %s does not exist" % service_slug)
-        else:
+        if not self.valid_version(version):
             self.error(404, "API Version %s not supported" % version)
+            return
 
+        service = Service.get_by_slug(service_slug)
+
+        if not service:
+            self.error(404, "Service %s does not exist" % service_slug)
+
+        self.json(service.rest(self.base_url(version)))
 
     @authorized.api("admin")
     def post(self, version, service_slug):
-        logging.debug("ServiceInstanceHandler#post")
+        if not self.valid_version(version):
+            self.error(404, "API Version %s not supported" % version)
+            return
+
+        service = Service.get_by_slug(service_slug)
+        if not service:
+            self.error(404, "Service %s does not exist" % service_slug)
+            return
+
         name = self.request.get('name', default_value=None)
         description = self.request.get('description', default_value=None)
 
-        if (self.valid_version(version)):
-            service = Service.get_by_slug(service_slug)
-            if service:
-                if description:
-                    service.description = description
+        if description:
+            service.description = description
 
-                if name:
-                    service.name = name
+        if name:
+            service.name = name
 
-                if name or description:
-                    service.put()
+        if name or description:
+            service.put()
 
-                self.json(service.rest(self.base_url(version)))
-            else:
-                self.error(404, "Service %s does not exist" % service_slug)
-        else:
-            self.error(404, "API Version %s not supported" % version)
+        self.json(service.rest(self.base_url(version)))
 
     @authorized.api("admin")
     def delete(self, version, service_slug):
-        logging.debug("ServiceInstanceHandler#delete slug=%s" % service_slug)
-
-        if (self.valid_version(version)):
-
-            service = Service.get_by_slug(service_slug)
-
-            if service:
-                query = Event.all()
-                query.filter('service =', service)
-                if query:
-                    for e in query:
-                        e.delete()
-
-                service.delete()
-                self.json(service.rest(self.base_url(version)))
-            else:
-                self.error(404, "Service %s not found" % service_slug)
-        else:
+        if not self.valid_version(version):
             self.error(404, "API Version %s not supported" % version)
+            return
 
+        service = Service.get_by_slug(service_slug)
 
+        if not service:
+            self.error(404, "Service %s not found" % service_slug)
+            return
 
+        query = Event.all()
+        query.filter('service =', service)
+        if query:
+            for e in query:
+                e.delete()
+
+        service.delete()
+        self.json(service.rest(self.base_url(version)))
 
 
 class EventsListHandler(restful.Controller):
