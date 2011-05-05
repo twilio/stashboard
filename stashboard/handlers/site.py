@@ -122,8 +122,8 @@ class RootHandler(BaseHandler):
 
             today = date.today() + timedelta(days=1)
             current, = service.history(1, default_status, start=today)
-            logging.error(current)
-            has_issues = current["information"] and status != default_status
+            has_issues = (current["information"] and
+                          status.key() == default_status.key())
 
             service_dict = {
                 "slug": service.slug,
@@ -144,6 +144,7 @@ class RootHandler(BaseHandler):
     def get(self):
         td = default_template_data()
         td.update(self.retrieve("frontpage"))
+        #td.update(self.data())
         self.render(td, 'index.html')
 
 

@@ -114,7 +114,7 @@ class HistoryTest(TestbedTest):
         down = Status.get_by_slug("down")
         up = Status.get_by_slug("up")
 
-        now = datetime(2011, 4, 4)
+        now = datetime(2011, 4, 4, 12, 51)
         event = Event(status=down, service=self.service, start=now, message="HEY")
         event.put()
 

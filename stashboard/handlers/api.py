@@ -41,6 +41,7 @@ from datetime import datetime
 from datetime import time
 from dateutil.parser import parse
 from google.appengine.api import memcache
+from google.appengine.api import taskqueue
 from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext import db
@@ -51,6 +52,13 @@ from utils import slugify
 from models import Status, Event, Service, Image
 from wsgiref.handlers import format_date_time
 
+
+def invalidate_cache():
+    if not memcache.delete("frontpage"):
+        logging.error("Memcache delete failed on frontpage")
+    taskqueue.add(url='/', method="GET")
+
+
 def aware_to_naive(d):
     """Convert an aware date to an naive date, in UTC"""
     offset = d.utcoffset()
@@ -59,9 +67,9 @@ def aware_to_naive(d):
         d = d - offset
     return d
 
+
 class NotFoundHandler(restful.Controller):
     def get(self):
-        logging.debug("NotFoundAPIHandler#get")
         self.error(404, "Can't find resouce")
 
 
@@ -101,9 +109,7 @@ class ServicesListHandler(restful.Controller):
         s = Service(name=name, slug=slug, description=description)
         s.put()
 
-        if not memcache.delete("frontpage"):
-            logging.error("Memcache delete failed on frontpage")
-
+        invalidate_cache()
         self.json(s.rest(self.base_url(version)))
 
 
@@ -142,8 +148,7 @@ class ServiceInstanceHandler(restful.Controller):
             service.name = name
 
         if name or description:
-            if not memcache.delete("frontpage"):
-                logging.error("Memcache delete failed on frontpage")
+            invalidate_cache()
             service.put()
 
         self.json(service.rest(self.base_url(version)))
@@ -166,9 +171,7 @@ class ServiceInstanceHandler(restful.Controller):
             for e in query:
                 e.delete()
 
-        if not memcache.delete("frontpage"):
-            logging.error("Memcache delete failed on frontpage")
-
+        invalidate_cache()
         service.delete()
         self.json(service.rest(self.base_url(version)))
 
@@ -250,9 +253,7 @@ class EventsListHandler(restful.Controller):
         e.informational = informational and informational == "true"
         e.put()
 
-        if not memcache.delete("frontpage"):
-            logging.error("Memcache delete failed on frontpage")
-
+        invalidate_cache()
         self.json(e.rest(self.base_url(version)))
 
 
@@ -318,9 +319,7 @@ class EventInstanceHandler(restful.Controller):
             return
 
         event.delete()
-
-        if not memcache.delete("frontpage"):
-            logging.error("Memcache delete failed on frontpage")
+        invalidate_cache()
 
         # Why not JSON?
         self.success(event.rest(self.base_url(version)))
@@ -374,9 +373,7 @@ class StatusesListHandler(restful.Controller):
         status = Status(name=name, slug=slug, description=description,
                         image=image.path, default=default)
         status.put()
-
-        if not memcache.delete("frontpage"):
-            logging.error("Memcache delete failed on frontpage")
+        invalidate_cache()
 
         self.json(status.rest(self.base_url(version)))
 
@@ -435,8 +432,7 @@ class StatusInstanceHandler(restful.Controller):
 
         if description or name or image or default:
             status.put()
-            if not memcache.delete("frontpage"):
-                logging.error("Memcache delete failed on frontpage")
+            invalidate_cache()
 
         self.json(status.rest(self.base_url(version)))
 
