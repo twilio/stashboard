@@ -62,7 +62,7 @@ SITE = [
     ]
 
 ADMIN = [
-    (r'/admin/api', admin.SetupHandler),
+    #(r'/admin/api', admin.SetupHandler),
     (r'/admin/setup', admin.SetupHandler),
     (r'/admin/services/create', admin.CreateServiceHandler),
     (r'/admin/services/(.*)/events/(.*)/delete', admin.DeleteEventHandler),

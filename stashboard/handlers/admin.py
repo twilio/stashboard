@@ -207,7 +207,7 @@ class CreateStatusHandler(site.BaseHandler):
         td = {
             "statuses_selected": True,
             "action": "create",
-            "url": "/admin/api/v1/statuses/",
+            "url": "/admin/api/v1/statuses",
             "images": Image.all().fetch(200),
             }
 

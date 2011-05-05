@@ -347,6 +347,11 @@ class StatusesListHandler(restful.Controller):
                 self.error(400, "Default must be true or false")
                 return
 
+            if default == "true": # Reset defaults
+                for stat in Status.all().filter("default", True):
+                    stat.default = False
+                    stat.put()
+
             if name and description and image:
                 slug = slugify.slugify(name)
                 status = Status.get_by_slug(slug)
@@ -403,6 +408,12 @@ class StatusInstanceHandler(restful.Controller):
                     status.image = image.path
 
                 if default is not None and default in ["false", "true"]:
+
+                    if default == "true": # Reset defaults
+                        for stat in Status.all().filter("default", True):
+                            stat.default = False
+                            stat.put()
+
                     status.default = default == "true"
 
                 if name is not None:
