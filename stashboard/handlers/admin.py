@@ -211,5 +211,22 @@ class CreateStatusHandler(site.BaseHandler):
             "images": Image.all().fetch(200),
             }
 
-        td.update(site.default_template_data())
-        self.render(td, 'admin/status_edit.html')
+
+class MigrationStarter(site.BaseHandler):
+
+    def post(self, key):
+        migration = self.find(key)
+        migration.run()
+
+
+class MigrationHandler(site.BaseHandler):
+
+    def get(self):
+        td = default_template_data()
+        #td["migrations"] = MigrationRunner.all()
+        self.render(td, "admin/migrations.html")
+
+    def post(self):
+        # Get value from post params
+        # kick off task queue
+        pass
