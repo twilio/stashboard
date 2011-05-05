@@ -143,8 +143,7 @@ class RootHandler(BaseHandler):
 
     def get(self):
         td = default_template_data()
-        #td.update(self.retrieve("frontpage"))
-        td.update(self.data())
+        td.update(self.retrieve("frontpage"))
         self.render(td, 'index.html')
 
 
