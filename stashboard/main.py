@@ -38,6 +38,7 @@ from handlers import site, api, admin
 from models import Status, Setting
 
 API = [
+    (r'/api/(.+)/levels', api.LevelListHandler), #DEPRECATED
     (r'/api/(.+)/services/(.+)/events/current', api.CurrentEventHandler),
     (r'/api/(.+)/services/(.+)/events', api.EventsListHandler),
     (r'/api/(.+)/services/(.+)/events/(.+)', api.EventInstanceHandler),

@@ -16,7 +16,7 @@
 <table id="events" class="data" cellpadding="10">
   <thead>
     <tr>
-      <th class="time-header">Date (GMT)</th>
+      <th class="time-header">Time</th>
       <th class="status-header">Status</th>
       <th class="status-header">Message</th>
     </tr>
@@ -26,7 +26,7 @@
     <tr>
       <td class="time">{{ e.start|timesince }} ago</td>
       {% if e.informational %}
-      <td class="status highlight"><img src="/images/icons/fugue/information.png" alt="Information" /></td>
+      <td class="status highlight"><img src="/images/icons/iconic/information.png" alt="Information" /></td>
       <td>{{ e.message }}</td>
       {% else %}
       <td class="status highlight"><img src="/images/{{ e.status.image }}" alt="{{ e.status.title }}" /></td>
