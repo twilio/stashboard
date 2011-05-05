@@ -84,34 +84,45 @@ class Service(db.Model):
 
     #Specialty function for front page
     def history(self, days, default, start=None):
-        today = start or date.today()
-        ago = today - timedelta(days=days)
+        """ Return the past n days of activity AFTER the start date.
 
-        events = self.events.filter('start >', ago) \
-            .filter('start <', today).fetch(100)
+        Arguments:
+        days    -- The number of days of activity to calculate
+        default -- The status to use as the base status
+
+        Keyword Arguments
+        start   -- The day to look before (defaults to today)
+
+        This funciton is currently only used on the front page
+        """
+        start = start or date.today()
+        ago = start - timedelta(days=days)
+
+        events = self.events.filter('start >=', ago) \
+            .filter('start <', start).fetch(100)
 
         stats = {}
 
-        for i in range(5):
-            stats[today.day] = {
+        for i in range(days):
+            start = start - timedelta(days=1)
+            stats[start.day] = {
                 "image": default.image,
                 "name": default.name,
-                "day": today,
+                "day": start,
+                "information": False,
             }
-            today = today - timedelta(days=1)
 
         for event in events:
             if event.status.slug != default.slug:
-                stats[event.start.day]["image"] = "icons/fugue/information.png"
+                stats[event.start.day]["image"] = "icons/iconic/information.png"
                 stats[event.start.day]["information"] = True
                 stats[event.start.day]["name"] = "information"
 
-        keys = stats.keys()
-        logging.error(keys)
-        keys.sort()
-        keys.reverse()
+        history = stats.values()
+        history.sort()
+        history.reverse()
 
-        return [ stats[k] for k in keys ]
+        return history
 
 
     def compare(self, other_status):
@@ -197,6 +208,7 @@ class Status(db.Model):
         """ Return a Python object representing this model"""
 
         m = {}
+        m["default"] = self.default
         m["name"] = str(self.name)
         m["id"] = str(self.slug)
         m["description"] = str(self.description)
@@ -204,6 +216,8 @@ class Status(db.Model):
         o = urlparse.urlparse(base_url)
         m["image"] = o.scheme + "://" +  o.netloc + self.image_url()
 
+        # V1 requirement
+        m["level"] = ""
         return m
 
 

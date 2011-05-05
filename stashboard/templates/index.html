@@ -19,6 +19,9 @@
       </td>
       <td class="status highlight">
 	<a href="{{ service.url }}">
+	  {% if service.has_issues %}
+	    <img class="information" src="/images/small-information.png" alt="Had Issues"/>
+	  {% endif %}
 	  <img class="sym" src="/images/{{ service.status.image }}" alt="{{ service.status.title }}"/>
 	</a>
       </td>

@@ -319,7 +319,7 @@ class StatusesListHandler(restful.Controller):
         logging.debug("StatusesListHandler#get")
 
         if (self.valid_version(version)):
-            query = Status.all().order('severity')
+            query = Status.all().order('name')
 
             if (query):
                 data = []
@@ -347,7 +347,7 @@ class StatusesListHandler(restful.Controller):
                 self.error(400, "Default must be true or false")
                 return
 
-            if name and description and severity and image:
+            if name and description and image:
                 slug = slugify.slugify(name)
                 status = Status.get_by_slug(slug)
                 image = Image.get_by_slug(image)
@@ -408,7 +408,7 @@ class StatusInstanceHandler(restful.Controller):
                 if name is not None:
                     status.name = name
 
-                if description or name or image or severity:
+                if description or name or image:
                     status.put()
 
                 self.json(status.rest(self.base_url(version)))
@@ -438,6 +438,13 @@ class StatusInstanceHandler(restful.Controller):
             self.error(404, "API Version %s not supported" % version)
 
 
+class LevelListHandler(restful.Controller):
+
+    def get(self, version):
+        if (self.valid_version(version)):
+            self.json({"levels": ["NORMAL", "WARNING", "ERROR", "CRITICAL"]})
+        else:
+            self.error(404, "API Version %s not supported" % version)
 
 
 class ImagesListHandler(restful.Controller):
