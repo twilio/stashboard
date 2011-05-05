@@ -81,8 +81,8 @@ class ServicesListHandler(restful.Controller):
             return
 
         query = Service.all().order('name')
-        data = [ s.rest(self.base_url(version)) for s in query ]
-        data = { "services": data }
+        data = [s.rest(self.base_url(version)) for s in query]
+        data = {"services": data}
         self.json(data)
 
     @authorized.api("admin")
@@ -204,7 +204,7 @@ class EventsListHandler(restful.Controller):
 
         if end:
             try:
-                _end  = aware_to_naive(parse(end))
+                _end = aware_to_naive(parse(end))
                 query.filter("start <=", _end)
             except:
                 self.error(400, "Invalid Date: %s" % end)
@@ -212,9 +212,8 @@ class EventsListHandler(restful.Controller):
 
         query.order('-start')
 
-        data = [ s.rest(self.base_url(version)) for s in query ]
-        self.json({ "events": data })
-
+        data = [s.rest(self.base_url(version)) for s in query]
+        self.json({"events": data})
 
     @authorized.api("admin")
     def post(self, version, service_slug):
@@ -333,7 +332,7 @@ class StatusesListHandler(restful.Controller):
 
         query = Status.all().order('name')
 
-        data = [ s.rest(self.base_url(version)) for s in query ]
+        data = [s.rest(self.base_url(version)) for s in query]
         self.json({"statuses": data})
 
     @authorized.api("admin")
@@ -363,11 +362,11 @@ class StatusesListHandler(restful.Controller):
             self.error(400, "A Status with the slug %s alread exists" % slug)
             return
 
-        if default == "true": # Reset defaults
+        # Reset default status
+        if default == "true":
             for stat in Status.all().filter("default", True):
                 stat.default = False
                 stat.put()
-
 
         default = default == "true"
         status = Status(name=name, slug=slug, description=description,
@@ -400,7 +399,6 @@ class StatusInstanceHandler(restful.Controller):
 
         status = Status.get_by_slug(status_slug)
 
-
         if not status:
             self.error(404, "No status with the slug %s found" % status_slug)
             return
@@ -420,7 +418,8 @@ class StatusInstanceHandler(restful.Controller):
 
         if default is not None and default in ["false", "true"]:
 
-            if default == "true": # Reset defaults
+            # Reset default status
+            if default == "true":
                 for stat in Status.all().filter("default", True):
                     stat.default = False
                     stat.put()
@@ -455,6 +454,7 @@ class StatusInstanceHandler(restful.Controller):
 
         status.delete()
         self.json(status.rest(self.base_url(version)))
+
 
 class LevelListHandler(restful.Controller):
 
