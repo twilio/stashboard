@@ -1,4 +1,5 @@
 import logging
+from models import Status
 
 MIGRATIONS = {}
 
@@ -45,6 +46,9 @@ class Migration(object):
 
     Register migrations with the MigrationRunner.register method
     """
+    @classmethod
+    def name(cls):
+        return cls.__name__
 
     def start(self):
         logging.info("Staring migration %s" % self.__class__.__name__)
@@ -56,15 +60,29 @@ class Migration(object):
         pass
 
 
-class SampleMigration(Migration):
+class UpdateStatusMigration(Migration):
     """ Migrate sample data
 
     This migration does nothing. NOTHING!
 
     """
-
     def run(self):
-        pass
+        # For each status
+        for status in Status.all().fetch(100):
+
+            # Set the status to default
+            status.default = False
+
+            # Update the status url
+            status.image = "icons/fugue/" + status.image + ".png"
+
+            # Save the status
+            status.put()
+
+        # Get the up status and make it default
+        default_status = Status.get_by_slug("up")
+        default_status.default = True
+        default_status.put()
 
 
-register(SampleMigration)
+register(UpdateStatusMigration)

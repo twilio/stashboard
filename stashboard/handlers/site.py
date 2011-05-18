@@ -26,7 +26,7 @@ import datetime
 import calendar
 import cgi
 import logging
-import oauth2 as oauth
+#import oauth2 as oauth
 import os
 import re
 import string

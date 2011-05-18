@@ -1,0 +1,23 @@
+{% extends "admin/admin.html" %}
+
+{% block section %}
+
+{% if notice %}
+<div id="notice">
+  {{ notice }}
+</div>
+{% endif %}
+
+<ul class="admin" id="migrations">
+    {% for migration in migrations %}
+    <li>
+      <form action="/admin/migrations" method="POST">
+	<input type="hidden" value="{{ migration.name }}" name="migration">
+	<input type="submit" value="Run" class="button">
+      </form>
+      {{ migration.name }}
+    </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

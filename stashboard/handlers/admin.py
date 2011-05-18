@@ -1,19 +1,24 @@
 import logging
+import migrations
 from google.appengine.api import users
+from google.appengine.api import taskqueue
 from google.appengine.ext import db
 from handlers import site
 from models import Service, Status, Event, Image
 from utils import slugify
+
 
 def default_template_data():
     td = site.default_template_data()
     td["title"] = td["title"] + " Admin"
     return td
 
+
 class RootHandler(site.BaseHandler):
 
     def get(self):
         self.redirect("/admin/services")
+
 
 class SetupHandler(site.BaseHandler):
 
@@ -22,8 +27,9 @@ class SetupHandler(site.BaseHandler):
 
     def post(self):
         Status.load_defaults()
-        Image.load_default()
+        Image.load_defaults()
         self.redirect("/admin")
+
 
 class ServiceHandler(site.BaseHandler):
 
@@ -32,6 +38,7 @@ class ServiceHandler(site.BaseHandler):
         td["services_selected"] = True
         td["services"] = Service.all().order("name").fetch(1000)
         self.render(td, 'admin/services.html')
+
 
 class ServiceInstanceHandler(site.BaseHandler):
 
@@ -201,6 +208,7 @@ class StatusHandler(site.BaseHandler):
         td["statuses"] = Status.all().order("name").fetch(1000)
         self.render(td, 'admin/status.html')
 
+
 class CreateStatusHandler(site.BaseHandler):
 
     def get(self):
@@ -215,18 +223,25 @@ class CreateStatusHandler(site.BaseHandler):
 class MigrationStarter(site.BaseHandler):
 
     def post(self, key):
-        migration = self.find(key)
-        migration.run()
+        migration = migrations.find(key)
+        migration().run()
 
 
 class MigrationHandler(site.BaseHandler):
 
     def get(self):
         td = default_template_data()
-        #td["migrations"] = MigrationRunner.all()
+        td["migrations"] = migrations.all()
+        td["notice"] = self.request.get("notice", False)
+        td["migrations_selected"] = True
         self.render(td, "admin/migrations.html")
 
     def post(self):
-        # Get value from post params
-        # kick off task queue
-        pass
+        migration = self.request.get("migration", None)
+
+        if migration is None:
+            self.error(400)
+            return
+
+        taskqueue.add(url="/admin/migrations/%s" % migration)
+        self.redirect("/admin/migrations?notice=Migration%20started")

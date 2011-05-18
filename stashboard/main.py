@@ -76,6 +76,8 @@ ADMIN = [
     (r'/admin/statuses/(.*)/edit', admin.EditStatusHandler),
     (r'/admin/statuses/create', admin.CreateStatusHandler),
     (r'/admin/statuses', admin.StatusHandler),
+    (r'/admin/migrations/(.*)', admin.MigrationStarter),
+    (r'/admin/migrations', admin.MigrationHandler),
     (r'/admin/credentials', site.ProfileHandler),
     (r'/admin/verify', site.VerifyAccessHandler),
     (r'/admin', admin.RootHandler),

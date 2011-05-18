@@ -406,3 +406,13 @@ form.admin ul.images li img {
 .sym {
   width: 20px;
 }
+
+#migrations li{
+  font-size: 22px;
+}
+
+#notice {
+  padding: 10px;
+  margin-bottom: 10px;
+  background: #EEE;
+}
