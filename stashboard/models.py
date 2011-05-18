@@ -129,7 +129,7 @@ class Service(db.Model):
         return 0
 
     def sid(self):
-        return str(self.key())
+        return unicode(self.key())
 
     def resource_url(self):
         return "/services/" + self.slug
@@ -138,9 +138,9 @@ class Service(db.Model):
         """ Return a Python object representing this model"""
 
         m = {}
-        m["name"] = str(self.name)
-        m["id"] = str(self.slug)
-        m["description"] = str(self.description)
+        m["name"] = unicode(self.name)
+        m["id"] = unicode(self.slug)
+        m["description"] = unicode(self.description)
         m["url"] = base_url + self.resource_url()
 
         event = self.current_event()
@@ -202,16 +202,16 @@ class Status(db.Model):
         return "/images/status/" + unicode(self.image) + ".png"
 
     def resource_url(self):
-        return "/statuses/" + str(self.slug)
+        return "/statuses/" + unicode(self.slug)
 
     def rest(self, base_url):
         """ Return a Python object representing this model"""
 
         m = {}
         m["default"] = self.default
-        m["name"] = str(self.name)
-        m["id"] = str(self.slug)
-        m["description"] = str(self.description)
+        m["name"] = unicode(self.name)
+        m["id"] = unicode(self.slug)
+        m["description"] = unicode(self.description)
         m["url"] = base_url + self.resource_url()
         o = urlparse.urlparse(base_url)
         m["image"] = o.scheme + "://" +  o.netloc + self.image_url()
@@ -239,7 +239,7 @@ class Event(db.Model):
         pass
 
     def sid(self):
-        return str(self.key())
+        return unicode(self.key())
 
     def resource_url(self):
         return self.service.resource_url() + "/events/" + self.sid()
@@ -253,7 +253,7 @@ class Event(db.Model):
         stamp = mktime(self.start.timetuple())
         m["timestamp"] = format_date_time(stamp)
         m["status"] = self.status.rest(base_url)
-        m["message"] = str(self.message)
+        m["message"] = unicode(self.message)
         m["url"] = base_url + self.resource_url()
 
         if self.informational:
