@@ -58,6 +58,7 @@ SITE = [
     (r'/services/(.+)/(.+)/(.+)', site.ServiceHandler),
     (r'/services/(.+)/(.+)', site.ServiceHandler),
     (r'/services/(.+)', site.ServiceHandler),
+    (r'/documentation/credentials', site.CredentialsRedirectHandler),
     (r'/documentation/(.+)', site.DocumentationHandler),
     ]
 
@@ -78,7 +79,7 @@ ADMIN = [
     (r'/admin/statuses', admin.StatusHandler),
     (r'/admin/migrations/(.*)', admin.MigrationStarter),
     (r'/admin/migrations', admin.MigrationHandler),
-    (r'/admin/credentials', site.ProfileHandler),
+    (r'/admin/applications', site.ProfileHandler),
     (r'/admin/verify', site.VerifyAccessHandler),
     (r'/admin', admin.RootHandler),
     ]

@@ -205,6 +205,11 @@ class DocumentationHandler(BaseHandler):
         else:
             self.render({}, '404.html')
 
+class CredentialsRedirectHandler(BaseHandler):
+
+    def get(self):
+        self.redirect("/admin/applications")
+
 
 class VerifyAccessHandler(BaseHandler):
 
