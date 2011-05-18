@@ -3,6 +3,7 @@ import migrations
 from google.appengine.api import users
 from google.appengine.api import taskqueue
 from google.appengine.ext import db
+from handlers import api
 from handlers import site
 from models import Service, Status, Event, Image
 from utils import slugify
@@ -28,6 +29,7 @@ class SetupHandler(site.BaseHandler):
     def post(self):
         Status.load_defaults()
         Image.load_defaults()
+        api.invalidate_cache()
         self.redirect("/admin")
 
 
