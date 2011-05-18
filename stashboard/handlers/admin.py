@@ -22,7 +22,7 @@ class SetupHandler(site.BaseHandler):
 
     def post(self):
         Status.load_defaults()
-        Image.load_default()
+        Image.load_defaults()
         self.redirect("/admin")
 
 class ServiceHandler(site.BaseHandler):
