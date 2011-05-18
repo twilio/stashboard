@@ -199,7 +199,7 @@ class Status(db.Model):
     default = db.BooleanProperty(default=False)
 
     # Deprecated
-    level = db.StringProperty(default="NORMAL")
+    severity = db.IntegerProperty(default=10)
 
     def image_url(self):
         return "/images/" + unicode(self.image)
@@ -219,8 +219,16 @@ class Status(db.Model):
         o = urlparse.urlparse(base_url)
         m["image"] = o.scheme + "://" +  o.netloc + self.image_url()
 
-        # V1 requirement
-        m["level"] = unicode(self.level)
+        # Maintain v1 requirement
+        if self.severity == 30:
+            m["level"] = "WARNING"
+        elif self.severity == 40:
+            m["level"] = "ERROR"
+        elif self.severity == 50:
+            m["level"] = "CRITICAL"
+        else:
+            m["level"] = "NORMAL"
+
         return m
 
 
