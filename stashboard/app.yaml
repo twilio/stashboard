@@ -11,6 +11,10 @@ builtins:
 - remote_api: on
 
 handlers:
+- url: /console/.*
+  script: $PYTHON_LIB/google/appengine/ext/admin
+  login: admin
+
 - url: /css
   static_dir: static/css
 
@@ -39,6 +43,11 @@ handlers:
 
 - url: .*
   script: main.py
+
+admin_console:
+  pages:
+  - name: Memcache
+    url: /console/memcache
 
 skip_files: |
  ^(.*/)?(
