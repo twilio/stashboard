@@ -146,7 +146,7 @@ nav .selected {
 .data .action { width: 5px; }
 
 .data .status img {
-  width: 20px;
+  max-width: 20px;
 }
 
 /* Front page table */
@@ -371,7 +371,7 @@ form.admin ul.images li img, form.admin ul.images li input{
 }
 
 form.admin ul.images li img {
-  width: 20px;
+  max-width: 20px;
 }
 
 #editbar {
@@ -404,7 +404,7 @@ form.admin ul.images li img {
 }
 
 .sym {
-  width: 20px;
+  max-width: 20px;
 }
 
 #migrations li{

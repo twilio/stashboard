@@ -6,9 +6,9 @@
   ><p
   >The following examples will use the StashBoard REST API to create a service, create a status, and then create an event with the new status for the new service. Sample code is provided for Python, Ruby, and PHP.</p
   ><p
-  >If you haven't already, head over to the <a href="/documentation/credentials"
-    >API Credentials section</a
-    > to obtain your API key. Please note that you must be an administrator to make changes via the REST API.</p
+  >If you haven't already, head over to the <a href="/admin/applications"
+    >Application admin</a
+    > to obtain an OAuth token. Please note that you must be an administrator to make changes via the REST API.</p
   ><div id="python"
   ><h3
     >Python</h3
@@ -28,7 +28,7 @@ oauth_secret = 'YYYYYYYYYYYYYYYYYYYYYYYY'
 
 # Create your consumer with the proper key/secret.
 # If you register your application with google, these values won't be
-# anonymous and anonymous. 
+# anonymous and anonymous.
 consumer = oauth.Consumer(key='anonymous', secret='anonymous')
 token = oauth.Token(oauth_key, oauth_secret)
 
@@ -101,7 +101,7 @@ oauth_secret = 'YYYYYYYYYYYYYYYYYYYYYYYY'
 # Fill in your website
 base = &quot;https://stashboard.appspot.com&quot;
 
-@consumer=OAuth::Consumer.new &quot;anonymous&quot;, 
+@consumer=OAuth::Consumer.new &quot;anonymous&quot;,
                               &quot;anonymous&quot;,
                               {:site=&gt;base}
 
@@ -166,7 +166,7 @@ puts event
   $token = new OAuthToken($oauth_key, $oauth_secret);
 
 
-  // Set up a request function  
+  // Set up a request function
   function request($consumer, $token, $url, $method = &quot;GET&quot;, $data = null){
 
     $sign = new OAuthSignatureMethod_HMAC_SHA1();

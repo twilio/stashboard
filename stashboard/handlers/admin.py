@@ -232,8 +232,6 @@ class MigrationHandler(site.BaseHandler):
     def get(self):
         td = default_template_data()
         td["migrations"] = migrations.all()
-        td["notice"] = self.request.get("notice", False)
-        td["migrations_selected"] = True
         self.render(td, "admin/migrations.html")
 
     def post(self):
@@ -244,4 +242,8 @@ class MigrationHandler(site.BaseHandler):
             return
 
         taskqueue.add(url="/admin/migrations/%s" % migration)
-        self.redirect("/admin/migrations?notice=Migration%20started")
+
+        td = default_template_data()
+        td["migrations"] = migrations.all()
+        td["notice"] = "Migration %s started. Check the logs for output" % migration
+        self.render(td, "admin/migrations.html")

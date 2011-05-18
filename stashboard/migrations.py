@@ -67,6 +67,7 @@ class UpdateStatusMigration(Migration):
 
     """
     def run(self):
+        logging.info("Update each status")
         # For each status
         for status in Status.all().fetch(100):
 
@@ -81,8 +82,13 @@ class UpdateStatusMigration(Migration):
 
         # Get the up status and make it default
         default_status = Status.get_by_slug("up")
+
+        if default_status is None:
+            logging.error("Could not find the up status")
+            return
+
         default_status.default = True
         default_status.put()
-
+        logging.info("Set up status as the default")
 
 register(UpdateStatusMigration)
