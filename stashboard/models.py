@@ -196,10 +196,13 @@ class Status(db.Model):
     slug = db.StringProperty(required=True)
     description = db.StringProperty(required=True)
     image = db.StringProperty(required=True)
-    default= db.BooleanProperty(default=False)
+    default = db.BooleanProperty(default=False)
+
+    # Deprecated
+    level = db.StringProperty(default="NORMAL")
 
     def image_url(self):
-        return "/images/status/" + unicode(self.image) + ".png"
+        return "/images/" + unicode(self.image)
 
     def resource_url(self):
         return "/statuses/" + unicode(self.slug)
@@ -217,7 +220,7 @@ class Status(db.Model):
         m["image"] = o.scheme + "://" +  o.netloc + self.image_url()
 
         # V1 requirement
-        m["level"] = ""
+        m["level"] = unicode(self.level)
         return m
 
 
