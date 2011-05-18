@@ -1,4 +1,5 @@
 import logging
+from models import Image
 from models import Status
 
 MIGRATIONS = {}
@@ -91,4 +92,15 @@ class UpdateStatusMigration(Migration):
         default_status.put()
         logging.info("Set up status as the default")
 
+
+class AddImagesMigration(Migration):
+    """ Add images to the database """
+
+    def run(self):
+        logging.info("Load the images into the database")
+        Image.load_defaults()
+        logging.info("Loading complete")
+
+
+register(AddImagesMigration)
 register(UpdateStatusMigration)

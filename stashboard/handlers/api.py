@@ -359,7 +359,11 @@ class StatusesListHandler(restful.Controller):
         image = Image.get_by_slug(image)
 
         if status is not None:
-            self.error(400, "A Status with the slug %s alread exists" % slug)
+            self.error(400, "A Status with the slug %s already exists" % slug)
+            return
+
+        if image is None:
+            self.error(400, "An Image with the slug %s doesn't exist" % image)
             return
 
         # Reset default status
@@ -404,17 +408,22 @@ class StatusInstanceHandler(restful.Controller):
             return
 
         name = self.request.get('name', default_value=None)
-        image = self.request.get('image', default_value=None)
+        image_slug = self.request.get('image', default_value=None)
         default = self.request.get('default', default_value=None)
         description = self.request.get('description', default_value=None)
 
-        image = Image.get_by_slug(image)
+        if image_slug is not None:
+            image = Image.get_by_slug(image_slug)
+
+            if image is None:
+                self.error(400, "An Image with the "
+                           "slug %s doesn't exist" % image_slug)
+                return
+
+            status.image = image.path
 
         if description is not None:
             status.description = description
-
-        if image is not None:
-            status.image = image.path
 
         if default is not None and default in ["false", "true"]:
 
@@ -479,7 +488,7 @@ class ImagesListHandler(restful.Controller):
             image = {
                 "url": "http://" + host + "/images/" + img.path,
                 "set": img.set,
-                "slug": img.slug,
+                "name": img.slug,
                 }
             images.append(image)
 
