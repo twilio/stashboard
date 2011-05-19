@@ -5,9 +5,6 @@ REST API Documentation
 ======================
 
 
-REST is amazing
-
-
 .. _rest-tutorials:
 
 Tutorials
