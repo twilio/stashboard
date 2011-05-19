@@ -26,7 +26,7 @@ import datetime
 import calendar
 import cgi
 import logging
-#import oauth2 as oauth
+import oauth2 as oauth
 import os
 import re
 import string
@@ -213,17 +213,15 @@ class CredentialsRedirectHandler(BaseHandler):
 
 class VerifyAccessHandler(BaseHandler):
 
-    @authorized.role("admin")
     def get(self):
         oauth_token = self.request.get('oauth_token', default_value=None)
         oauth_verifier = self.request.get('oauth_verifier', default_value=None)
         user = users.get_current_user()
         authr = AuthRequest.all().filter('owner = ', user).get()
 
-        if oauth_token and oauth_verifier and user and authr:
+        if oauth_token and oauth_verifier and user:
 
-            host = self.request.headers.get('host', 'nohost')
-            access_token_url = 'https://%s/_ah/OAuthGetAccessToken' % host
+            access_token_url = '/_ah/OAuthGetAccessToken'
 
             consumer_key = 'anonymous'
             consumer_secret = 'anonymous'
@@ -234,22 +232,23 @@ class VerifyAccessHandler(BaseHandler):
             token.set_verifier(oauth_verifier)
             client = oauth.Client(consumer, token)
 
-            if "localhost" not in host:
+            logging.error(access_token_url)
 
-                resp, content = client.request(access_token_url, "POST")
+            resp, content = client.request(access_token_url, "POST")
 
-                if resp['status'] == '200':
+            if resp['status'] == '200':
 
-                    access_token = dict(cgi.parse_qsl(content))
+                access_token = dict(cgi.parse_qsl(content))
 
-                    profile = Profile(
-                        owner=user,
-                        token=access_token['oauth_token'],
-                        secret=access_token['oauth_token_secret']
-                        )
-                    profile.put()
+                profile = Profile(
+                    owner=user,
+                    token=access_token['oauth_token'],
+                    secret=access_token['oauth_token_secret']
+                    )
+                profile.put()
 
-        self.redirect("/documentation/credentials")
+
+        self.redirect("/admin/applications")
 
 
 class ProfileHandler(BaseHandler):
@@ -280,11 +279,15 @@ class ProfileHandler(BaseHandler):
 
                 host = self.request.headers.get('host', 'nohost')
 
-                callback = 'http://%s/documentation/verify' % host
+                if "localhost" in host:
+                    schema = "http"
+                else:
+                    schema = "https"
 
-                request_token_url = ('https://%s/_ah/OAuthGetRequestToken?'
-                                     'oauth_callback=%s' % (host, callback))
-                authorize_url = 'https://%s/_ah/OAuthAuthorizeToken' % host
+                callback = '%s://%s/admin/verify' % (schema, host)
+                request_token_url = ('%s://%s/_ah/OAuthGetRequestToken?'
+                                     'oauth_callback=%s' % (schema, host, callback))
+                authorize_url = '%s://%s/_ah/OAuthAuthorizeToken' % (schema, host)
 
                 consumer = oauth.Consumer(consumer_key, consumer_secret)
                 client = oauth.Client(consumer)
@@ -295,26 +298,26 @@ class ProfileHandler(BaseHandler):
 
                 td["user_is_authorized"] = False
 
-                if "localhost" not in host:
+                logging.error(request_token_url)
 
-                    resp, content = client.request(request_token_url, "GET")
+                resp, content = client.request(request_token_url, "GET")
 
-                    if resp['status'] == '200':
+                if resp['status'] == '200':
 
-                        request_token = dict(cgi.parse_qsl(content))
+                    request_token = dict(cgi.parse_qsl(content))
 
-                        authr = AuthRequest.all().filter("owner =", user).get()
-                        token_secret = request_token['oauth_token_secret']
+                    authr = AuthRequest.all().filter("owner =", user).get()
+                    token_secret = request_token['oauth_token_secret']
 
-                        if authr:
-                            authr.request_secret = token_secret
-                        else:
-                            authr = AuthRequest(owner=user,
-                                                request_secret=token_secret)
+                    if authr:
+                        authr.request_secret = token_secret
+                    else:
+                        authr = AuthRequest(owner=user,
+                                            request_secret=token_secret)
 
-                        authr.put()
+                    authr.put()
 
-                        td["oauth_url"] = "%s?oauth_token=%s" % \
-                            (authorize_url, request_token['oauth_token'])
+                    td["oauth_url"] = "%s?oauth_token=%s" % \
+                        (authorize_url, request_token['oauth_token'])
 
         self.render(td, 'credentials.html')
