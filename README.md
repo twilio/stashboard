@@ -15,9 +15,13 @@ See the [Getting Started](http://code.google.com/appengine/docs/python/gettingst
 [deploy]: http://code.google.com/appengine/docs/python/gettingstarted/uploading.html
 [appengine]: http://code.google.com/appengine/downloads.html#Google_App_Engine_SDK_for_Python
 
-## REST API
+## Demo
 
-Stashboard includes a full REST API. Tutorials, sample code, and full documentation can be found [here](http://readthedocs.org/docs/stashboard/en/latest/rest/index.html#rest-documentation)
+The most recent version of Stashboard lives at http://stashboard.appspot.com
+
+## Documentation
+
+Full documentation can be found on [Read The Docs](http://readthedocs.org/docs/stashboard/en/latest)
 
 ## Community
 
