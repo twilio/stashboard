@@ -79,8 +79,9 @@ ADMIN = [
     (r'/admin/statuses', admin.StatusHandler),
     (r'/admin/migrations/(.*)', admin.MigrationStarter),
     (r'/admin/migrations', admin.MigrationHandler),
-    (r'/admin/applications', site.ProfileHandler),
-    (r'/admin/verify', site.VerifyAccessHandler),
+    (r'/admin/credentials', admin.CredentialHandler),
+    (r'/admin/oauth/authorize', admin.OAuthRequestHandler),
+    (r'/admin/oauth/verify', admin.OAuthVerifyHandler),
     (r'/admin', admin.RootHandler),
     ]
 

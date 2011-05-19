@@ -24,9 +24,7 @@ __author__ = 'Kyle Conroy'
 
 import datetime
 import calendar
-import cgi
 import logging
-import oauth2 as oauth
 import os
 import re
 import string
@@ -208,116 +206,4 @@ class DocumentationHandler(BaseHandler):
 class CredentialsRedirectHandler(BaseHandler):
 
     def get(self):
-        self.redirect("/admin/applications")
-
-
-class VerifyAccessHandler(BaseHandler):
-
-    def get(self):
-        oauth_token = self.request.get('oauth_token', default_value=None)
-        oauth_verifier = self.request.get('oauth_verifier', default_value=None)
-        user = users.get_current_user()
-        authr = AuthRequest.all().filter('owner = ', user).get()
-
-        if oauth_token and oauth_verifier and user:
-
-            access_token_url = '/_ah/OAuthGetAccessToken'
-
-            consumer_key = 'anonymous'
-            consumer_secret = 'anonymous'
-
-            consumer = oauth.Consumer(consumer_key, consumer_secret)
-
-            token = oauth.Token(oauth_token, authr.request_secret)
-            token.set_verifier(oauth_verifier)
-            client = oauth.Client(consumer, token)
-
-            logging.error(access_token_url)
-
-            resp, content = client.request(access_token_url, "POST")
-
-            if resp['status'] == '200':
-
-                access_token = dict(cgi.parse_qsl(content))
-
-                profile = Profile(
-                    owner=user,
-                    token=access_token['oauth_token'],
-                    secret=access_token['oauth_token_secret']
-                    )
-                profile.put()
-
-
-        self.redirect("/admin/applications")
-
-
-class ProfileHandler(BaseHandler):
-
-    def get(self):
-
-        consumer_key = 'anonymous'
-        consumer_secret = 'anonymous'
-
-        td = default_template_data()
-        td["logged_in"] = False
-        td["credentials_selected"] = True
-        td["consumer_key"] = consumer_key
-
-        user = users.get_current_user()
-
-        if user:
-
-            td["logged_in"] = users.is_current_user_admin()
-            profile = Profile.all().filter('owner = ', user).get()
-
-            if profile:
-
-                td["user_is_authorized"] = True
-                td["profile"] = profile
-
-            else:
-
-                host = self.request.headers.get('host', 'nohost')
-
-                if "localhost" in host:
-                    schema = "http"
-                else:
-                    schema = "https"
-
-                callback = '%s://%s/admin/verify' % (schema, host)
-                request_token_url = ('%s://%s/_ah/OAuthGetRequestToken?'
-                                     'oauth_callback=%s' % (schema, host, callback))
-                authorize_url = '%s://%s/_ah/OAuthAuthorizeToken' % (schema, host)
-
-                consumer = oauth.Consumer(consumer_key, consumer_secret)
-                client = oauth.Client(consumer)
-
-                # Step 1: Get a request token. This is a temporary token
-                # that is used for having the user authorize an access token
-                # and to sign the request to obtain said access token.
-
-                td["user_is_authorized"] = False
-
-                logging.error(request_token_url)
-
-                resp, content = client.request(request_token_url, "GET")
-
-                if resp['status'] == '200':
-
-                    request_token = dict(cgi.parse_qsl(content))
-
-                    authr = AuthRequest.all().filter("owner =", user).get()
-                    token_secret = request_token['oauth_token_secret']
-
-                    if authr:
-                        authr.request_secret = token_secret
-                    else:
-                        authr = AuthRequest(owner=user,
-                                            request_secret=token_secret)
-
-                    authr.put()
-
-                    td["oauth_url"] = "%s?oauth_token=%s" % \
-                        (authorize_url, request_token['oauth_token'])
-
-        self.render(td, 'credentials.html')
+        self.redirect("/admin/credentials")

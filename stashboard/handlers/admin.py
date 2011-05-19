@@ -1,11 +1,16 @@
+import cgi
 import logging
+import oauth2 as oauth
+import os
 import migrations
-from google.appengine.api import users
+from django.conf import settings
+from google.appengine.api import memcache
 from google.appengine.api import taskqueue
+from google.appengine.api import users
 from google.appengine.ext import db
 from handlers import api
 from handlers import site
-from models import Service, Status, Event, Image
+from models import Service, Status, Event, Image, Profile
 from utils import slugify
 
 
@@ -249,3 +254,108 @@ class MigrationHandler(site.BaseHandler):
         td["migrations"] = migrations.all()
         td["notice"] = "Migration %s started. Check the logs for output" % migration
         self.render(td, "admin/migrations.html")
+
+
+class CredentialHandler(site.BaseHandler):
+
+    def get(self):
+
+        user = users.get_current_user()
+        profile = Profile.all().filter('owner = ', user).get()
+
+        td = default_template_data()
+        td["credentials_selected"] = True
+        td["consumer_key"] = settings.CONSUMER_KEY
+        td["consumer_secret"] = settings.CONSUMER_SECRET
+
+        if os.environ['SERVER_SOFTWARE'].startswith('Development'):
+            td["authorized"] = True
+            td["oauth_token"] = "ACCESS_TOKEN"
+            td["oauth_token_secret"] = "ACCESS_TOKEN_SECRET"
+        elif profile:
+            td["authorized"] = True
+            td["oauth_token"] = profile.token
+            td["oauth_token_secret"] = profile.secret
+        else:
+            td["authorized"] = False
+
+        self.render(td, 'admin/credentials.html')
+        return
+
+
+class OAuthRequestHandler(site.BaseHandler):
+
+    def get(self):
+        user = users.get_current_user()
+        host = self.request.headers.get('host', 'nohost')
+        consumer_key = settings.CONSUMER_KEY
+        consumer_secret = settings.CONSUMER_SECRET
+
+        callback = 'https://%s/admin/oauth/verify' % host
+        request_token_url = ('https://%s/_ah/OAuthGetRequestToken?'
+                             'oauth_callback=%s' % (host, callback))
+        authorize_url = 'https://%s/_ah/OAuthAuthorizeToken' % host
+
+        consumer = oauth.Consumer(consumer_key, consumer_secret)
+        client = oauth.Client(consumer)
+
+        resp, content = client.request(request_token_url, "GET")
+
+        if resp['status'] != '200':
+            self.error(400)
+            self.response.out.write("Getting Request Token failed")
+            return
+
+        request_token = dict(cgi.parse_qsl(content))
+        token = request_token['oauth_token_secret']
+
+        if not memcache.set("oauth_token", token, namespace=user.email()):
+            logging.error("Memcache set failed on oauth_token")
+
+        oauth_url = ("%s?oauth_token=%s" %
+                     (authorize_url, request_token['oauth_token']))
+
+        self.redirect(oauth_url)
+
+
+class OAuthVerifyHandler(site.BaseHandler):
+
+    def get(self):
+        oauth_token = self.request.get('oauth_token', default_value=None)
+        oauth_verifier = self.request.get('oauth_verifier', default_value=None)
+        user = users.get_current_user()
+        request_secret = memcache.get("oauth_token", namespace=user.email())
+
+        if not oauth_token or not oauth_verifier or not request_secret:
+            self.error(400)
+            self.response.out.write("Missing data")
+            return
+
+        host = self.request.headers.get('host', 'nohost')
+        access_token_url = 'https://%s/_ah/OAuthGetAccessToken' % host
+
+        consumer_key = settings.CONSUMER_KEY
+        consumer_secret = settings.CONSUMER_SECRET
+        consumer = oauth.Consumer(consumer_key, consumer_secret)
+        token = oauth.Token(oauth_token, request_secret)
+        token.set_verifier(oauth_verifier)
+
+        client = oauth.Client(consumer, token)
+
+        resp, content = client.request(access_token_url, "POST")
+
+        if resp['status'] != '200':
+            self.error(400)
+            logging.error("Authorization failed!")
+            return
+
+        access_token = dict(cgi.parse_qsl(content))
+
+        profile = Profile(
+            owner=user,
+            token=access_token['oauth_token'],
+            secret=access_token['oauth_token_secret']
+            )
+        profile.put()
+
+        self.redirect("/admin/credentials")

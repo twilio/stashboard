@@ -32,10 +32,10 @@ from wsgiref.handlers import format_date_time
 class Image(db.Model):
     """A service to track
 
-        Properties:
-        slug -- stirng: URL friendly version of the name
-        name -- string: The name of this service
-        path -- stirng: The path to the image
+    Properties:
+    slug -- stirng: URL friendly version of the name
+    name -- string: The name of this service
+    path -- stirng: The path to the image
 
     """
     slug = db.StringProperty(required=True)
@@ -61,10 +61,10 @@ class Image(db.Model):
 class Service(db.Model):
     """A service to track
 
-        Properties:
-        name        -- string: The name of this service
-        description -- string: The function of the service
-        slug        -- stirng: URL friendly version of the name
+    Properties:
+    name        -- string: The name of this service
+    description -- string: The function of the service
+    slug        -- stirng: URL friendly version of the name
 
     """
     @staticmethod
@@ -154,11 +154,11 @@ class Service(db.Model):
 class Status(db.Model):
     """A possible system status
 
-        Properties:
-        name        -- string: The friendly name of this status
-        slug        -- stirng: The identifier for the status
-        description -- string: The state this status represents
-        image       -- string: Image in /images/status
+    Properties:
+    name        -- string: The friendly name of this status
+    slug        -- stirng: The identifier for the status
+    description -- string: The state this status represents
+    image       -- string: Image in /images/status
 
     """
     @classmethod
@@ -278,11 +278,4 @@ class Profile(db.Model):
     owner = db.UserProperty(required=True)
     token = db.StringProperty(required=True)
     secret = db.StringProperty(required=True)
-
-class AuthRequest(db.Model):
-    owner = db.UserProperty(required=True)
-    request_secret = db.StringProperty()
-
-class Setting(db.Model):
-    name = db.StringProperty(required=True)
 

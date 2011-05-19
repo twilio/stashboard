@@ -416,3 +416,50 @@ form.admin ul.images li img {
   margin-bottom: 10px;
   background: #EEE;
 }
+
+.admin h1 {
+  margin-bottom: 10px;
+}
+
+#oauth img, #oauth div{
+  display: inline-block;
+  vertical-align: middle;
+}
+
+#oauth img {
+  width: 200px;
+}
+
+#oauth div {
+  margin-left: 30px;
+}
+
+#oauth p {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: #ffa49c;
+  border-radius: 10px;
+  border: 1px solid red;
+  -moz-border-radius: 10px;
+}
+
+#oauth p a {
+  margin-left: 30px;
+}
+
+#oauth table tr td{
+  padding: 6px;
+}
+
+#oauth table tr td{
+  font-family: monospace;
+}
+
+#oauth table tr td:first-child{
+  font:14px arial,helvetica,verdana,sans-serif;
+  text-align: right;
+  font-weight: bold;
+}
+
+
+
