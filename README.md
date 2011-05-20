@@ -15,6 +15,10 @@ See the [Getting Started](http://code.google.com/appengine/docs/python/gettingst
 [deploy]: http://code.google.com/appengine/docs/python/gettingstarted/uploading.html
 [appengine]: http://code.google.com/appengine/downloads.html#Google_App_Engine_SDK_for_Python
 
+## Finishing Setup
+
+Once you get Stashboard up and running, visit `/admin/setup` to complete the installation
+
 ## Demo
 
 The most recent version of Stashboard lives at http://stashboard.appspot.com
