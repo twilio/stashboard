@@ -225,7 +225,7 @@ class CreateStatusHandler(site.BaseHandler):
             "url": "/admin/api/v1/statuses",
             "images": Image.all().fetch(200),
             }
-            
+
         td.update(site.default_template_data())
         self.render(td, 'admin/status_create.html')
 
@@ -362,3 +362,10 @@ class OAuthVerifyHandler(site.BaseHandler):
         profile.put()
 
         self.redirect("/admin/credentials")
+
+
+class InvalidateCacheHandler(site.BaseHandler):
+
+    def get(self):
+        api.invalidate_cache()
+        self.response.out.write("Success")

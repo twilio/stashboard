@@ -81,6 +81,7 @@ ADMIN = [
     (r'/admin/credentials', admin.CredentialHandler),
     (r'/admin/oauth/authorize', admin.OAuthRequestHandler),
     (r'/admin/oauth/verify', admin.OAuthVerifyHandler),
+    (r'/admin/tasks/invalidate-cache', admin.InvalidateCacheHandler),
     (r'/admin', admin.RootHandler),
     ]
 
