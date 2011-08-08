@@ -35,7 +35,6 @@ from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 from handlers import site, api, admin
-from models import Status, Setting
 
 API = [
     (r'/api/(.+)/levels', api.LevelListHandler), #DEPRECATED

@@ -40,7 +40,7 @@ from datetime import date, timedelta
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils import simplejson as json
-from models import Status, Service, Event, Profile, AuthRequest
+from models import Status, Service, Event, Profile
 from time import mktime
 from utils import authorized
 from wsgiref.handlers import format_date_time
