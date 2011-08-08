@@ -37,7 +37,7 @@ header h1 {margin: 15px; float: left; height: 40px; line-height: 40px;}
 header h1 span {font-weight: normal;}
 header h2 {margin: 15px 0; float: left; line-height: 67px;}
 header .button-container { float: right; margin-top: 20px;}
-#logo { height: 40px; float: left; margin: 15px 0;}
+#logo { height: 40px; width: 54px; float: left; margin: 15px 0;}
 
 #status { height: 200px; }
 #status h2 { font-size: 60px; color: #FFF; text-align: center; padding-top: 65px;text-shadow: 2px 2px 0px #000;}
@@ -285,6 +285,11 @@ td.status a .information {position: absolute; top: 0px; left: 1px; z-index: 500;
     font-family: courier, monospace;
     font-size: 10px;
 }
+
+#powered img {
+    width: 27px;
+}
+
 
 ul.admin .button {
   float: right;
