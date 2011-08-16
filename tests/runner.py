@@ -8,6 +8,7 @@ import os
 def main(sdk_path, test_path):
     logging.basicConfig(filename="testing.log", level=logging.DEBUG)
     sys.path.insert(0, os.path.abspath("."))
+    sys.path.insert(0, os.path.abspath("./stashboard"))
     sys.path.insert(0, sdk_path)
     import dev_appserver
     dev_appserver.fix_sys_path()

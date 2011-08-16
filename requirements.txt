@@ -1,0 +1,2 @@
+requests
+-e git+git@github.com:derferman/webtest.git#egg=WebTest
