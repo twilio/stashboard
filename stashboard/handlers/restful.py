@@ -188,10 +188,10 @@ class Controller(webapp.RequestHandler):
         data = json.dumps(data)
 
         if callback:
-            self.response.headers.add_header("Content-Type", "application/javascript")
+            self.response.headers['Content-Type'] = "application/javascript"
             data = callback + "(" + data + ");"
         else:
-            self.response.headers.add_header("Content-Type", "application/json")
+            self.response.headers['Content-Type'] = "application/json"
 
         self.response.out.write(data)
 
