@@ -110,10 +110,13 @@ class ServicesListHandler(restful.Controller):
         s.put()
 
         invalidate_cache()
+
+        self.response.set_status(201)
         self.json(s.rest(self.base_url(version)))
 
 
 class ServiceInstanceHandler(restful.Controller):
+
     def get(self, version, service_slug):
         if not self.valid_version(version):
             self.error(404, "API Version %s not supported" % version)
@@ -173,6 +176,7 @@ class ServiceInstanceHandler(restful.Controller):
 
         invalidate_cache()
         service.delete()
+        self.response.set_status(204)
         self.json(service.rest(self.base_url(version)))
 
 

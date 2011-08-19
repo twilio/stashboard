@@ -5,8 +5,8 @@ import unittest
 import requests
 from google.appengine.ext import testbed
 from stashboard.main import application
+from stashboard.models import Service
 from webtest import TestApp
-import oauth2 as oauth
 
 class HTTPTest(unittest.TestCase):
     """Easily test HTTP requests against a URL"""
@@ -82,6 +82,12 @@ class PublicServicesTest(StashboardTest):
 
 class ServicesTest(StashboardTest):
 
+    def test_get_services_list(self):
+        """Services should return a 200 with the proper content type"""
+        response = self.get("/api/v1/services")
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.headers["Content-Type"], "application/json")
+
     def test_create_service_name(self):
         """Services should 400 without a name"""
         response = self.post("/admin/api/v1/services",
@@ -118,8 +124,8 @@ class ServicesTest(StashboardTest):
 
     def test_put_with_data(self):
         """should return 405 Method Not Allowed"""
-        response = self.post("/admin/api/v1/services",
-                             data={"description": "An example service API"})
+        response = self.put("/admin/api/v1/services",
+                            data={"description": "An example service API"})
         self.assertEquals(response.status_code, 405)
 
 if __name__ == '__main__':
