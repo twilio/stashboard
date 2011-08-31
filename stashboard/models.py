@@ -39,7 +39,7 @@ class Image(db.Model):
 
     """
     slug = db.StringProperty(required=True)
-    set = db.StringProperty(required=True)
+    icon_set = db.StringProperty(required=True)
     path = db.StringProperty(required=True)
 
     @classmethod
@@ -51,7 +51,7 @@ class Image(db.Model):
         path = os.path.join(os.path.dirname(__file__), "fixtures/images.json")
         images = json.load(open(path))
         for i in images:
-            image = Image(slug=i["name"], set=i["set"], path=i["url"])
+            image = Image(slug=i["name"], icon_set=i["set"], path=i["url"])
             image.put()
 
     def absolute_url(self):

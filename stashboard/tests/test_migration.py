@@ -1,6 +1,6 @@
 import unittest
-from stashboard import migrations
-from stashboard.migrations import Migration
+import migrations
+from migrations import Migration
 
 
 class SampleMigration(Migration):

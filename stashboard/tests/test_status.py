@@ -1,5 +1,5 @@
 from base import TestbedTest
-from stashboard.models import Status
+from models import Status
 
 class StatusTest(TestbedTest):
 

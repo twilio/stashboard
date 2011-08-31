@@ -6,10 +6,9 @@ import unittest
 import os
 
 def main(sdk_path, test_path):
-    logging.basicConfig(filename="testing.log", level=logging.DEBUG)
-    sys.path.insert(0, os.path.abspath("."))
-    sys.path.insert(0, os.path.abspath("./stashboard"))
+    #logging.basicConfig(level=logging.DEBUG)
     sys.path.insert(0, sdk_path)
+    sys.path.insert(0, ".")
     import dev_appserver
     dev_appserver.fix_sys_path()
     suite = unittest.loader.TestLoader().discover(test_path)

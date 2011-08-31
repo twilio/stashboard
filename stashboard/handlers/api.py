@@ -347,27 +347,28 @@ class StatusesListHandler(restful.Controller):
 
         name = self.request.get('name', default_value=None)
         description = self.request.get('description', default_value=None)
-        image = self.request.get('image', default_value=None)
+        image_slug = self.request.get('image', default_value=None)
         default = self.request.get('default', default_value="false")
 
         if default not in ["true", "false"]:
             self.error(400, "Default must be true or false")
             return
 
-        if not name or not description or not image:
+        if not name or not description or not image_slug:
             self.error(400, "Bad Data")
             return
 
         slug = slugify.slugify(name)
         status = Status.get_by_slug(slug)
-        image = Image.get_by_slug(image)
+        image = Image.get_by_slug(image_slug)
 
         if status is not None:
             self.error(400, "A Status with the slug %s already exists" % slug)
             return
 
         if image is None:
-            self.error(400, "An Image with the slug %s doesn't exist" % image)
+            msg = "An Image with the slug %s doesn't exist" % image_slug
+            self.error(400, msg)
             return
 
         # Reset default status
@@ -382,6 +383,7 @@ class StatusesListHandler(restful.Controller):
         status.put()
         invalidate_cache()
 
+        self.response.set_status(201)
         self.json(status.rest(self.base_url(version)))
 
 
@@ -491,7 +493,7 @@ class ImagesListHandler(restful.Controller):
         for img in Image.all().fetch(1000):
             image = {
                 "url": "http://" + host + "/images/" + img.path,
-                "set": img.set,
+                "icon_set": img.icon_set,
                 "name": img.slug,
                 }
             images.append(image)
