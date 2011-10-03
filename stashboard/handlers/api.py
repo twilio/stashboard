@@ -415,6 +415,7 @@ class StatusInstanceHandler(restful.Controller):
 
         name = self.request.get('name', default_value=None)
         image_slug = self.request.get('image', default_value=None)
+        image = None
         default = self.request.get('default', default_value=None)
         description = self.request.get('description', default_value=None)
 
@@ -459,7 +460,7 @@ class StatusInstanceHandler(restful.Controller):
         status = Status.get_by_slug(status_slug)
 
         if not status:
-            self.error(404, "Status %s not found" % service_slug)
+            self.error(404, "Status %s not found" % status_slug)
             return
 
         # We may want to think more about this

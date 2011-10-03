@@ -28,9 +28,56 @@ class StatusInstanceTest(StashboardTest):
         image = Image(icon_set="fugue", slug="cross-circle",
                       path="fugue/cross-circle.png")
         image.put()
-        status = Status(name="Foo", slug="foo", description="bar", 
+        self.status = Status(name="Foo", slug="foo", description="bar", 
             image="cross-circle")
-        status.put()
+        self.status.put()
+
+    def test_update_wrong_image(self):
+        response = self.post("/admin/api/v1/statuses/foo",
+            data={"image": "foobar"})
+        self.assertEquals(response.status_code, 400)
+
+    def test_update_default_false(self):
+        response = self.post("/admin/api/v1/statuses/foo",
+            data={"default": "false"})
+        self.assertEquals(response.status_code, 200)
+
+        status = Status.get(self.status.key())
+        self.assertFalse(status.default)
+
+    def test_update_default(self):
+        response = self.post("/admin/api/v1/statuses/foo",
+            data={"default": "true"})
+        self.assertEquals(response.status_code, 200)
+
+        status = Status.get(self.status.key())
+        self.assertTrue(status.default)
+
+    def test_update_image(self):
+        response = self.post("/admin/api/v1/statuses/foo",
+            data={"image": "cross-circle"})
+        self.assertEquals(response.status_code, 200)
+
+        status = Status.get(self.status.key())
+        self.assertEquals(status.image, "fugue/cross-circle.png")
+
+    def test_update_description(self):
+        response = self.post("/admin/api/v1/statuses/foo",
+            data={"description": "blah"})
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.headers["Content-Type"], "application/json")
+
+        status = Status.get(self.status.key())
+        self.assertEquals(status.description, "blah")
+
+    def test_update_name(self):
+        response = self.post("/admin/api/v1/statuses/foo",
+            data={"name": "Foobar"})
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.headers["Content-Type"], "application/json")
+
+        status = Status.get(self.status.key())
+        self.assertEquals(status.name, "Foobar")
 
     def test_get_wrong_status(self):
         response = self.get("/api/v1/statuses/bat")
@@ -40,6 +87,34 @@ class StatusInstanceTest(StashboardTest):
     def test_get_status(self):
         response = self.get("/api/v1/statuses/foo")
         self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.headers["Content-Type"], "application/json")
+
+    def test_delete_success(self):
+        response = self.delete("/admin/api/v1/statuses/foo")
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.headers["Content-Type"], "application/json")
+
+        status = Status.get(self.status.key())
+        self.assertEquals(status, None)
+
+    def test_delete_no_slug(self):
+        response = self.delete("/admin/api/v1/statuses/bar")
+        self.assertEquals(response.status_code, 404)
+        self.assertEquals(response.headers["Content-Type"], "application/json")
+
+    def test_delete_wrong_version(self):
+        response = self.delete("/admin/api/hey/statuses/foo")
+        self.assertEquals(response.status_code, 404)
+        self.assertEquals(response.headers["Content-Type"], "application/json")
+
+    def test_post_no_slug(self):
+        response = self.post("/admin/api/v1/statuses/bar")
+        self.assertEquals(response.status_code, 404)
+        self.assertEquals(response.headers["Content-Type"], "application/json")
+
+    def test_post_wrong_version(self):
+        response = self.post("/admin/api/hey/statuses/foo")
+        self.assertEquals(response.status_code, 404)
         self.assertEquals(response.headers["Content-Type"], "application/json")
 
     def test_wrong_version(self):
@@ -96,6 +171,35 @@ class StatusesTest(StashboardTest):
         self.assertEquals(response.status_code, 404)
         self.assertEquals(response.headers["Content-Type"], "application/json")
 
+    def test_existing_status(self):
+        """Services should 400 without a name"""
+        status = Status(name="Foo", slug="foo", description="hello",
+            image="cross-circle")
+        status.put()
+
+        response = self.post("/admin/api/v1/statuses",
+                             data={"description": "An example service API",
+                                   "name": "Foo", 
+                                   "image": "cross-circle"})
+        self.assertEquals(response.status_code, 400)
+        self.assertEquals(response.headers["Content-Type"], "application/json")
+
+    def test_wrong_image(self):
+        """Services should 400 without a name"""
+        response = self.post("/admin/api/v1/statuses",
+                             data={"description": "An example service API",
+                                   "name": "Foo",
+                                   "image": "foobar"})
+        self.assertEquals(response.status_code, 400)
+        self.assertEquals(response.headers["Content-Type"], "application/json")
+
+    def test_missing_image(self):
+        """Services should 400 without a name"""
+        response = self.post("/admin/api/v1/statuses",
+                             data={"description": "An example service API",
+                                   "name": "Foo"})
+        self.assertEquals(response.status_code, 400)
+        self.assertEquals(response.headers["Content-Type"], "application/json")
 
     def test_missing_service_name(self):
         """Services should 400 without a name"""
