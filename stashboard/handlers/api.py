@@ -244,7 +244,7 @@ class EventsListHandler(restful.Controller):
             if event:
                 status = event.status
             else:
-                status = Status.default()
+                status = Status.get_default()
         else:
             status = Status.get_by_slug(status_slug)
 
