@@ -4,8 +4,8 @@ import urllib
 import unittest
 import requests
 from google.appengine.ext import testbed
-from main import application
-from models import Service
+from stashboard.main import application
+from stashboard.models import Service
 from webtest import TestApp
 
 

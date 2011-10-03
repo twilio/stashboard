@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from base import TestbedTest
-from models import Service, Status, Event
+from stashboard.models import Service, Status, Event
 
 class UnicodeTest(TestbedTest):
 

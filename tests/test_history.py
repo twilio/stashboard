@@ -2,9 +2,9 @@ from datetime import datetime
 from datetime import date
 from datetime import timedelta
 from base import TestbedTest
-from models import Event
-from models import Service
-from models import Status
+from stashboard.models import Event
+from stashboard.models import Service
+from stashboard.models import Status
 
 class HistoryTest(TestbedTest):
 

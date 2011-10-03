@@ -1,3 +1,5 @@
+# Stashboard
+
 Stashboard was written by Twilio to provide status information on our phone, SMS, and Communication APIs. We open sourced the code to provide a generic status page designed to be customized by any hosted services company to provide customers up-to-date status information. The code can be downloaded, customized with your logo, and run on any Google App Engine account.
 
 ## Installation
@@ -32,6 +34,17 @@ Full documentation can be found on [Read The Docs](http://readthedocs.org/docs/s
 All Stashboard development and discussion happens in the [Stashboard google group](https://groups.google.com/forum/#!forum/stashboard)
 
 To keep up to date, you can follow [@stashboard](http://twitter.com/stashboard) on Twitter or join the [#stashboard](irc://irc.freenode.net/stashboard) channel on freenode
+
+## Development
+
+You'll need to install a couple more packages to hack on Stashboard
+  
+    pip install -r requirements.txt
+
+To run the unit tests, 
+
+    python tests/runner.py tests
+
 
 ## Future
 

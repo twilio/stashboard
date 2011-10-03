@@ -1,5 +1,5 @@
 from base import TestbedTest
-from models import Image
+from stashboard.models import Image
 
 class ImageTest(TestbedTest):
 
