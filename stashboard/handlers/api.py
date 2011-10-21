@@ -41,6 +41,7 @@ from datetime import datetime
 from datetime import time
 from dateutil.parser import parse
 from google.appengine.api import memcache
+from google.appengine.api import datastore_errors
 from google.appengine.api import taskqueue
 from google.appengine.api import users
 from google.appengine.ext import webapp
@@ -176,7 +177,6 @@ class ServiceInstanceHandler(restful.Controller):
 
         invalidate_cache()
         service.delete()
-        self.response.set_status(204)
         self.json(service.rest(self.base_url(version)))
 
 
@@ -293,7 +293,11 @@ class EventInstanceHandler(restful.Controller):
             self.error(404, "Service %s not found" % service_slug)
             return
 
-        event = Event.get(db.Key(sid))
+        try:
+            event = Event.get(db.Key(sid))
+        except datastore_errors.BadKeyError:
+            self.error(404, "Event %s not found" % sid)
+            return
 
         if not event or service.key() != event.service.key():
             self.error(404, "No event for Service %s with sid = %s" \
@@ -314,7 +318,12 @@ class EventInstanceHandler(restful.Controller):
             self.error(404, "Service %s not found" % service_slug)
             return
 
-        event = Event.get(db.Key(sid))
+ 
+        try:
+            event = Event.get(db.Key(sid))
+        except datastore_errors.BadKeyError:
+            self.error(404, "Event %s not found" % sid)
+            return
 
         if not event or service.key() != event.service.key():
             self.error(404, "No event for Service %s with sid = %s" \

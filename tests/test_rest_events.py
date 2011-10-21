@@ -1,12 +1,12 @@
 import json
-from stashboard.models import Status, Image, Event, Service
+import models
 from test_api import StashboardTest
 
 class PublicEventsTest(StashboardTest):
 
     def setUp(self):
         super(PublicEventsTest, self).setUp()
-        service = Service(name="Foo", slug="foo", description="Hello")
+        service = models.Service(name="Foo", slug="foo", description="Hello")
         service.put()
 
     def test_get(self):
@@ -27,16 +27,108 @@ class PublicEventsTest(StashboardTest):
 
 
 class EventInstanceTest(StashboardTest):
-    pass
+
+    def setUp(self):
+        super(EventInstanceTest, self).setUp()
+        service = models.Service(name="Foo", slug="foo", description="Hello")
+        service.put()
+
+        self.status = models.Status(name="Up", slug="up", default=True,
+            description="bar", image="cross-circle")
+        self.status.put()
+
+        self.event = models.Event(service=service, status=self.status,
+                message="Foo")
+        self.event.put()
+
+    def test_current_get_wrong_service(self):
+        response = self.get("/admin/api/v1/services/bar/events/current")
+        self.assertEquals(response.status_code, 404)
+
+    def test_current_get_wrong_version(self):
+        response = self.get("/admin/api/foo/services/foo/events/current")
+        self.assertEquals(response.status_code, 404)
+
+    def test_delete_wrong_service(self):
+        response = self.delete("/admin/api/v1/services/bar/events/foo")
+        self.assertEquals(response.status_code, 404)
+
+    def test_delete_wrong_sid(self):
+        response = self.delete("/admin/api/v1/services/foo/events/foo")
+        self.assertEquals(response.status_code, 404)
+
+    def test_delete_wrong_version(self):
+        response = self.delete("/admin/api/foo/services/foo/events/foo")
+        self.assertEquals(response.status_code, 404)
+
+    def test_get_wrong_service(self):
+        response = self.get("/admin/api/v1/services/bar/events/foo")
+        self.assertEquals(response.status_code, 404)
+
+    def test_get_wrong_sid(self):
+        response = self.get("/admin/api/v1/services/foo/events/foo")
+        self.assertEquals(response.status_code, 404)
+
+    def test_get_wrong_version(self):
+        response = self.get("/admin/api/foo/services/foo/events/foo")
+        self.assertEquals(response.status_code, 404)
+
+    def test_get_current_event(self):
+        url = "/admin/api/v1/services/foo/events/current"
+        response = self.get(url)
+        self.assertEquals(response.headers["Content-Type"], "application/json")
+        self.assertEquals(response.status_code, 200)
+
+    def test_delete_wrong_event(self):
+        service = models.Service(name="Bar", slug="bar", description="Hello")
+        service.put()
+
+        event = models.Event(service=service, status=self.status, message="foo")
+        event.put()
+
+        url = "/admin/api/v1/services/foo/events/{}".format(event.key())
+        response = self.delete(url)
+        self.assertEquals(response.status_code, 404)
+
+    def test_get_wrong_event(self):
+        service = models.Service(name="Bar", slug="bar", description="Hello")
+        service.put()
+
+        event = models.Event(service=service, status=self.status, message="foo")
+        event.put()
+
+        url = "/admin/api/v1/services/foo/events/{}".format(event.key())
+        response = self.get(url)
+        self.assertEquals(response.status_code, 404)
+
+    def test_get_event(self):
+        url = "/admin/api/v1/services/foo/events/{}".format(self.event.key())
+        response = self.get(url)
+        self.assertEquals(response.headers["Content-Type"], "application/json")
+        self.assertEquals(response.status_code, 200)
+
+    def test_put_not_supported(self):
+        response = self.put("/admin/api/foo/services/foo/events/foo")
+        self.assertEquals(response.status_code, 405)
+
+    def test_post_wrong_version(self):
+        response = self.post("/admin/api/foo/services/foo/events/foo")
+        self.assertEquals(response.status_code, 405)
+
+    def test_delete_event(self):
+        url = "/admin/api/v1/services/foo/events/{}".format(self.event.key())
+        response = self.delete(url)
+        self.assertEquals(response.headers["Content-Type"], "application/json")
+        self.assertEquals(response.status_code, 200)
 
 
 class EventListTest(StashboardTest):
 
     def setUp(self):
         super(EventListTest, self).setUp()
-        service = Service(name="Foo", slug="foo", description="Hello")
+        service = models.Service(name="Foo", slug="foo", description="Hello")
         service.put()
-        status = Status(name="Up", slug="up", default=True,
+        status = models.Status(name="Up", slug="up", default=True,
             description="bar", image="cross-circle")
         status.put()
 

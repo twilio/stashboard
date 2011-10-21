@@ -1,6 +1,8 @@
 import json
-from stashboard.models import Service
+from mock import patch
+from models import Service
 from test_api import StashboardTest
+
 
 class PublicServicesTest(StashboardTest):
 
@@ -19,6 +21,40 @@ class PublicServicesTest(StashboardTest):
     def test_put(self):
         response = self.put("/api/v1/services")
         self.assertEquals(response.status_code, 405)
+
+
+class ServiceInstanceTest(StashboardTest):
+
+    def setUp(self):
+        super(ServiceInstanceTest, self).setUp()
+        self.service = Service(name="Foo", slug="foo", description="foo")
+        self.service.put()
+
+    @patch("handlers.api.invalidate_cache")
+    def test_delete_service(self, mock):
+        response = self.delete("/admin/api/v1/services/foo")
+        self.assertEquals(response.status_code, 200)
+
+    def test_delete_wrong_service(self):
+        response = self.delete("/admin/api/v1/services/bar")
+        self.assertEquals(response.status_code, 404)
+
+    def test_delete_wrong_version(self):
+        response = self.delete("/admin/api/foo/services/foo")
+        self.assertEquals(response.status_code, 404)
+
+    def test_get_wrong_service(self):
+        response = self.get("/admin/api/v1/services/bar")
+        self.assertEquals(response.status_code, 404)
+
+    def test_get_wrong_version(self):
+        response = self.get("/admin/api/foo/services/foo")
+        self.assertEquals(response.status_code, 404)
+
+    def test_get_service(self):
+        response = self.get("/admin/api/v1/services/foo")
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.headers["Content-Type"], "application/json")
 
 
 class ServicesTest(StashboardTest):

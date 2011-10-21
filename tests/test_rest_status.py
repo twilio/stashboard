@@ -1,5 +1,5 @@
 import json
-from stashboard.models import Status, Image
+from models import Status, Image
 from test_api import StashboardTest
 
 class PublicStatusesTest(StashboardTest):

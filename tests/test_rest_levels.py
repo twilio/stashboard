@@ -1,5 +1,5 @@
 import json
-from stashboard.models import Service
+from models import Service
 from test_api import StashboardTest
 
 class LevelTest(StashboardTest):
