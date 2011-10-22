@@ -43,6 +43,32 @@ class ServiceInstanceTest(StashboardTest):
         response = self.delete("/admin/api/foo/services/foo")
         self.assertEquals(response.status_code, 404)
 
+    def test_post_wrong_service(self):
+        response = self.post("/admin/api/v1/services/bar")
+        self.assertEquals(response.status_code, 404)
+
+    def test_post_wrong_version(self):
+        response = self.post("/admin/api/foo/services/foo")
+        self.assertEquals(response.status_code, 404)
+
+    def test_post_update_desc(self):
+        response = self.post("/admin/api/v1/services/foo",
+                data={"description": "hello"})
+        self.assertEquals(response.headers["Content-Type"], "application/json")
+        self.assertEquals(response.status_code, 200)
+
+        service = Service.get(self.service.key())
+        self.assertEquals(service.description, "hello")
+
+    def test_post_update(self):
+        response = self.post("/admin/api/v1/services/foo",
+            data={"name": "bar"})
+        self.assertEquals(response.headers["Content-Type"], "application/json")
+        self.assertEquals(response.status_code, 200)
+
+        service = Service.get(self.service.key())
+        self.assertEquals(service.name, "bar")
+
     def test_get_wrong_service(self):
         response = self.get("/admin/api/v1/services/bar")
         self.assertEquals(response.status_code, 404)
