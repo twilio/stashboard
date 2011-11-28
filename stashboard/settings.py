@@ -6,7 +6,6 @@ SITE_NAME = "Stashboard"
 SITE_AUTHOR = "Colonel Mustache"
 SITE_URL = "http://stashbooard.appspot.com"
 REPORT_URL = "mailto:help@stashboard.org"
-PUBSUBHUBBUB_URL = "http://pubsub.example.com"
 
 # OAuth Consumer Credentials
 CONSUMER_KEY = 'anonymous'
