@@ -1,0 +1,17 @@
+{% extends "admin/admin.html" %}
+
+{% block section %}
+<form class="delete" action="/admin/api/v1/services/{{service.slug}}/events/{{ event.sid }}" method="post">
+
+  <div class="error">{{ error }}</div>
+
+  <p>Are you sure you want to delete this event? </p>
+
+  <link rel="redirect" href="/admin/services/{{service.slug}}" />
+
+  <button type="submit" class="button pill big primary danger">
+    Delete Event
+  </button>
+
+</form>
+{% endblock %}

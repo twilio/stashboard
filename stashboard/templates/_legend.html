@@ -1,0 +1,11 @@
+<div id="legend">
+  <h4> Status Legend </h4>
+  <ul>
+    {% for status in statuses %}
+    <li>
+      <img class="sym" src="/images/{{ status.image }}" alt="{{ status.title }}">
+      <p>{{ status.description }}</p>
+    </li>
+    {% endfor %}
+  </ul>
+</div>

@@ -1,0 +1,12 @@
+[
+    {
+        "url": "icons/fugue/broom.png",
+        "set": "fugue",
+        "name": "broom"
+    },
+    {
+        "url": "icons/fugue/bug.png",
+        "set": "fugue",
+        "name": "bug"
+    }
+]

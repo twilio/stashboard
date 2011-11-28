@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<table id="services" class="data">
+  <thead>
+    <tr>
+      <th>Service</th>
+      <th class="today">Current</th>
+      {% for day in days %}
+      <th> {{ day|date:"N d" }} </th>
+      {% endfor %}
+  </thead>
+
+  <tbody>
+    {% for service in services %}
+    <tr id="{{ service.slug}}">
+      <td>
+	<a href="{{ service.url }}">{{ service.name }}</a>
+      </td>
+      <td class="status highlight">
+	<a href="{{ service.url }}">
+	  {% if service.has_issues %}
+	    <img class="information" src="/images/small-information.png" alt="Had Issues"/>
+	  {% endif %}
+	  <img class="sym" src="/images/{{ service.status.image }}" alt="{{ service.status.title }}"/>
+	</a>
+      </td>
+      {% for h in service.history %}
+      <td class="status">
+	{% if h.information %}
+	<a href="{{ service.url }}/{{ h.day|date:"Y/m/j" }}">
+	  <img class="sym" src="/images/{{ h.image }}" alt="{{ h.title }}"/>
+	</a>
+	{% else %}
+	<img class="sym" src="/images/{{ h.image }}" alt="{{ h.title }}"/>
+	{% endif %}
+      </td>
+      {% endfor %}
+    {% endfor %}
+  </tbody>
+</table>
+
+{% include "_legend.html" %}
+
+{% endblock %}

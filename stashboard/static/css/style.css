@@ -1,0 +1,469 @@
+html, body{
+  height: 100%;
+}
+
+body{
+  font:12px arial,helvetica,verdana,sans-serif;
+  background: rgb(247, 247, 247);
+}
+
+a {
+  color:#333;
+  text-decoration:none;
+}
+
+a:hover {
+  color:#666;
+}
+
+em {
+  font-style: italic;
+}
+
+#wrapper {
+  width: 900px; min-height: 100%;
+  height: auto !important; height: 100%;
+  margin: 0 auto -3em;
+}
+
+h1 {font-size: 32px; font-weight: bold;}
+h2 {font-size: 32px; font-weight: bold;}
+h3 {font-size: 24px; font-weight: bold;}
+h3.date-range {color: #999; margin-top: 20px}
+
+header {height: 70px;}
+
+header h1 {margin: 15px; float: left; height: 40px; line-height: 40px;}
+header h1 span {font-weight: normal;}
+header h2 {margin: 15px 0; float: left; line-height: 67px;}
+header .button-container { float: right; margin-top: 20px;}
+#logo { height: 40px; width: 54px; float: left; margin: 15px 0;}
+
+#status { height: 200px; }
+#status h2 { font-size: 60px; color: #FFF; text-align: center; padding-top: 65px;text-shadow: 2px 2px 0px #000;}
+
+#content {
+  border: 1px solid rgb(228, 228, 228);
+  background: white;
+  padding: 20px;
+  position: relative;
+}
+
+.dialog { display: none; }
+
+#sidebar { float: right; margin: 20px; width: 250px; }
+
+#sidebar .panel { margin-bottom: 20px; }
+#sidebar .panel { margin-bottom:20px; }
+#sidebar .panel h3 { margin-bottom:7px; }
+#sidebar .panel ul li {
+  background:url(images/li.gif) no-repeat 0 3px;
+  color:#7F7F7F;line-height:1.2em;
+  border-top:1px solid #BBB;
+  padding:4px 0 4px 16px;
+}
+
+nav {
+  height: 50px;
+}
+
+nav ul {
+  background: #4476b5;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+}
+
+nav li {
+    float: left;
+    height: 50px;
+    margin: 0 20px;
+    line-height: 50px;
+}
+
+nav li a {
+    display:block;
+    font-size:15px;
+    font-weight:bold;
+    text-decoration:none;
+    color: #F3FBEC;
+}
+
+nav li a:hover {
+    color: #F3FBEC;
+    text-decoration:underline;
+}
+
+nav .selected {
+    background:url("../images/sub-nav-selected-arrow.png") no-repeat scroll center bottom transparent;
+}
+
+/* DATA TABLES */
+.data {
+  width: 100%;
+  border-spacing:10;
+  font-size: 1.1em;
+  border-collapse: separate;
+  border-left:1px solid #E4E4E4;
+  border-top:1px solid #E4E4E4;
+}
+
+.data a {
+  text-decoration: underline;
+}
+
+.data thead {
+  background: #EEEEEE;
+}
+
+.data th {
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  padding: 10px;
+  border-bottom: 1px solid rgb(228, 228, 228);
+  border-right: 1px solid rgb(228, 228, 228);
+}
+
+.data tr {
+  font-size: 16px;
+}
+
+.data td {
+  padding: 10px;
+  border-bottom: 1px solid rgb(228, 228, 228);
+  border-right: 1px solid rgb(228, 228, 228);
+  vertical-align: middle;
+  height: 25px;
+}
+
+
+.data .time { width: 20%; }
+.data .today { background: rgb(228, 228, 228); }
+.data .highlight { background: rgb(247, 247, 247); }
+.data .status, .data .date, .data .today { text-align: center; }
+.data .action { width: 5px; }
+
+.data .status img {
+  max-width: 20px;
+}
+
+/* Front page table */
+
+#services {
+  border-left: none;
+  border-top: none;
+}
+
+#services th {
+  font-size: 20px;
+}
+
+#services th:first-child {
+  text-align: left;
+}
+
+#services thead {
+  background: none;
+}
+
+#events { margin-top: 20px; }
+#events .status { width: 10%; }
+#events .time { text-align:  center; }
+
+#submit {
+  background: rgb(228, 228, 228);
+  border: 1px solid #ccc;
+  margin: 20px 0px;
+  padding: 10px;
+  text-align: right;
+}
+
+#submit label {
+  float: left;
+  clear: left;
+  width: 55px;
+  padding: 10px;
+}
+
+#allgood {
+  border: 1px solid #86c440;
+  background: #daf1b8;
+  padding: 40px;
+  text-align: center;
+  margin-top: 10px;
+  font-size: 20px;
+}
+
+#allgood img, #allgood p {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+#submit h3 {text-align: left;}
+
+#submit .update-message { float: left; width: 390px; height: 100px; padding: 3px;}
+#submit .update-status { float: left; margin: 10px 0px;}
+#submit .update-submit { clear: left; display: block; margin-left: auto; width: 150px;}
+
+#legend h4 { color: #999; font-size: 18px; margin: 20px 0 5px 0;}
+#legend ul {font-size: 12px}
+#legend li {margin-right: 10px; display: inline-block;}
+#legend img, #legend p {vertical-align: middle; display: inline-block;}
+
+footer, #push {height: 3em;}
+footer {width: 900px; margin: auto;}
+footer ul {padding: 10px 0px;}
+footer ul li {display: inline-block;}
+footer ul.left { float: left;}
+footer ul.left li {margin-right: 7px}
+footer ul.right { float: right;}
+#icons, #icons a{ color: #ccc; }
+
+td.status a{position: relative;}
+td.status a .information {position: absolute; top: 0px; left: 1px; z-index: 500;}
+
+.dialog label, .dialog textarea, .dialog input
+    { margin: 10px; clear: right;}
+
+.dialog label {display: block;}
+
+.dialog textarea { width: 400px; height: 75px;}
+
+.breadcrumb { font-weight: normal;}
+
+#add-note, #update-status { float: right; margin-left: 15px}
+#add-event-model {display: none;}
+
+#delete-service, #edit-service {margin-top: 20px}
+#delete-service {float: right}
+#delete-service-modal {display: none}
+
+#documentation {
+    font-size: 14px;
+}
+
+#documentation a { color: #4476B5; text-decoration: underline;}
+
+#documentation p { margin: 10px 0px; }
+#documentation h2 { margin: 20px 0 10px 0; }
+#documentation h3 { margin: 15px 0px 10px 0; font-size: 24px; color:#555555;}
+#documentation h4 { margin: 10px 0px; font-size: 22px; color: #4476B5;}
+#documentation h5 { margin: 10px 0px; font-size: 16px;}
+
+#documentation table {
+    font-size: 12px;
+}
+
+#documentation table td, #documentation table th {
+    padding: 10px;
+    border: 1px solid #555555;
+}
+
+#documentation table td {
+}
+
+#documentation table th {
+    background: #ccc;
+}
+
+#documentation table caption {font-style: italic; text-align: right;}
+
+#documentation blockquote, pre {
+    background: #F0F0F0;
+    margin: 10px 0;
+    padding: 10px;
+    width:auto;
+}
+
+#documentation blockquote p {
+    margin: 0;
+}
+
+#powered {
+    font-family: courier, monospace;
+    font-size: 10px;
+}
+
+#powered img {
+    width: 27px;
+}
+
+ul.admin .button {
+  float: right;
+  margin-left: 5px;
+}
+
+ul.admin li {
+  padding: 5px;
+  border-bottom: 1px solid #CCC;
+}
+
+ul.admin .name {
+  font-size: 20px;
+}
+
+ul.admin a  .name:hover {
+  font-size: 20px;
+  text-decoration: underline;
+}
+
+#create {
+  margin-top: 10px;
+}
+
+dl.form dd{
+  margin-bottom: 20px;
+}
+
+dl.form dt{
+  font-size: 14px;
+  margin-bottom: 3px;
+}
+
+dl.form input[type=text] {
+  width: 500px;
+  padding: 5px;
+  font-size: 16px;
+}
+
+dl.form textarea {
+  width: 500px;
+  padding: 5px;
+  font-size: 16px;
+  height: 100px;
+}
+
+form.delete p {
+  margin-bottom: 20px;
+  font-size: 16px
+}
+
+form.delete strong {
+  font-weight: bold;
+}
+
+form.admin h1{
+  margin-bottom: 20px;
+}
+
+.error {
+  display: none;
+  background: #EFA8AA;
+  width: 500px;
+  padding: 7px;
+  border: 1px solid #D62A11;
+  color: #D62A11;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+form.admin ul.images {
+  width: 550px;
+}
+
+form.admin ul.images li {
+  display: inline-block;
+  vertical-align: top;
+  margin: 5px;
+}
+
+form.admin ul.images li img, form.admin ul.images li input{
+  display: inline-block;
+  vertical-align: middle;
+}
+
+form.admin ul.images li img {
+  max-width: 20px;
+}
+
+#editbar {
+  float: right;
+}
+
+#notfound {
+  text-align: center;
+}
+
+#notfound img, #notfound section {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+#notfound p {
+  font-size: 16px;
+}
+
+#notfound img {
+  width: 350px;
+}
+
+#setup h1, #setup p {
+  margin-bottom: 20px;
+}
+
+#setup p {
+  font-size: 16px;
+}
+
+.sym {
+  max-width: 20px;
+}
+
+#migrations li{
+  font-size: 22px;
+}
+
+#notice {
+  padding: 10px;
+  margin-bottom: 10px;
+  background: #EEE;
+}
+
+.admin h1 {
+  margin-bottom: 10px;
+}
+
+#oauth img, #oauth div{
+  display: inline-block;
+  vertical-align: middle;
+}
+
+#oauth img {
+  width: 200px;
+}
+
+#oauth div {
+  margin-left: 30px;
+}
+
+#oauth p {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: #ffa49c;
+  border-radius: 10px;
+  border: 1px solid red;
+  -moz-border-radius: 10px;
+}
+
+#oauth p a {
+  margin-left: 30px;
+}
+
+#oauth table tr td{
+  padding: 6px;
+}
+
+#oauth table tr td{
+  font-family: monospace;
+}
+
+#oauth table tr td:first-child{
+  font:14px arial,helvetica,verdana,sans-serif;
+  text-align: right;
+  font-weight: bold;
+}
+
+
+

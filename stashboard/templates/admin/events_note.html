@@ -1,0 +1,24 @@
+{% extends "admin/admin.html" %}
+
+{% block section %}
+<form class="admin" action="/admin/api/v1/services/{{service.slug}}/events" method="post">
+
+  <h1>Add Note on {{ service.name }}</h1>
+
+  <div class="error">{{ error }}</div>
+
+  <input type="hidden" name="informational" value="true"/>
+
+  <dl class="form">
+    <dt><label for="message">Message</label></dt>
+    <dd><textarea id="message" name="message" size="30" type="text">{{description}}</textarea></dd>
+  </dl>
+
+  <link rel="redirect" href="/admin/services/{{service.slug}}" />
+
+  <button type="submit" class="button pill big primary">
+    Update Status
+  </button>
+
+</form>
+{% endblock %}

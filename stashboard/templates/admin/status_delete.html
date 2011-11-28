@@ -1,0 +1,17 @@
+{% extends "admin/admin.html" %}
+
+{% block section %}
+<form class="delete" action="/admin/api/v1/statuses/{{status.slug}}" method="post">
+
+  <div class="error">{{ error }}</div>
+
+  <p>Are you sure you want to delete the {{ status.name}} status? </p>
+
+  <link rel="redirect" href="/admin/statuses" />
+
+  <button type="submit" class="button pill big primary danger">
+    Delete Status
+  </button>
+
+</form>
+{% endblock %}

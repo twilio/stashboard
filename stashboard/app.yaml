@@ -1,0 +1,65 @@
+application: stashboard
+version: 2
+runtime: python
+api_version: 1
+
+derived_file_type:
+- python_precompiled
+
+builtins:
+- appstats: on
+- remote_api: on
+
+handlers:
+- url: /console/.*
+  script: $PYTHON_LIB/google/appengine/ext/admin
+  login: admin
+
+- url: /css
+  static_dir: static/css
+
+- url: /images
+  static_dir: static/images
+
+- url: /js
+  static_dir: static/js
+
+- url: /favicon\.ico
+  static_files: static/favicon.ico
+  upload: static/favicon.ico
+
+- url: /robots\.txt
+  static_files: static/robots.txt
+  upload: static/robots.txt
+
+- url: /admin/api.*
+  script: main.py
+  secure: always
+
+- url: /admin.*
+  script: main.py
+  secure: always
+  login: admin
+
+- url: .*
+  script: main.py
+
+admin_console:
+  pages:
+  - name: Memcache
+    url: /console/memcache
+
+skip_files: |
+ ^(.*/)?(
+ (#.*#)|
+ (.*~)|
+ (.*\.py[co])|
+ (.*/RCS/.*)|
+ (\..*)|
+ (dev/.*)|
+ (tests/.*)|
+ (docs/.*)|
+ (.*\.markdown)|
+ (license\.txt)|
+ (setup.py)
+ )$

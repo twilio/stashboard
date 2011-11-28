@@ -1,0 +1,45 @@
+{% extends "admin/admin.html" %}
+
+{% block section %}
+
+
+<form class="admin" action="{{ url }}" method="post">
+
+  <h1>{{ action|title }} a Status</h1>
+
+  <div class="error">{{ error }}</div>
+
+  <dl class="form">
+    <dt><label for="name">Name</label></dt>
+    <dd><input id="name" name="name" size="30" type="text" value="{{name}}"></dd>
+    <dt><label for="description">Description</label></dt>
+    <dd><textarea id="description" name="description" size="30" type="text">{{description}}</textarea></dd>
+    <dt><label for="image">Image</label></dt>
+    <dd>
+      <ul class="images">
+	{% for i in images %}
+	<li>
+	<input type="radio" name="image" value="{{ i.slug }}" {% if image_url == i.path %}checked{% endif %}>
+	<img src="{{ i.absolute_url }}" alt="{{ i.slug }}">
+	</li>
+	{% endfor %}
+      </ul>
+    </dd>
+    <dt><label for="default">Default Status</label></dt>
+    <dd>
+      <input type="checkbox" name="default" value="true" {% if default %}checked{%endif%}> Yes
+    </dd>
+  </dl>
+
+  {% if slug %}
+  <link rel="redirect" href="/admin/statuses/{{slug}}">
+  {% else %}
+  <link rel="redirect" href="/admin/statuses">
+  {% endif%}
+
+  <button type="submit" class="button pill big primary">
+    {{ action|title }}
+  </button>
+
+</form>
+{% endblock %}

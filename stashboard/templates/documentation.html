@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block js %}
+<link rel="stylesheet" href="/css/prettify.css" type="text/css" media="screen" />
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+<script type="text/javascript" src="/js/prettify.js"></script>
+{% endblock %}
+
+{% block content %}
+
+
+<nav>
+  <ul>
+    <li {% if overview_selected %} class="selected" {% endif %}>
+      <a href="/documentation/overview">Overview</a></li>
+
+    <li {% if rest_selected %} class="selected" {% endif %}>
+      <a href="/documentation/rest">REST API</a></li>
+
+    <li {% if example_selected %} class="selected" {% endif %}>
+      <a href="/documentation/examples">Examples</a></li>
+
+  </ul>
+</nav>
+
+<div class="frame" id="documentation">
+
+  {% block document %}
+
+  {% endblock %}
+
+  <script type="text/javascript">
+    $("code").addClass("prettyprint");
+    prettyPrint();
+  </script>
+
+</div>
+
+{% endblock %}

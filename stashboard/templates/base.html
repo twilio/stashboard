@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="/css/reset.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/css/style.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/css/gh-buttons.css" type="text/css" media="screen" />
+    {% block js %}
+    {% endblock %}
+  </head>
+  <body>
+    <div id="wrapper">
+      <header>
+	<div class="actions button-container">
+	  {% if admin %}
+	  <a class="button pill big" href="/admin">Admin</a>
+	  {% endif %}
+	  <a href="{{ report_url }}" class="button pill big">Report an Issue</a>
+	</div>
+        <img id="logo" src="/images/logo.png" alt="Logo"/>
+        <a href="/"><h1 id="title">{{ title }}</h1></a>
+      </header>
+      <section id="content">
+        {% block content %}
+        {% endblock %}
+      </section>
+      <div id="push"></div>
+    </div>
+    <footer>
+      <ul class="left">
+	{% if user %}
+	<li>
+	  <a href="{{ logout_url }}">Logout</a>
+	</li>
+	{% endif %}
+	<li>
+	  <a href="/documentation/overview">API</a>
+	</li>
+        <li>&copy; 2010-{% now "Y" %} <a href="http://www.twilio.com">Twilio Inc.</a></li>
+      </ul>
+      <ul class="right">
+	<li id="powered"><a href="http://www.stashboard.org">POWERED BY <img src="/images/poweredbystash.png" alt="stash!" /> STASHBOARD</a></li>
+       </ul>
+    </footer>
+    {% block js_end %}
+    {% endblock %}
+  </body>
+</html>

@@ -1,0 +1,21 @@
+{% extends "admin/admin.html" %}
+
+{% block section %}
+
+<h1>Statuses</h1>
+
+<ul class="admin">
+    {% for status in statuses %}
+    <li>
+      <span class="name">{{ status.name }}</span>
+      <a class="button danger icon trash" href="/admin/statuses/{{ status.slug }}/delete">Delete</a>
+      <a class="button icon edit" href="/admin/statuses/{{ status.slug }}/edit">Edit</a>
+    </li>
+    {% endfor %}
+</ul>
+
+<a id="create" href="/admin/statuses/create" class="button pill big primary">
+  Create a Status
+</a>
+
+{% endblock %}

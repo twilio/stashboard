@@ -1,34 +1,30 @@
 # Stashboard
 
-## About
-
-Stashboard was written by Twilio to provide status information on our phone, SMS, and Communication APIs. We open sourced the code and to provide a generic status page designed to be customized by any hosted services company to provide customers up-to-date status information. The code can be downloaded, customized with your logo, and run on any Google App Engine account.
+Stashboard was written by Twilio to provide status information on our phone, SMS, and Communication APIs. We open sourced the code to provide a generic status page designed to be customized by any hosted services company to provide customers up-to-date status information. The code can be downloaded, customized with your logo, and run on any Google App Engine account.
 
 ## Installation
 
-First, install the App Engine SDK for Python.
+1. Download and install the [App Engine SDK for Python][appengine]
+2. `git clone git://github.com/twilio/stashboard.git`
+3. Add your application id to `app.yaml`
+4. Open the SDK, choose `File > Add Existing Application...` and select the `stashboard` folder inside the cloned repository
+5. Update the settings in `settings.py`
+6. Visit http://your-app-id.appspot.com/admin/setup to complete the installation
 
-Next, download and extract Stashboard to your computer.
+From here you can either run Stashboard locally in the [App Engine development environment][local] or [deploy to Appspot][deploy].
+See the [Getting Started](http://code.google.com/appengine/docs/python/gettingstarted) guide for a basic overview of the App Engine platform.
 
-### Run Locally
+[local]: http://code.google.com/appengine/docs/python/gettingstarted/devenvironment.html
+[deploy]: http://code.google.com/appengine/docs/python/gettingstarted/uploading.html
+[appengine]: http://code.google.com/appengine/downloads.html#Google_App_Engine_SDK_for_Python
 
-Open the SDK, choose File > Add Existing Application..., select the stashboard folder you downloaded above and choose a port. Press Run and navigate to http://localhost:{port} to see your Stashboard installation.
+## Demo
 
-### Deploy to AppSpot
+The most recent version of Stashboard lives at http://stashboard.appspot.com
 
-Before you can deploy Stashboard, you will need to create an application on App Engine.
+## Documentation
 
-Once your application is registered, open app.yaml in the Stashboard directory and change application-id to the name of your newly created application.
-
-Hit the 'Deploy' button, wait a couple of seconds, and then naviagate to http://{app-name}.appspot.com to enjoy your new status dashboard
-
-## Basic View
-
-By default, Stashboard exposes a rich client, utilizing AJAX and jQuery. If instead you just want a basic read only view, change the `rich_client` attribute to `False` in `config.py`.
-
-## REST API
-
-Full documentation of the REST API can be found at <http://stashboard.appspot.com/documentation/rest>
+Full documentation can be found on [Read The Docs](http://readthedocs.org/docs/stashboard/en/latest)
 
 ## Community
 
@@ -36,8 +32,22 @@ All Stashboard development and discussion happens in the [Stashboard google grou
 
 To keep up to date, you can follow [@stashboard](http://twitter.com/stashboard) on Twitter or join the [#stashboard](irc://irc.freenode.net/stashboard) channel on freenode
 
+## Development
+
+You'll need to install a couple more packages to hack on Stashboard
+  
+    pip install -r requirements.txt
+
+To run the unit tests, 
+
+    python tests/runner.py tests
+
 ## Future
 
-Future plans include RSS feeds, Web Hook integration, and a richer support for different status page views.
+The [roadmap](https://github.com/twilio/stashboard/wiki/Roadmap) details future plans for Stashboard.
 
-
+## Acknowledgements
+* Buttons by [Necolas](https://github.com/necolas/css3-github-buttons)
+* Fugue icons by [Yusuke Kamiyamane](http://p.yusukekamiyamane.com/)
+* Iconic icons by [P.J. Onori](http://somerandomdude.com/projects/iconic/)
+* OAuth support via [simplegeo/python-oauth2](https://github.com/simplegeo/python-oauth2)

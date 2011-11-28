@@ -1,0 +1,60 @@
+{% extends "admin/admin.html" %}
+
+{% block section %}
+
+<div id="editbar" class="actions button-container">
+
+  <a href="/admin/services/{{service.slug}}/events/create" class="button pill primary">
+    Update Status
+  </a>
+
+  <a href="/admin/services/{{service.slug}}/note/create" class="button pill">
+    Add Note
+  </a>
+
+  <ul class="button-group">
+    <li>
+      <a class="button pill icon edit" href="/admin/services/{{service.slug}}/edit">Edit Service</a>
+    </li>
+    <li>
+      <a class="button pill icon trash danger" href="/admin/services/{{service.slug}}/delete">Delete Service</a>
+    </li>
+  </ul>
+</div>
+
+<h2>{{ service.name }}</h2>
+
+<p id="serviceDescription"> {{ service.description }}</p>
+
+{% if start_date %}
+<h3 class="date-range">
+  {{ start_date|date:"n/j/Y" }}
+</h3>
+{% endif %}
+
+<table id="events" class="data" cellpadding="10">
+  <thead>
+    <tr>
+      <th class="time-header">Date (GMT)</th>
+      <th class="status-header">Status</th>
+      <th class="status-header">Message</th>
+      <th class="status-header">
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for e in events %}
+    <tr>
+      <td class="time">{{ e.start|timesince }} ago</td>
+      <td class="status highlight"><img src="/images/{{ e.status.image }}" alt="{{ e.status.title }}" /></td>
+      <td>{{ e.message }}</td>
+      <td class="action"><a class="button icon remove danger" href="/admin/services/{{ service.slug }}/events/{{e.sid}}/delete">Delete</a></td>
+    </tr>
+    {% empty %}
+    <tr><td colspan=4>No events!</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+{% endblock %}
