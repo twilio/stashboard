@@ -2,9 +2,9 @@
 REST API Documentation
 ========================
 
-The Stashboard REST API is split in two portions. The public facing REST API only responds to GET and lives at the `/api/v1/` endpoint. This API requires no authentication.
+The Stashboard REST API is split in two portions. The public facing REST API only responds to GET and lives at the ``/api/v1/`` endpoint. This API requires no authentication.
 
-The admin-only REST API lives at the `/admin/api/v1/` endpoint and responsds to GET, POST, PUT, and DELETE. You'll need to authenticate via OAuth.
+The admin-only REST API lives at the ``/admin/api/v1/`` endpoint and responsds to GET, POST, PUT, and DELETE. You'll need to authenticate via OAuth. You can obtain your OAuth keys on the OAuth Credentials page at ``https://{application-id}.appspot.com/admin/credentials``
 
 Services 
 ----------
@@ -632,4 +632,3 @@ Returns a list of status images.
                 },
             ]
         }
-
