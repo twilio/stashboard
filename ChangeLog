@@ -1,4 +1,25 @@
+ChangeLog
+===========
+
+
+2011.11.27, Version 1.5
+-------------------------
+
+* Rewrite frontend to use memcache and templating instead of client-side javascript 
+
+* Add test coverage for REST API 
+
+* Add a new admin section
+
+* All destructive API calls now must go through the "/admin/api/v1" endpoint
+
+* Add a "Report Incident" button
+
+
+
 2010.07.22, Version 1.1.4
+--------------------------
+
 * Changed the front page to use the proper date range for events
 
 * Fix the rfc1123() to handle -ve timezone offset (Barnaby Gray)
@@ -8,3 +29,5 @@
 * Fix small spelling error in common.js
 
 * Added a favicon
+
+
