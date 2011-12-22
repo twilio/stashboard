@@ -45,6 +45,8 @@ API = [
     (r'/api/(.+)/services', api.ServicesListHandler),
     (r'/api/(.+)/statuses/(.+)', api.StatusInstanceHandler),
     (r'/api/(.+)/statuses', api.StatusesListHandler),
+    (r'/api/(.+)/lists/(.+)', api.ListInstanceHandler),
+    (r'/api/(.+)/lists', api.ListsListHandler),
     (r'/api/(.+)/status-images', api.ImagesListHandler),
     (r'/api/.*', api.NotFoundHandler),
     ]

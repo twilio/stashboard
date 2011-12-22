@@ -50,7 +50,7 @@ from handlers import restful
 from time import mktime
 from utils import authorized
 from utils import slugify
-from models import Status, Event, Service, Image
+from models import List, Status, Event, Service, Image
 from wsgiref.handlers import format_date_time
 
 
@@ -72,6 +72,112 @@ def aware_to_naive(d):
 class NotFoundHandler(restful.Controller):
     def get(self):
         self.error(404, "Can't find resouce")
+
+class ListsListHandler(restful.Controller):
+
+    def get(self, version):
+        if not self.valid_version(version):
+            self.error(404, "API Version %s not supported" % version)
+            return
+
+        query = List.all().order('name')
+        data = [s.rest(self.base_url(version)) for s in query]
+        data = {"lists": data}
+        self.json(data)
+
+    @authorized.api("admin")
+    def post(self, version):
+        if not self.valid_version(version):
+            self.error(404, "API Version %s not supported" % version)
+            return
+
+        name = self.request.get('name', default_value=None)
+        description = self.request.get('description', default_value=None)
+
+        if not name or not description:
+            self.error(400, "Bad Data: Name: %s, Description: %s" \
+                           % (name, description))
+            return
+
+        slug = slugify.slugify(name)
+        existing_s = List.get_by_slug(slug)
+
+        if existing_s:
+            self.error(404, "A list with this name already exists")
+            return
+
+        l = List(name=name, slug=slug, description=description)
+        l.put()
+
+        invalidate_cache()
+
+        self.response.set_status(201)
+        self.json(l.rest(self.base_url(version)))
+
+
+class ListInstanceHandler(restful.Controller):
+
+    def get(self, version, list_slug):
+        if not self.valid_version(version):
+            self.error(404, "API Version %s not supported" % version)
+            return
+
+        list = List.get_by_slug(list_slug)
+
+        if not list:
+            self.error(404, "List %s does not exist" % list_slug)
+            return
+
+        self.json(list.rest(self.base_url(version)))
+
+    @authorized.api("admin")
+    def post(self, version, list_slug):
+        if not self.valid_version(version):
+            self.error(404, "API Version %s not supported" % version)
+            return
+
+        list = List.get_by_slug(list_slug)
+        if not list:
+            self.error(404, "Service %s does not exist" % list_slug)
+            return
+
+        name = self.request.get('name', default_value=None)
+        description = self.request.get('description', default_value=None)
+
+        if description:
+            list.description = description
+
+        if name:
+            list.name = name
+
+        if name or description:
+            invalidate_cache()
+            list.put()
+
+        self.json(list.rest(self.base_url(version)))
+
+    @authorized.api("admin")
+    def delete(self, version, list_slug):
+        if not self.valid_version(version):
+            self.error(404, "API Version %s not supported" % version)
+            return
+
+        list = List.get_by_slug(list_slug)
+
+        if not list:
+            self.error(404, "List %s not found" % list_slug)
+            return
+
+        query = Service.all()
+        query.filter('service =', list)
+        if query:
+            for s in query:
+                s.list = None
+                s.put()
+
+        invalidate_cache()
+        list.delete()
+        self.json(service.rest(self.base_url(version)))
 
 
 class ServicesListHandler(restful.Controller):
