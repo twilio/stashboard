@@ -1,0 +1,21 @@
+{% extends "admin/admin.html" %}
+
+{% block section %}
+
+<h1>Lists</h1>
+
+<ul class="admin">
+    {% for list in lists %}
+    <li>
+      <span class="name">{{ list.name }}</span>
+      <a class="button danger icon trash" href="/admin/lists/{{ list.slug }}/delete">Delete</a>
+      <a class="button icon edit" href="/admin/lists/{{ list.slug }}/edit">Edit</a>
+    </li>
+    {% endfor %}
+</ul>
+
+<a id="create" href="/admin/lists/create" class="button pill big primary">
+  Create a List
+</a>
+
+{% endblock %}

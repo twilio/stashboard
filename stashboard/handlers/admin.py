@@ -10,7 +10,7 @@ from google.appengine.api import users
 from google.appengine.ext import db
 from handlers import api
 from handlers import site
-from models import Service, Status, Event, Image, Profile
+from models import List, Service, Status, Event, Image, Profile
 from utils import slugify
 
 
@@ -228,6 +228,64 @@ class CreateStatusHandler(site.BaseHandler):
 
         td.update(site.default_template_data())
         self.render(td, 'admin/status_create.html')
+
+
+class EditListHandler(site.BaseHandler):
+
+    def get(self, slug):
+        list = List.get_by_slug(slug)
+        if not list:
+            self.not_found()
+            return
+
+        td = {
+            "lists_selected": True,
+            "list": list,
+            "action": "edit",
+            "url": "/admin/api/v1/list/" + slug,
+            "description": list.description,
+            "name": list.name,
+            }
+
+        td.update(site.default_template_data())
+        self.render(td, 'admin/list_edit.html')
+
+class DeleteListHandler(site.BaseHandler):
+
+    def get(self, slug):
+        list = List.get_by_slug(slug)
+        if not list:
+            self.not_found()
+            return
+
+        td = {
+            "listss_selected": True,
+            "list": list,
+            }
+
+        td.update(site.default_template_data())
+        self.render(td, 'admin/list_delete.html')
+
+
+class ListHandler(site.BaseHandler):
+
+    def get(self):
+        td = default_template_data()
+        td["lists_selected"] = True
+        td["lists"] = List.all().order("name").fetch(1000)
+        self.render(td, 'admin/list.html')
+
+class CreateListHandler(site.BaseHandler):
+
+    def get(self):
+        td = {
+            "lists_selected": True,
+            "action": "create",
+            "url": "/admin/api/v1/lists",
+            }
+
+        td.update(site.default_template_data())
+        self.render(td, 'admin/list_create.html')
 
 
 class MigrationStarter(site.BaseHandler):
