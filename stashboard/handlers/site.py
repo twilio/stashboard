@@ -111,7 +111,7 @@ class RootHandler(BaseHandler):
         services = []
         default_status = Status.get_default()
 
-        for service in Service.all().order("name").fetch(100):
+        for service in Service.all().order("list").order("name").fetch(100):
             event = service.current_event()
             if event is not None:
                 status = event.status
