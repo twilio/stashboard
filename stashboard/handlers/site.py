@@ -193,6 +193,55 @@ class ListHandler(BaseHandler):
         #td.update(self.data())
         self.render(td, 'index.html')
 
+class ListListHandler(BaseHandler):
+
+    lists = []
+
+    def data(self):
+        services = []
+        default_status = Status.get_default()
+
+        lists = []
+        for list in self.lists:
+            l = List.get_by_slug(list)
+            if l is not None:
+                lists.append(l)
+
+        for service in Service.all().filter("list IN", lists).order("name").fetch(100):
+            event = service.current_event()
+            if event is not None:
+                status = event.status
+            else:
+                status = default_status
+
+            today = date.today() + timedelta(days=1)
+            current, = service.history(1, default_status, start=today)
+            has_issues = (current["information"] and
+                          status.key() == default_status.key())
+
+            service_dict = {
+                "slug": service.slug,
+                "name": service.name,
+                "url": service.url(),
+                "status": status,
+                "has_issues": has_issues,
+                "history": service.history(5, default_status),
+                }
+            services.append(service_dict)
+
+        return {
+            "days": get_past_days(5),
+            "statuses": Status.all().fetch(100),
+            "services": services,
+            }
+
+    def get(self):
+        self.lists = self.request.get_all('filter')
+        self.lists.sort()
+
+        td = default_template_data()
+        td.update(self.retrieve("list"+"_".join(self.lists)))
+        self.render(td, 'index.html')
 
 class ServiceHandler(BaseHandler):
 
