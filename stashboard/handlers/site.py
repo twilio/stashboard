@@ -196,6 +196,7 @@ class ListHandler(BaseHandler):
 class ListListHandler(BaseHandler):
 
     lists = []
+    statuses = []
 
     def data(self):
         services = []
@@ -213,6 +214,8 @@ class ListListHandler(BaseHandler):
                 status = event.status
             else:
                 status = default_status
+
+            if len(self.statuses) and not status.slug in self.statuses: continue
 
             today = date.today() + timedelta(days=1)
             current, = service.history(1, default_status, start=today)
@@ -239,8 +242,11 @@ class ListListHandler(BaseHandler):
         self.lists = self.request.get_all('filter')
         self.lists.sort()
 
+        self.statuses = self.request.get_all('status')
+        self.statuses.sort()
+
         td = default_template_data()
-        td.update(self.retrieve("list"+"_".join(self.lists)))
+        td.update(self.retrieve("list"+"_".join(self.statuses)+"_".join(self.lists)))
         self.render(td, 'index.html')
 
 class ServiceHandler(BaseHandler):
