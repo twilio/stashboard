@@ -55,8 +55,13 @@ from wsgiref.handlers import format_date_time
 
 
 def invalidate_cache():
-    if not memcache.delete("frontpage"):
-        logging.error("Memcache delete failed on frontpage")
+    all_pages = memcache.get("__all_pages__")
+    if all_pages is not None:
+        for page,d in all_pages.items():
+            if not memcache.delete(page):
+                logging.error("Memcache delete failed on %s", page)
+    if not memcache.delete("__all_pages__"):
+        logging.error("Memcache delete failed on __all_pages__")
     taskqueue.add(url='/', method="GET")
 
 

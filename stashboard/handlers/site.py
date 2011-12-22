@@ -85,6 +85,14 @@ class BaseHandler(webapp.RequestHandler):
             item = self.data()
             if not memcache.add(key, item):
                 logging.error("Memcache set failed on %s" % key)
+            else:
+                all_pages = memcache.get("__all_pages__")
+                if all_pages is not None:
+                    all_pages[key] = 1
+                else:
+                    all_pages = {key: 1}
+                if not memcache.set("__all_pages__", all_pages):
+                    logging.error("Memcache set failed on __all_pages__")
         return item
 
     def not_found(self):
@@ -189,8 +197,8 @@ class ListHandler(BaseHandler):
             return
 
         td = default_template_data()
-        #td.update(self.retrieve("list"+list_slug))
-        td.update(self.data())
+        td.update(self.retrieve("list"+list_slug))
+        #td.update(self.data())
         self.render(td, 'index.html')
 
 class ListListHandler(BaseHandler):
@@ -246,8 +254,8 @@ class ListListHandler(BaseHandler):
         self.statuses.sort()
 
         td = default_template_data()
-        #td.update(self.retrieve("list"+"_".join(self.statuses)+"_".join(self.lists)))
-        td.update(self.data())
+        td.update(self.retrieve("list"+"_".join(self.statuses)+"_".join(self.lists)))
+        #td.update(self.data())
         self.render(td, 'index.html')
 
 class ListSummaryHandler(BaseHandler):
@@ -271,8 +279,8 @@ class ListSummaryHandler(BaseHandler):
 
     def get(self):
         td = default_template_data()
-        #td.update(self.retrieve("summary"))
-        td.update(self.data())
+        td.update(self.retrieve("summary"))
+        #td.update(self.data())
         self.render(td, 'summary.html')
 
 
