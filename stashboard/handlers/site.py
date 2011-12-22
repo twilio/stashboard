@@ -41,7 +41,7 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils import simplejson as json
 from time import mktime
-from models import Status, Service, Event, Profile
+from models import List, Status, Service, Event, Profile
 from utils import authorized
 from wsgiref.handlers import format_date_time
 
@@ -142,6 +142,54 @@ class RootHandler(BaseHandler):
     def get(self):
         td = default_template_data()
         td.update(self.retrieve("frontpage"))
+        #td.update(self.data())
+        self.render(td, 'index.html')
+
+class ListHandler(BaseHandler):
+
+    list = None
+
+    def data(self):
+        services = []
+        default_status = Status.get_default()
+
+        for service in Service.all().filter("list =", self.list).order("name").fetch(100):
+            event = service.current_event()
+            if event is not None:
+                status = event.status
+            else:
+                status = default_status
+
+            today = date.today() + timedelta(days=1)
+            current, = service.history(1, default_status, start=today)
+            has_issues = (current["information"] and
+                          status.key() == default_status.key())
+
+            service_dict = {
+                "slug": service.slug,
+                "name": service.name,
+                "url": service.url(),
+                "status": status,
+                "has_issues": has_issues,
+                "history": service.history(5, default_status),
+                }
+            services.append(service_dict)
+
+        return {
+            "days": get_past_days(5),
+            "statuses": Status.all().fetch(100),
+            "services": services,
+            }
+
+    def get(self, list_slug):
+        self.list = List.get_by_slug(list_slug)
+
+        if self.list is None:
+            self.not_found()
+            return
+
+        td = default_template_data()
+        td.update(self.retrieve("list"+list_slug))
         #td.update(self.data())
         self.render(td, 'index.html')
 
