@@ -189,8 +189,8 @@ class ListHandler(BaseHandler):
             return
 
         td = default_template_data()
-        td.update(self.retrieve("list"+list_slug))
-        #td.update(self.data())
+        #td.update(self.retrieve("list"+list_slug))
+        td.update(self.data())
         self.render(td, 'index.html')
 
 class ListListHandler(BaseHandler):
@@ -246,7 +246,8 @@ class ListListHandler(BaseHandler):
         self.statuses.sort()
 
         td = default_template_data()
-        td.update(self.retrieve("list"+"_".join(self.statuses)+"_".join(self.lists)))
+        #td.update(self.retrieve("list"+"_".join(self.statuses)+"_".join(self.lists)))
+        td.update(self.data())
         self.render(td, 'index.html')
 
 class ServiceHandler(BaseHandler):
