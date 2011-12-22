@@ -250,6 +250,32 @@ class ListListHandler(BaseHandler):
         td.update(self.data())
         self.render(td, 'index.html')
 
+class ListSummaryHandler(BaseHandler):
+
+    def data(self):
+        lists = {}
+        default_status = Status.get_default()
+
+        for service in Service.all().order("list").fetch(100):
+            event = service.current_event()
+            if event is not None:
+                status = event.status
+            else:
+                status = default_status
+
+            if not lists.has_key(service.list) or \
+                lists[service.list].severity < status.severity:
+                lists[service.list] = status
+
+        return { "lists": lists.items() }
+
+    def get(self):
+        td = default_template_data()
+        #td.update(self.retrieve("summary"))
+        td.update(self.data())
+        self.render(td, 'summary.html')
+
+
 class ServiceHandler(BaseHandler):
 
     def get(self, service_slug, year=None, month=None, day=None):

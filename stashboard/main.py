@@ -61,6 +61,7 @@ SITE = [
     (r'/services/(.+)', site.ServiceHandler),
     (r'/lists/(.+)', site.ListHandler),
     (r'/lists', site.ListListHandler),
+    (r'/summary', site.ListSummaryHandler),
     (r'/documentation/credentials', site.CredentialsRedirectHandler),
     (r'/documentation/(.+)', site.DocumentationHandler),
     ]
