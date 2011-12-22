@@ -200,10 +200,18 @@ class ServicesListHandler(restful.Controller):
 
         name = self.request.get('name', default_value=None)
         description = self.request.get('description', default_value=None)
+        list = self.request.get('list', default_value=None)
 
-        if not name or not description:
-            self.error(400, "Bad Data: Name: %s, Description: %s" \
-                           % (name, description))
+        badlist = False
+        l = None
+        if list <> "":
+            l = List.all().filter("name =", list).get()
+            if l is None:
+                badlist = True
+
+        if not name or not description or badlist:
+            self.error(400, "Bad Data: Name: %s, List: %s, Description: %s" \
+                           % (name, list, description))
             return
 
         slug = slugify.slugify(name)
@@ -213,7 +221,7 @@ class ServicesListHandler(restful.Controller):
             self.error(404, "A sevice with this name already exists")
             return
 
-        s = Service(name=name, slug=slug, description=description)
+        s = Service(name=name, slug=slug, description=description, list=l)
         s.put()
 
         invalidate_cache()
@@ -250,6 +258,7 @@ class ServiceInstanceHandler(restful.Controller):
 
         name = self.request.get('name', default_value=None)
         description = self.request.get('description', default_value=None)
+        list = self.request.get('list', default_value=None)
 
         if description:
             service.description = description
@@ -257,7 +266,20 @@ class ServiceInstanceHandler(restful.Controller):
         if name:
             service.name = name
 
-        if name or description:
+        if list:
+            l = List.all().filter("name = ", list).get()
+            if l is None:
+                self.error(400, "Bad data: Name: %s, List: %s, Description: %s" \
+                           % (name, list, description))
+                return
+            service.list = l
+
+        if "" == list:
+            service.list = None
+            list = "removed"
+
+
+        if name or description or list:
             invalidate_cache()
             service.put()
 

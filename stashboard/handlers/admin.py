@@ -97,6 +97,11 @@ class EditServiceHandler(site.BaseHandler):
             "action": "edit",
             }
 
+        if service.list is not None:
+            td["list"] = service.list.name
+        else:
+            td["list"] = ""
+
         td.update(site.default_template_data())
         self.render(td, 'admin/services_create.html')
 
