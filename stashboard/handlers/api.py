@@ -174,7 +174,7 @@ class ListInstanceHandler(restful.Controller):
             return
 
         query = Service.all()
-        query.filter('service =', list)
+        query.filter('list =', list)
         if query:
             for s in query:
                 s.list = None
@@ -182,7 +182,7 @@ class ListInstanceHandler(restful.Controller):
 
         invalidate_cache()
         list.delete()
-        self.json(service.rest(self.base_url(version)))
+        self.json(list.rest(self.base_url(version)))
 
 
 class ServicesListHandler(restful.Controller):
