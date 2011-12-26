@@ -32,6 +32,287 @@
       ></pre
     ></div
   ></div
+><div id="lists-list-resource"
+><h2
+ >FIXME: Lists List Resource</h2
+ ><p
+ >FIXME: Lists description</p
+ ><div id="resource-url-0"
+ ><h3
+   >Resource URL</h3
+   ><blockquote
+   ><p
+     >/api/v1/lists</p
+     ></blockquote
+   ></div
+ ><div id="resource-properties"
+ ><h3
+   >Resource Properties</h3
+   ><table
+   ><caption
+     >Lists resource properties</caption
+     ><col width="16%"
+      /><col width="46%"
+      /><thead
+     ><tbody
+     ><tr class="header"
+       ><th align="left"
+         >Property</th
+         ><th align="left"
+         >Description</th
+         ></tr
+       ></thead
+     ><tbody
+     ><tr class="odd"
+	><td align="left"
+	  >id</td
+	  ><td align="left"
+	  >The unique identifier by which to identify the list</td
+	  ></tr
+	><tr class="even"
+	><td align="left"
+	  >name</td
+	  ><td align="left"
+	  >The name of the list, defined by the user</td
+	  ></tr
+	><tr class="odd"
+	><td align="left"
+	  >description</td
+	  ><td align="left"
+	  >The description of the list</td
+	  ></tr
+	><tr class="even"
+	><td align="left"
+	  >url</td
+	  ><td align="left"
+	  >The URL of the specific list resource</td
+	  ></tr
+	></tbody
+      ></table
+    ></div
+  ><div id="http-methods"
+  ><h3
+    >HTTP Methods</h3
+    ><div id="get"
+    ><h4
+      >GET</h4
+      ><p
+      >Returns a list of all lists</p
+      ><div id="example"
+      ><h5
+	>Example</h5
+	><blockquote
+	><p
+	  >GET /api/v1/lists HTTP/1.1</p
+	  ></blockquote
+	><pre
+	><code
+	  >{
+    &quot;lists&quot;: [
+        {
+            &quot;name&quot;: &quot;Example Foo&quot;,
+            &quot;id&quot;: &quot;example-foo&quot;,
+            &quot;description&quot;: &quot;An explanation of this service&quot;
+            &quot;url&quot;: &quot;/api/v1/lists/example-foo&quot;,
+        },
+        {
+            &quot;name&quot;: &quot;Example Bar&quot;,
+            &quot;id&quot;: &quot;example-bar&quot;,
+            &quot;description&quot;: &quot;An explanation of this service&quot;
+            &quot;url&quot;: &quot;/api/v1/lists/example-bar&quot;,
+        }
+    ]
+}
+</code
+	  ></pre
+	></div
+      ></div
+    ><div id="post"
+    ><h4
+      >POST</h4
+      ><p
+      >Creates a new list (or updates an existing list) and returns the new list object.</p
+      ><table
+      ><caption
+	>Lists List POST parameters</caption
+	><col width="16%"
+	 /><col width="12%"
+	 /><col width="32%"
+	 /><thead
+	><tr class="header"
+	  ><th align="left"
+	    >Param</th
+	    ><th align="left"
+	    >Optional</th
+	    ><th align="left"
+	    >Description</th
+	    ></tr
+	  ></thead
+	><tbody
+	><tr class="odd"
+	  ><td align="left"
+	    >name</td
+	    ><td align="left"
+	    >Required</td
+	    ><td align="left"
+	    >Name of the list</td
+	    ></tr
+	  ><tr class="even"
+	  ><td align="left"
+	    >description</td
+	    ><td align="left"
+	    >Required</td
+	    ><td align="left"
+	    >Description of list</td
+	    ></tr
+	  ></tbody
+	></table
+      ><div id="example-1"
+      ><h5
+	>Example</h5
+	><blockquote
+	><p
+	  >POST /api/v1/lists HTTP/1.1 name=New%20List&amp;description=A%20great%20list</p
+	  ></blockquote
+	><pre
+	><code
+	  >{
+    &quot;name&quot;: &quot;New List&quot;,
+    &quot;id&quot;: &quot;new-list&quot;,
+    &quot;description&quot;: &quot;A great list&quot;
+    &quot;url&quot;: &quot;/api/v1/lists/new-list&quot;,
+}
+</code
+	  ></pre
+	></div
+      ></div
+    ></div
+  ></div
+><div id="list-instance-resource"
+><h2
+  >List Instance Resource</h2
+  ><p
+  >The List Instance resources represents an individual list</p
+  ><div id="resource-url-1"
+  ><h3
+    >Resource Url</h3
+    ><blockquote
+    ><p
+      >/api/v1/lists/{list}</p
+      ></blockquote
+    ></div
+  ><div id="http-methods-1"
+  ><h3
+    >HTTP Methods</h3
+    ><div id="get-1"
+    ><h4
+      >GET</h4
+      ><p
+      >Returns a list object</p
+      ><div id="example-2"
+      ><h5
+	>Example</h5
+	><blockquote
+	><p
+	  >GET /api/v1/lists/{list} HTTP/1.1</p
+	  ></blockquote
+	><pre
+	><code
+	  >{
+    &quot;name&quot;: &quot;Example List&quot;,
+    &quot;id&quot;: &quot;example-list&quot;,
+    &quot;description&quot;: &quot;An explanation of what this list represents&quot;
+    &quot;url&quot;: &quot;/api/v1/lists/example-list&quot;,
+}
+</code
+	  ></pre
+	></div
+      ></div
+    ><div id="post-1"
+    ><h4
+      >POST</h4
+      ><p
+      >Updates a list's description and returns the updated list object.</p
+      ><table
+      ><caption
+	>List Instance POST parameters</caption
+	><col width="16%"
+	 /><col width="12%"
+	 /><col width="32%"
+	 /><thead
+	><tr class="header"
+	  ><th align="left"
+	    >Param</th
+	    ><th align="left"
+	    >Optional</th
+	    ><th align="left"
+	    >Description</th
+	    ></tr
+	  ></thead
+	><tbody
+	><tr class="odd"
+	  ><td align="left"
+	    >name</td
+	    ><td align="left"
+	    >Optional</td
+	    ><td align="left"
+	    >Name of the service</td
+	    ></tr
+	  ><tr class="even"
+	  ><td align="left"
+	    >description</td
+	    ><td align="left"
+	    >Optional</td
+	    ><td align="left"
+	    >Description of service</td
+	    ></tr
+	  ></tbody
+	></table
+      ><div id="example-3"
+      ><h5
+	>Example</h5
+	><blockquote
+	><p
+	  >POST /api/v1/lists/{list} description=System%20is%20now%20operational</p
+	  ></blockquote
+	><pre
+	><code
+	  >{
+    &quot;name&quot;: &quot;Example List&quot;,
+    &quot;id&quot;: &quot;example-list&quot;,
+    &quot;description&quot;: &quot;System is now operational&quot;,
+    &quot;url&quot;: &quot;/api/v1/lists/example-list&quot;,
+}
+</code
+	  ></pre
+	></div
+      ></div
+    ></div
+  ><div id="delete"
+  ><h3
+    >DELETE</h3
+    ><p
+    >Deletes a list and returns the deleted list object</p
+    ><div id="example-4"
+    ><h4
+      >Example</h4
+      ><blockquote
+      ><p
+	>DELETE /api/v1/lists/{list} HTTP/1.1</p
+	></blockquote
+      ><pre
+      ><code
+	>{
+    &quot;name&quot;: &quot;Example List&quot;,
+    &quot;id&quot;: &quot;example-list&quot;,
+    &quot;description&quot;: &quot;System is now operational&quot;,
+    &quot;url&quot;: &quot;/api/v1/lists/example-list&quot;,
+}
+</code
+	></pre
+      ></div
+    ></div
+  ></div
 ><div id="services-list-resource"
 ><h2
   >Services List Resource</h2
@@ -76,17 +357,23 @@
 	  ></tr
 	><tr class="odd"
 	><td align="left"
+	  >list</td
+	  ><td align="left"
+	  >The list, defined by the user</td
+	  ></tr
+	><tr class="even"
+	><td align="left"
 	  >description</td
 	  ><td align="left"
 	  >The description of the web service</td
 	  ></tr
-	><tr class="even"
+	><tr class="odd"
 	><td align="left"
 	  >current-event</td
 	  ><td align="left"
 	  >The current event for the service</td
 	  ></tr
-	><tr class="odd"
+	><tr class="even"
 	><td align="left"
 	  >url</td
 	  ><td align="left"
@@ -117,6 +404,7 @@
         {
             &quot;name&quot;: &quot;Example Foo&quot;,
             &quot;id&quot;: &quot;example-foo&quot;,
+            &quot;list&quot;: null,
             &quot;description&quot;: &quot;An explanation of this service&quot;
             &quot;url&quot;: &quot;/api/v1/services/example-foo&quot;,
             &quot;current-event&quot;: {
@@ -179,6 +467,14 @@
 	    ></tr
 	  ><tr class="even"
 	  ><td align="left"
+	    >list name</td
+	    ><td align="left"
+	    >Optional</td
+	    ><td align="left"
+	    >Name of the list</td
+	    ></tr
+	  ><tr class="odd"
+	  ><td align="left"
 	    >description</td
 	    ><td align="left"
 	    >Required</td
@@ -192,14 +488,20 @@
 	>Example</h5
 	><blockquote
 	><p
-	  >POST /api/v1/services HTTP/1.1 name=New%20Service&amp;description=A%20great%20service</p
+	  >POST /api/v1/services HTTP/1.1 name=New%20Service&amp;list=Example%20List&amp;description=A%20great%20service</p
 	  ></blockquote
 	><pre
 	><code
 	  >{
     &quot;name&quot;: &quot;New Service&quot;,
     &quot;id&quot;: &quot;new-service&quot;,
-    &quot;description&quot;: &quot;A great service&quot;
+    &quot;list&quot;: {
+	&quot;name&quot;: &quot;Example List&quot;,
+	&quot;id&quot;: &quot;example-list&quot;,
+	&quot;description&quot;: &quot;System is now operational&quot;,
+	&quot;url&quot;: &quot;/api/v1/lists/example-list&quot;,
+    },
+    &quot;description&quot;: &quot;A great service&quot;,
     &quot;url&quot;: &quot;/api/v1/services/new-service&quot;,
     &quot;current-event&quot;: null,
 }
@@ -242,6 +544,12 @@
 	  >{
     &quot;name&quot;: &quot;Example Service&quot;,
     &quot;id&quot;: &quot;example-service&quot;,
+    &quot;list&quot;: {
+	&quot;name&quot;: &quot;Example List&quot;,
+	&quot;id&quot;: &quot;example-list&quot;,
+	&quot;description&quot;: &quot;System is now operational&quot;,
+	&quot;url&quot;: &quot;/api/v1/lists/example-list&quot;,
+    },
     &quot;description&quot;: &quot;An explanation of what this service represents&quot;
     &quot;url&quot;: &quot;/api/v1/services/example-service&quot;,
     &quot;current-event&quot;: null,
@@ -282,6 +590,14 @@
 	    ></tr
 	  ><tr class="even"
 	  ><td align="left"
+	    >list name</td
+	    ><td align="left"
+	    >Optional</td
+	    ><td align="left"
+	    >Name of the list</td
+	    ></tr
+	  ><tr class="odd"
+	  ><td align="left"
 	    >description</td
 	    ><td align="left"
 	    >Optional</td
@@ -302,6 +618,7 @@
 	  >{
     &quot;name&quot;: &quot;Example Service&quot;,
     &quot;id&quot;: &quot;example-service&quot;,
+    &quot;list&quot;: null,
     &quot;description&quot;: &quot;System is now operational&quot;,
     &quot;url&quot;: &quot;/api/v1/services/example-service&quot;,
     &quot;current-event&quot;: null,
@@ -328,6 +645,7 @@
 	>{
     &quot;name&quot;: &quot;Example Service&quot;,
     &quot;id&quot;: &quot;example-service&quot;,
+    &quot;list&quot;: null,
     &quot;description&quot;: &quot;System is now operational&quot;,
     &quot;url&quot;: &quot;/api/v1/services/example-service&quot;,
     &quot;current-event&quot;: null,
