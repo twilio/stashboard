@@ -209,7 +209,7 @@ class ServicesListHandler(restful.Controller):
 
         badlist = False
         l = None
-        if list <> "":
+        if list is not None and list <> "":
             l = List.all().filter("name =", list).get()
             if l is None:
                 badlist = True
