@@ -271,9 +271,9 @@ class ListSummaryHandler(BaseHandler):
             else:
                 status = default_status
 
-            if not lists.has_key(service.list) or \
-                lists[service.list].severity < status.severity:
-                lists[service.list] = status
+            if service.list and not lists.has_key(service.list.slug) or \
+                lists[service.list.slug]["status"].severity < status.severity:
+                lists[service.list.slug] = {"list": service.list, "status": status}
 
         return { "lists": lists.items() }
 

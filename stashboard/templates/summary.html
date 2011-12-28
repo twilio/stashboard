@@ -9,14 +9,14 @@
   </thead>
 
   <tbody>
-    {% for list,status in lists %}
-    <tr id="{{ list.slug}}">
+    {% for list_slug,l in lists %}
+    <tr id="{{ list_slug}}">
       <td>
-	<a href="{{ list.url }}">{{ list.name }}</a>
+	<a href="{{ l.list.url }}">{{ l.list.name }}</a>
       </td>
       <td class="status highlight">
-	<a href="{{ list.url }}">
-	  <img class="sym" src="/images/{{ status.image }}" alt="{{ status.title }}"/>
+	<a href="{{ l.list.url }}">
+	  <img class="sym" src="/images/{{ l.status.image }}" alt="{{ l.status.title }}"/>
 	</a>
       </td>
     {% endfor %}
