@@ -78,19 +78,20 @@ class BaseHandler(webapp.RequestHandler):
 
     def retrieve(self, key):
         """ Helper for loading data from memcache """
-        item = memcache.get(key)
+        all_pages = memcache.get("__all_pages__")
+        if all_pages is None:
+            all_pages = {}
+
+        item = memcache.get(key) if all_pages.has_key(key) else None
+
         if item is not None:
             return item
         else:
             item = self.data()
-            if not memcache.add(key, item):
+            if not memcache.set(key, item):
                 logging.error("Memcache set failed on %s" % key)
             else:
-                all_pages = memcache.get("__all_pages__")
-                if all_pages is not None:
-                    all_pages[key] = 1
-                else:
-                    all_pages = {key: 1}
+                all_pages[key] = 1
                 if not memcache.set("__all_pages__", all_pages):
                     logging.error("Memcache set failed on __all_pages__")
         return item
