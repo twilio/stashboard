@@ -39,13 +39,19 @@ def api(role):
     A decorator to enforce user roles in context of the API
     """
     def wrapper(handler_method):
+
         def check_login(self, *args, **kwargs):
+            dev = os.environ['SERVER_SOFTWARE'].startswith('Development')
             host = self.request.headers.get('host', 'nohost')
             try:
                 user = oauth.get_current_user()
                 admin = oauth.is_current_user_admin()
             except oauth.OAuthRequestError, e:
+                logging.error("OAuthRegistrationError")
                 admin = False
+
+            if dev and str(user) == "example@example.com":
+                admin = True
 
             if not admin:
                 user = users.get_current_user()
