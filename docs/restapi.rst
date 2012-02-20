@@ -172,6 +172,149 @@ Deletes a service and returns the deleted service object
             "current-event": null,
         }
 
+Service List
+-------------
+
+The Service List resource represents all a collection of related services
+
+==============   ===============
+Property         Description
+==============   ===============
+id	         The unique identifier by which to identify the service list
+name             The name of the service list, defined by the user
+description      The description of the service list
+url	         The URL of the specific service list resource
+==============   ===============
+
+List Resource
+~~~~~~~~~~~~~~~
+
+.. code-block:: text
+
+    /admin/api/v1/service-lists
+
+GET
++++++
+
+Returns a list of all current service lists tracked by Stashboard
+
+.. code-block:: bash
+
+   GET /admin/api/v1/service-lists HTTP/1.1
+
+.. code-block:: js
+        {
+            "lists": [
+                {
+                    "name": "Example Foo",
+                    "id": "example-foo",
+                    "description": "An explanation of this service"
+                    "url": "/api/v1/service-lists/example-foo",
+                },
+                {
+                    "name": "Example Bar",
+                    "id": "example-bar",
+                    "description": "An explanation of this service"
+                    "url": "/api/v1/service-lists/example-bar",
+                }
+            ]
+        }
+
+POST 
+++++++
+
+Creates a new service list (or updates an existing service list) and returns the new service list object.
+
+==============   ===============
+Param            Description
+==============   ===============
+name             Name of the service list
+description      Description of service list
+==============   ===============
+
+.. code-block:: text
+
+   POST /admin/api/v1/services HTTP/1.1 name=New%20Service&description=A%20great%20service
+
+.. code-block:: js
+
+        {
+            "name": "New List",
+            "id": "new-list",
+            "description": "A great service"
+            "url": "/api/v1/service-list/new-list",
+        }
+
+
+Instance Resource
+~~~~~~~~~~~~~~~~~~
+
+.. code-block:: text
+
+    /admin/api/v1/services/{service}
+
+The Service Instance resources represents an individual service list
+
+GET
+++++
+
+.. code-block:: bash
+
+    GET /admin/api/v1/service-list/{service} HTTP/1.1
+
+.. code-block:: js
+
+        {
+            "name": "Example List",
+            "id": "example-list",
+            "description": "An explanation of what this list represents"
+            "url": "/api/v1/service-list/example-list",
+        }
+
+POST
++++++
+
+Updates a service list's description and returns the updated service list. All the listed parameters are optional.
+
+==============   ===============
+Param            Description
+==============   ===============
+name             Name of the service list
+description      Description of service list
+==============   ===============
+
+.. code-block:: text
+  
+    POST /admin/api/v1/service-lists/{service-list} description=System%20is%20now%20operational
+
+.. code-block:: js
+
+        {
+            "name": "Example List",
+            "id": "example-list",
+            "description": "System is now operational",
+            "url": "/api/v1/service-lists/example-list",
+        }
+
+
+DELETE
++++++++
+
+Deletes a service list and returns the deleted service object
+
+.. code-block:: text
+
+    DELETE /admin/api/v1/service-lists/{service-list} HTTP/1.1
+
+.. code-block:: js
+
+        {
+            "name": "Example List",
+            "id": "example-list",
+            "description": "System is now operational",
+            "url": "/api/v1/service-lists/example-list",
+        }
+
 Events
 -----------
 

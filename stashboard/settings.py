@@ -11,4 +11,6 @@ REPORT_URL = "mailto:help@stashboard.org"
 CONSUMER_KEY = 'anonymous'
 CONSUMER_SECRET = 'anonymous'
 
-TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), "templates"))
+TEMPLATE_DIRS = (
+    os.path.join(os.path.dirname(__file__), "templates"),
+    )

@@ -2,7 +2,8 @@
 {% block document %}
 <section class="resource">
   <h1>Service Lists API</h1>
-  <h2>Attributes</h2>
+  <p>Services are often grouped into collections of related services.</p>
+  <h3>Attributes</h3>
   <dl>
     <dt>id<dt>
     <dd>The unique identifier by which to identify the list</dd>
@@ -13,11 +14,9 @@
     <dt>url</dt>
     <dd>The URL of the specific list resource</dd>
   </dl>
-  <h2>List all service lists</h2>
+  <h3>List all service lists</h3>
   <blockquote>GET /api/v1/service-lists</blockquote>
-  <pre>
-    <code>
-{
+  <pre><code>{
     "lists": [
         {
             "name": "Example Foo",
@@ -32,19 +31,15 @@
             "url": "/api/v1/lists/example-bar",
         }
     ]
-}
-    </code>
-  </pre>
-  <h2>Get a single service list</h2>
-  <blockquote>GET /api/v1/service-lists/<service_id></blockquote>
-  <pre>
-    <code>
-{
+}</code></pre>
+  <h3>Get a single service list</h3>
+  <blockquote>GET /api/v1/service-lists/{service_list_id}</blockquote>
+  <pre><code>{
     "name": "Example List",
     "id": "example-list",
     "description": "An explanation of what this list represents"
     "url": "/api/v1/lists/example-list",
-}
-    </code>
-  </pre>
+}</code></pre>
 </section>
+
+{% endblock %} 

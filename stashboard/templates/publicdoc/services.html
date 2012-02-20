@@ -1,9 +1,10 @@
 {% extends "documentation.html" %}
+
 {% block document %}
 <section class="resource">
   <h1>Services API</h1>
-  <p>The Services List resource represents all web services currently tracked via StashBoard. The resources also allows for the creation of new, trackable web services.</p>
-  <h2>Attributes</h2>
+  <p>Each service has a log of <a href="/documentation/events">all events</a> that have occured in the past. The current state of a service is represented by the current status of the service.</p>
+  <h3>Attributes</h3>
   <dl>
     <dt>id<dt>
     <dd>The unique identifier by which to identify the service>
@@ -18,11 +19,9 @@
     <dt>url</dt>
     <dd>URL of this resource</dd>
   </dl>
-  <h2>List all the services</h2>
+  <h3>List all the services</h3>
   <blockquote>GET /api/v1/services</blockquote>
-  <pre>
-  <code>
-{
+  <pre><code>{
     "services": [
         {
             "name": "Example Foo",
@@ -53,14 +52,10 @@
             "current-event": null,
         }
     ]
-}
-    </code>
-  </pre>
-  <h2>Get a single service</h2>
-  <blockquote>GET /api/v1/services/<service_id></blockquote>
-  <pre>
-    <code>
-{
+}</code></pre>
+  <h3>Get a single service</h3>
+  <blockquote>GET /api/v1/services/{service-id}</blockquote>
+  <pre><code>{
     "name": "Example Service",
     "id": "example-service",
     "description": "An explanation of what this service represents",
@@ -72,7 +67,6 @@
     },
     "url": "/api/v1/services/example-service",
     "current-event": null
-}
-    </code>
-  </pre>
+}</code></pre>
 </section>
+{% endblock %}

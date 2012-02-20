@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block title %} API {% endblock %}
 {% block js %}
 <link rel="stylesheet" href="/css/prettify.css" type="text/css" media="screen" />
 
@@ -7,26 +8,26 @@
 {% endblock %}
 
 {% block content %}
-
-
 <nav>
   <ul>
-    <li {% if overview_selected %} class="selected" {% endif %}>
-      <a href="/documentation/overview">Overview</a></li>
-
-    <li {% if rest_selected %} class="selected" {% endif %}>
-      <a href="/documentation/rest">REST API</a></li>
-
-    <li {% if example_selected %} class="selected" {% endif %}>
-      <a href="/documentation/examples">Examples</a></li>
-
+    <li {% if selected == "overview" %} class="selected" {% endif %}>
+      <a href="/documentation">REST API Overview</a></li>
+    <li {% if selected == "services" %} class="selected" {% endif %}>
+      <a href="/documentation/services">Services</a></li>
+    <li {% if selected == "service-lists" %} class="selected" {% endif %}>
+      <a href="/documentation/service-lists">Service Lists</a></li>
+    <li {% if selected == "events" %} class="selected" {% endif %}>
+      <a href="/documentation/events">Events</a></li>
+    <li {% if selected == "statuses" %} class="selected" {% endif %}>
+      <a href="/documentation/statuses">Statuses</a></li>
+    <li {% if selected == "status-images" %} class="selected" {% endif %}>
+      <a href="/documentation/status-images">Status Images</a></li>
   </ul>
 </nav>
 
 <div class="frame" id="documentation">
 
   {% block document %}
-
   {% endblock %}
 
   <script type="text/javascript">
@@ -35,5 +36,4 @@
   </script>
 
 </div>
-
 {% endblock %}

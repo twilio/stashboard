@@ -1,0 +1,26 @@
+{% extends "documentation.html" %}
+{% block document %}
+<section>
+  <h1>API Overview</h1>
+  <p>The API is broken down into three main resources: <a href="/documentation/services">Services</a>, <a href="/documentation/events">Events</a>, and <a href="/documentation/statuses">Statuses</a>.</p>
+  <h3>Resource Schema</h3>
+  <p>All resources returned will be JSON objects. In the case of a list resource, the JSON object will have a field containing the list of returned resources</p>
+  <pre><code>{
+    "objects": [
+        {
+            "id": "foo",
+            "descrption": "This is a sample object"
+        }
+    ]
+}</pre></code>
+  <h3>Authetioncation (or lack thereof)</h3>
+  <p>No API requests require authentication as all resources are read-only</p>
+  <h3>Client Errors</h3>
+  <p>Client errors will have the following structure. 
+  <pre><code>{
+    "message": "Can't find resouce",
+    "code": 404,
+    "error": true
+}</pre></code>
+</section>
+{% endblock %}

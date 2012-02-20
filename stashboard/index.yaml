@@ -39,3 +39,8 @@ indexes:
   - name: status
   - name: start
     direction: desc
+
+- kind: Service
+  properties:
+  - name: list
+  - name: name

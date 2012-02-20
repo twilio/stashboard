@@ -1,0 +1,33 @@
+{% extends "documentation.html" %}
+
+{% block document %}
+<section class="resource">
+  <h1>Statuses API</h1>
+  <p>Each <a href="/documentation/statuses">status</a> has an image that is displayed to the end user. These images need be chosen from this list.</p>
+  <h3>Attributes</h3>
+  <dl>
+    <dt>name</dt>
+    <dd>The name of the status image</dd> 
+    <dt>set</dt>
+    <dd>The icon set this image belongs to</dd>
+    <dt>url</dt>
+    <dd>The image URL<dd>
+  </dl>
+  <h3>List all status images</h3>
+  <blockquote>GET /api/v1/statuses</blockquote>
+  <pre><code>{
+    "images": [
+        {
+            "url": "http://status.twilio.com/images/icons/fugue/broom.png",
+            "set": "fugue",
+            "name": "broom"
+        },
+        {
+            "url": "http://status.twilio.com/images/icons/fugue/flag.png",
+            "set": "fugue",
+            "name": "flag"
+        },
+    ]
+}</code></pre>
+</section>
+{% endblock %}

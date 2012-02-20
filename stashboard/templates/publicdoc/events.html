@@ -1,0 +1,100 @@
+{% extends "documentation.html" %}
+
+{% block document %}
+<section class="resource">
+  <h1>Events API</h1>
+  <p>Whenever anything interesting happens to a <a href="/documentation/services">service</a>, an event is created.</p> 
+  <h3>Attributes</h3>
+  <dl>
+    <dt>sid</dt>
+    <dd>The unique identifier by which to identify the event</dd>
+    <dt>message</dt>
+    <dd>The message associated with this event</dd>
+    <dt>timestamp</dt>
+    <dd>The time at which this event occurred, given in RFC 1132 format.</dd>
+    <dt>url</dt>
+    <dd>The URL of the specific event resource</dd>
+    <dt>status</dt>
+    <dd>The status of this event, as described by the Statuses resource</dd>
+  </dl>
+  <h3>List all events for a service</h3>
+  <blockquote>GET /api/v1/services/{service-id}/events</blockquote>
+  <pre><code>{
+    "events": [
+        {
+            "timestamp": "Mon, 28 Jun 2010 22:17:06 GMT",
+            "message": "Problem fixed", 
+            "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GBAM",
+            "url": "/api/v1/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd2",
+            "status": {
+                "id": "down",
+                "name": "Down",
+                "description": "An explanation of what this status represents",
+                "level": "ERROR",
+                "image": "/images/status/cross-circle.png",
+                "url": "/api/v1/statuses/down",
+            },
+        }, 
+        {
+            "timestamp": "Mon, 28 Jun 2010 22:18:06 GMT",
+            "message": "Might be up", 
+            "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
+            "url": "/api/v1/services/example-service/events/ahJpc215d2Vic..."
+            "status": {
+                "id": "down",
+                "name": "Down",
+                "description": "An explanation of what this status represents",
+                "level": "ERROR",
+                "image": "/images/status/cross-circle.png",
+                "url": "/api/v1/statuses/down",
+            },
+        }
+    ]
+}</code></pre>
+  <h3>Filter serice events by date</h3>
+  <p>The Events List resource also supports filtering events via dates. To filter events, place on of the following options into the query string for a GET request. While the format of these parameters is very flexible, we suggested either the RFC 2822 or RFC 1123 format due to their support for encoding timezone information.</p>
+  <h3>Filter Options</h3>
+  <dl>
+    <dt>start</dt>
+    <dd>Only show events which started after this date, inclusive.</dd>
+    <dt>end</dd>
+    <dd>Only show events which started before this date, inclusive.</dd>
+  </dl>
+  <blockquote>GET /api/v1/services/{service-id}/events?start=2010-06-10</blockquote>
+  <p>Returns all events starting after June 6, 2010. Similarly, both "start" and "end" can be used to create date ranges</p>
+  <blockquote>GET /api/v1/services/{service-id}/events?end=2010-06-17&start=2010-06-01</blockquote>
+  <p>Return all events between June 6, 2010 and June 17, 2010</p>
+  <h3>Get the current event for a service</h3>
+  <blockquote>GET /api/v1/services/{service-id}/current</blockquote>
+  <pre><code>{
+    "timestamp": "Mon, 28 Jun 2010 22:17:06 GMT",
+    "message": "Might be up", 
+    "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
+    "url": "/api/v1/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
+    "status": {
+        "id": "down",
+        "name": "Down",
+        "description": "An explanation of what this status represents",
+        "level": "ERROR",
+        "image": "/images/status/cross-circle.png",
+        "url": "/api/v1/statuses/down",
+    },
+}</code></pre>
+  <h3>Get an individual event</h3>
+  <blockquote>GET /api/v1/services/{service-id}/events/{event-sid}</blockquote>
+  <pre><code>{
+    "timestamp": "Mon, 28 Jun 2010 22:17:06 GMT",
+    "message": "Might be up", 
+    "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
+    "url": "/api/v1/services/example-service/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
+    "status": {
+        "id": "down",
+        "name": "Down",
+        "description": "An explanation of what this status represents",
+        "level": "ERROR",
+        "image": "/images/status/cross-circle.png",
+        "url": "/api/v1/statuses/down",
+    }
+}</code></pre>
+</section>
+{% endblock %}

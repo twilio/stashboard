@@ -31,6 +31,26 @@ h2 {font-size: 32px; font-weight: bold;}
 h3 {font-size: 24px; font-weight: bold;}
 h3.date-range {color: #999; margin-top: 20px}
 
+#documentation blockquote, #documentation code {
+  font-size: .85em;
+  font-family: monospace;
+}
+
+#documentation dl {
+  margin-left: 10px;
+}
+
+
+#documentation dt {
+  color: #333;
+  margin-bottom: 4px;
+  font-weight: bold;
+}
+
+#documentation dd {
+  margin: 0 0 10px 25px;
+}
+
 header {height: 70px;}
 
 header h1 {margin: 15px; float: left; height: 40px; line-height: 40px;}

@@ -64,6 +64,7 @@ SITE = [
     (r'/summary', site.ListSummaryHandler),
     (r'/documentation/credentials', site.CredentialsRedirectHandler),
     (r'/documentation/(.+)', site.DocumentationHandler),
+    (r'/documentation', site.BaseDocumentationHandler),
     ]
 
 ADMIN = [

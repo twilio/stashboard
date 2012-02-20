@@ -1,0 +1,55 @@
+{% extends "documentation.html" %}
+
+{% block document %}
+<section class="resource">
+  <h1>Statuses API</h1>
+  <p><a href="/documentation/events">Events</a> have a status which describes the current state of a <a href="/documentation/services">services</a></p>
+  <h3>Attributes</h3>
+  <dl>
+    <dt>id</dt>
+    <dd>The unique identifier by which to identify the status</dd>
+    <dt>name</dt>
+    <dd>The name of the status, defined by the user</dd>
+    <dt>description</dt>
+    <dd>The description of the status</dd>
+    <dt>url</dt>
+    <dd>The URL of the specific status resource</dd>
+    <dt>level</dt>
+    <dd>The level of this status. Can be any value listed in the Levels List resource</dd>
+    <dt>image</dt>
+    <dd>The URL of the image for this status</dd>
+  </dl>
+  <h3>List all statuses</h3>
+  <blockquote>GET /api/v1/statuses</blockquote>
+  <pre><code>{
+    "statuses": [
+        {
+            "name": "Available",
+            "id": "available",
+            "description": "An explanation of what this status represents",
+            "level": "NORMAL",
+            "image": "/images/status/tick-circle.png",
+            "url": "api/v1/statuses/up",
+        },
+        {
+            "name": "Down",
+            "id": "down",
+            "description": "An explanation of what this status represents",
+            "level": "ERROR",
+            "image": "/images/status/cross-circle.png",
+            "url": "api/v1/statuses/down",
+        },
+    ]
+}</code></pre>
+  <h3>Get an individual status</h3>
+  <blockquote>GET /api/v1/statuses/{status-id}</blockquote>
+  <pre><code>{
+    "name": "Down",
+    "id": "down",
+    "description": "A new status",
+    "level": "ERROR",
+    "image": "/images/status/cross-circle.png",
+    "url": "/api/v1/statuses/down",
+}</code></pre>
+</section>
+{% endblock %}

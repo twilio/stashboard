@@ -324,23 +324,34 @@ class ServiceHandler(BaseHandler):
 
         self.render(td, 'service.html')
 
+class BaseDocumentationHandler(BaseHandler):
+
+    def get(self):
+        td = default_template_data()
+        td["selected"] = "overview"
+        self.render(td, 'publicdoc/index.html')
+
 
 class DocumentationHandler(BaseHandler):
+
+    pages = [
+        "events",
+        "services",
+        "service-lists",
+        "status-images",
+        "statuses",
+        "status-images",
+    ]
 
     def get(self, page):
         td = default_template_data()
 
-        if page == "overview":
-            td["overview_selected"] = True
-            self.render(td, 'overview.html')
-        elif page == "rest":
-            td["rest_selected"] = True
-            self.render(td, 'restapi.html')
-        elif page == "examples":
-            td["example_selected"] = True
-            self.render(td, 'examples.html')
-        else:
+        if page not in self.pages:
             self.render({}, '404.html')
+            return
+
+        td["selected"] = page
+        self.render(td, "publicdoc/%s.html" % page)
 
 class CredentialsRedirectHandler(BaseHandler):
 
