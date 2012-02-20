@@ -57,6 +57,47 @@ class Image(db.Model):
     def absolute_url(self):
         return "/images/" + self.path
 
+class List(db.Model):
+    """A list to group service
+
+    Properties:
+    name        -- string: The name of this list
+    description -- string: The description of the list
+    slug        -- string: URL friendly version of the name
+
+    """
+    @staticmethod
+    def get_by_slug(list_slug):
+        return List.all().filter('slug = ', list_slug).get()
+
+    slug = db.StringProperty(required=True)
+    name = db.StringProperty(required=True)
+    description = db.StringProperty(required=True)
+
+    def url(self):
+        return "/lists/%s" % self.slug
+
+    def compare(self, other_status):
+        return 0
+
+    def sid(self):
+        return unicode(self.key())
+
+    def resource_url(self):
+        return "/lists/" + self.slug
+
+    def rest(self, base_url):
+        """ Return a Python object representing this model"""
+
+        m = {}
+        m["name"] = unicode(self.name)
+        m["id"] = unicode(self.slug)
+        m["description"] = unicode(self.description)
+        m["url"] = base_url + self.resource_url()
+
+        return m
+
+
 
 class Service(db.Model):
     """A service to track
@@ -74,6 +115,7 @@ class Service(db.Model):
     slug = db.StringProperty(required=True)
     name = db.StringProperty(required=True)
     description = db.StringProperty(required=True)
+    list = db.ReferenceProperty(List)
 
     def current_event(self):
         event = self.events.order('-start').get()
@@ -148,6 +190,11 @@ class Service(db.Model):
             m["current-event"] = event.rest(base_url)
         else:
             m["current-event"] = None
+
+        if self.list:
+            m["list"] = self.list.rest(base_url)
+        else:
+            m["list"] = None
 
         return m
 

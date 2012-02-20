@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<table id="services" class="data">
+  <thead>
+    <tr>
+      <th>List</th>
+      <th class="today">Status</th>
+  </thead>
+
+  <tbody>
+    {% for list_slug,l in lists %}
+    <tr id="{{ list_slug}}">
+      <td>
+	<a href="{{ l.list.url }}">{{ l.list.name }}</a>
+      </td>
+      <td class="status highlight">
+	<a href="{{ l.list.url }}">
+	  <img class="sym" src="/images/{{ l.status.image }}" alt="{{ l.status.title }}"/>
+	</a>
+      </td>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% include "_legend.html" %}
+
+{% endblock %}

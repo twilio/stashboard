@@ -50,13 +50,18 @@ from handlers import restful
 from time import mktime
 from utils import authorized
 from utils import slugify
-from models import Status, Event, Service, Image
+from models import List, Status, Event, Service, Image
 from wsgiref.handlers import format_date_time
 
 
 def invalidate_cache():
-    if not memcache.delete("frontpage"):
-        logging.error("Memcache delete failed on frontpage")
+    all_pages = memcache.get("__all_pages__")
+    if all_pages is not None:
+        for page,d in all_pages.items():
+            if not memcache.delete(page):
+                logging.error("Memcache delete failed on %s", page)
+    if not memcache.delete("__all_pages__"):
+        logging.error("Memcache delete failed on __all_pages__")
     taskqueue.add(url='/', method="GET")
 
 
@@ -72,6 +77,112 @@ def aware_to_naive(d):
 class NotFoundHandler(restful.Controller):
     def get(self):
         self.error(404, "Can't find resouce")
+
+class ListsListHandler(restful.Controller):
+
+    def get(self, version):
+        if not self.valid_version(version):
+            self.error(404, "API Version %s not supported" % version)
+            return
+
+        query = List.all().order('name')
+        data = [s.rest(self.base_url(version)) for s in query]
+        data = {"lists": data}
+        self.json(data)
+
+    @authorized.api("admin")
+    def post(self, version):
+        if not self.valid_version(version):
+            self.error(404, "API Version %s not supported" % version)
+            return
+
+        name = self.request.get('name', default_value=None)
+        description = self.request.get('description', default_value=None)
+
+        if not name or not description:
+            self.error(400, "Bad Data: Name: %s, Description: %s" \
+                           % (name, description))
+            return
+
+        slug = slugify.slugify(name)
+        existing_s = List.get_by_slug(slug)
+
+        if existing_s:
+            self.error(404, "A list with this name already exists")
+            return
+
+        l = List(name=name, slug=slug, description=description)
+        l.put()
+
+        invalidate_cache()
+
+        self.response.set_status(201)
+        self.json(l.rest(self.base_url(version)))
+
+
+class ListInstanceHandler(restful.Controller):
+
+    def get(self, version, list_slug):
+        if not self.valid_version(version):
+            self.error(404, "API Version %s not supported" % version)
+            return
+
+        list = List.get_by_slug(list_slug)
+
+        if not list:
+            self.error(404, "List %s does not exist" % list_slug)
+            return
+
+        self.json(list.rest(self.base_url(version)))
+
+    @authorized.api("admin")
+    def post(self, version, list_slug):
+        if not self.valid_version(version):
+            self.error(404, "API Version %s not supported" % version)
+            return
+
+        list = List.get_by_slug(list_slug)
+        if not list:
+            self.error(404, "Service %s does not exist" % list_slug)
+            return
+
+        name = self.request.get('name', default_value=None)
+        description = self.request.get('description', default_value=None)
+
+        if description:
+            list.description = description
+
+        if name:
+            list.name = name
+
+        if name or description:
+            invalidate_cache()
+            list.put()
+
+        self.json(list.rest(self.base_url(version)))
+
+    @authorized.api("admin")
+    def delete(self, version, list_slug):
+        if not self.valid_version(version):
+            self.error(404, "API Version %s not supported" % version)
+            return
+
+        list = List.get_by_slug(list_slug)
+
+        if not list:
+            self.error(404, "List %s not found" % list_slug)
+            return
+
+        query = Service.all()
+        query.filter('list =', list)
+        if query:
+            for s in query:
+                s.list = None
+                s.put()
+
+        invalidate_cache()
+        list.delete()
+        self.json(list.rest(self.base_url(version)))
 
 
 class ServicesListHandler(restful.Controller):
@@ -94,10 +205,18 @@ class ServicesListHandler(restful.Controller):
 
         name = self.request.get('name', default_value=None)
         description = self.request.get('description', default_value=None)
+        list = self.request.get('list', default_value=None)
 
-        if not name or not description:
-            self.error(400, "Bad Data: Name: %s, Description: %s" \
-                           % (name, description))
+        badlist = False
+        l = None
+        if list is not None and list <> "":
+            l = List.all().filter("name =", list).get()
+            if l is None:
+                badlist = True
+
+        if not name or not description or badlist:
+            self.error(400, "Bad Data: Name: %s, List: %s, Description: %s" \
+                           % (name, list, description))
             return
 
         slug = slugify.slugify(name)
@@ -107,7 +226,7 @@ class ServicesListHandler(restful.Controller):
             self.error(404, "A sevice with this name already exists")
             return
 
-        s = Service(name=name, slug=slug, description=description)
+        s = Service(name=name, slug=slug, description=description, list=l)
         s.put()
 
         invalidate_cache()
@@ -144,6 +263,7 @@ class ServiceInstanceHandler(restful.Controller):
 
         name = self.request.get('name', default_value=None)
         description = self.request.get('description', default_value=None)
+        list = self.request.get('list', default_value=None)
 
         if description:
             service.description = description
@@ -151,7 +271,20 @@ class ServiceInstanceHandler(restful.Controller):
         if name:
             service.name = name
 
-        if name or description:
+        if list:
+            l = List.all().filter("name = ", list).get()
+            if l is None:
+                self.error(400, "Bad data: Name: %s, List: %s, Description: %s" \
+                           % (name, list, description))
+                return
+            service.list = l
+
+        if "" == list:
+            service.list = None
+            list = "removed"
+
+
+        if name or description or list:
             invalidate_cache()
             service.put()
 
