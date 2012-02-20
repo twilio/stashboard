@@ -1,0 +1,78 @@
+{% extends "documentation.html" %}
+{% block document %}
+<section class="resource">
+  <h1>Services API</h1>
+  <p>The Services List resource represents all web services currently tracked via StashBoard. The resources also allows for the creation of new, trackable web services.</p>
+  <h2>Attributes</h2>
+  <dl>
+    <dt>id<dt>
+    <dd>The unique identifier by which to identify the service>
+    <dt>name</dt>
+    <dd>The name of the service, defined by the user</dd>
+    <dt>description</dt>
+    <dd>The description of the web service</dd>
+    <dt>service-list<dt>
+    <dd>The <a href="#">service list</a> this service belongs to, if any</dd>
+    <dt>current-event</dt>
+    <dd>The current event for the service, if any</dd>
+    <dt>url</dt>
+    <dd>URL of this resource</dd>
+  </dl>
+  <h2>List all the services</h2>
+  <blockquote>GET /api/v1/services</blockquote>
+  <pre>
+  <code>
+{
+    "services": [
+        {
+            "name": "Example Foo",
+            "id": "example-foo",
+            "list": null,
+            "description": "An explanation of this service"
+            "url": "/api/v1/services/example-foo",
+            "current-event": {
+                'message': 'What an event!',
+                'sid': 'ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M',
+                'status': {
+                    'description': 'Hey, dude',
+                    'id': 'up',
+                    'image': '/images/status/tick-circle.png',
+                    'level': 'NORMAL',
+                    'name': 'Up',
+                    'url': '/statuses/up'
+        },
+                'timestamp': 'Mon, 28 Jun 2010 22:17:06 GMT',
+                'url': '/services/twilio/events/ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M'},
+
+        },
+        {
+            "name": "Example Bar",
+            "id": "example-bar",
+            "description": "An explanation of this service"
+            "url": "/api/v1/services/example-bar",
+            "current-event": null,
+        }
+    ]
+}
+    </code>
+  </pre>
+  <h2>Get a single service</h2>
+  <blockquote>GET /api/v1/services/<service_id></blockquote>
+  <pre>
+    <code>
+{
+    "name": "Example Service",
+    "id": "example-service",
+    "description": "An explanation of what this service represents",
+    "list": {
+        "name": "Example List",
+        "id": "example-list",
+        "description": "System is now operational",
+        "url": "/api/v1/service-lists/example-list"
+    },
+    "url": "/api/v1/services/example-service",
+    "current-event": null
+}
+    </code>
+  </pre>
+</section>

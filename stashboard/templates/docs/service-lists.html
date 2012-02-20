@@ -1,0 +1,50 @@
+{% extends "documentation.html" %}
+{% block document %}
+<section class="resource">
+  <h1>Service Lists API</h1>
+  <h2>Attributes</h2>
+  <dl>
+    <dt>id<dt>
+    <dd>The unique identifier by which to identify the list</dd>
+    <dt>name</dt>
+    <dd>The name of the list, defined by the user</dd>
+    <dt>description</dt>
+    <dd>The description of the list</dd>
+    <dt>url</dt>
+    <dd>The URL of the specific list resource</dd>
+  </dl>
+  <h2>List all service lists</h2>
+  <blockquote>GET /api/v1/service-lists</blockquote>
+  <pre>
+    <code>
+{
+    "lists": [
+        {
+            "name": "Example Foo",
+            "id": "example-foo",
+            "description": "An explanation of this service"
+            "url": "/api/v1/lists/example-foo",
+        },
+        {
+            "name": "Example Bar",
+            "id": "example-bar",
+            "description": "An explanation of this service"
+            "url": "/api/v1/lists/example-bar",
+        }
+    ]
+}
+    </code>
+  </pre>
+  <h2>Get a single service list</h2>
+  <blockquote>GET /api/v1/service-lists/<service_id></blockquote>
+  <pre>
+    <code>
+{
+    "name": "Example List",
+    "id": "example-list",
+    "description": "An explanation of what this list represents"
+    "url": "/api/v1/lists/example-list",
+}
+    </code>
+  </pre>
+</section>
