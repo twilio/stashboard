@@ -203,6 +203,7 @@ Returns a list of all current service lists tracked by Stashboard
    GET /admin/api/v1/service-lists HTTP/1.1
 
 .. code-block:: js
+
         {
             "lists": [
                 {
@@ -223,7 +224,7 @@ Returns a list of all current service lists tracked by Stashboard
 POST 
 ++++++
 
-Creates a new service list (or updates an existing service list) and returns the new service list object.
+Creates a new service list and returns the new service list object.
 
 ==============   ===============
 Param            Description
@@ -234,7 +235,7 @@ description      Description of service list
 
 .. code-block:: text
 
-   POST /admin/api/v1/services HTTP/1.1 name=New%20Service&description=A%20great%20service
+   POST /admin/api/v1/service-lists HTTP/1.1 name=New%20Service&description=A%20great%20service
 
 .. code-block:: js
 
@@ -251,7 +252,7 @@ Instance Resource
 
 .. code-block:: text
 
-    /admin/api/v1/services/{service}
+    /admin/api/v1/service-lists/{service-list}
 
 The Service Instance resources represents an individual service list
 
@@ -260,7 +261,7 @@ GET
 
 .. code-block:: bash
 
-    GET /admin/api/v1/service-list/{service} HTTP/1.1
+    GET /admin/api/v1/service-lists/{service} HTTP/1.1
 
 .. code-block:: js
 
@@ -268,7 +269,7 @@ GET
             "name": "Example List",
             "id": "example-list",
             "description": "An explanation of what this list represents"
-            "url": "/api/v1/service-list/example-list",
+            "url": "/api/v1/service-lists/example-list",
         }
 
 POST

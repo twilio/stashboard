@@ -142,6 +142,7 @@ class ListInstanceHandler(restful.Controller):
             return
 
         list = List.get_by_slug(list_slug)
+
         if not list:
             self.error(404, "Service %s does not exist" % list_slug)
             return
@@ -205,18 +206,22 @@ class ServicesListHandler(restful.Controller):
 
         name = self.request.get('name', default_value=None)
         description = self.request.get('description', default_value=None)
-        list = self.request.get('list', default_value=None)
-
-        badlist = False
+        slist = self.request.get('list', default_value=None)
         l = None
-        if list is not None and list <> "":
-            l = List.all().filter("name =", list).get()
-            if l is None:
-                badlist = True
 
-        if not name or not description or badlist:
-            self.error(400, "Bad Data: Name: %s, List: %s, Description: %s" \
-                           % (name, list, description))
+        if slist:
+            l = List.all().filter("slug =", slist).get()
+
+        if not name:
+            self.error(400, "Bad name: %s" % name)
+            return
+
+        if not description:
+            self.error(400, "Bad description: %s" % description)
+            return
+
+        if slist and not l:
+            self.error(400, "Bad list slug: %s" % slist)
             return
 
         slug = slugify.slugify(name)
@@ -272,11 +277,12 @@ class ServiceInstanceHandler(restful.Controller):
             service.name = name
 
         if list:
-            l = List.all().filter("name = ", list).get()
+            l = List.all().filter("slug = ", list).get()
+
             if l is None:
-                self.error(400, "Bad data: Name: %s, List: %s, Description: %s" \
-                           % (name, list, description))
+                self.error(400, "Can't find list with slug %s" % list)
                 return
+
             service.list = l
 
         if "" == list:

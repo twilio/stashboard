@@ -75,7 +75,7 @@ class List(db.Model):
     description = db.StringProperty(required=True)
 
     def url(self):
-        return "/lists/%s" % self.slug
+        return "/service-lists/%s" % self.slug
 
     def compare(self, other_status):
         return 0
@@ -84,7 +84,7 @@ class List(db.Model):
         return unicode(self.key())
 
     def resource_url(self):
-        return "/lists/" + self.slug
+        return "/service-lists/" + self.slug
 
     def rest(self, base_url):
         """ Return a Python object representing this model"""

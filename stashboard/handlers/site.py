@@ -162,7 +162,9 @@ class ListHandler(BaseHandler):
         services = []
         default_status = Status.get_default()
 
-        for service in Service.all().filter("list =", self.list).order("name").fetch(100):
+        query = Service.all().filter("list =", self.list).order("name")
+
+        for service in query.fetch(100):
             event = service.current_event()
             if event is not None:
                 status = event.status

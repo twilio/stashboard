@@ -95,6 +95,7 @@ class EditServiceHandler(site.BaseHandler):
             "slug": service.slug,
             "name": service.name,
             "action": "edit",
+            "service_lists": List.all().fetch(100),
             }
 
         if service.list is not None:
@@ -113,6 +114,7 @@ class CreateServiceHandler(site.BaseHandler):
             "services_selected": True,
             "url": "/admin/api/v1/services",
             "action": "create",
+            "service_lists": List.all().fetch(100),
             }
 
         td.update(site.default_template_data())
@@ -247,7 +249,7 @@ class EditListHandler(site.BaseHandler):
             "lists_selected": True,
             "list": list,
             "action": "edit",
-            "url": "/admin/api/v1/list/" + slug,
+            "url": "/admin/api/v1/service-lists/" + slug,
             "description": list.description,
             "name": list.name,
             }
@@ -286,7 +288,7 @@ class CreateListHandler(site.BaseHandler):
         td = {
             "lists_selected": True,
             "action": "create",
-            "url": "/admin/api/v1/lists",
+            "url": "/admin/api/v1/service-lists",
             }
 
         td.update(site.default_template_data())

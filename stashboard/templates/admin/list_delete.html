@@ -1,13 +1,13 @@
 {% extends "admin/admin.html" %}
 
 {% block section %}
-<form class="delete" action="/admin/api/v1/lists/{{list.slug}}" method="post">
+<form class="delete" action="/admin/api/v1/service-lists/{{list.slug}}" method="post">
 
   <div class="error">{{ error }}</div>
 
-  <p>Are you sure you want to delete the {{ list.name}} list? </p>
+  <p>Are you sure you want to delete the {{ list.name}} service list? </p>
 
-  <link rel="redirect" href="/admin/lists" />
+  <link rel="redirect" href="/admin/service-lists" />
 
   <button type="submit" class="button pill big primary danger">
     Delete List

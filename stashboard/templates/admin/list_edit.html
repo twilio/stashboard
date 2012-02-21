@@ -5,7 +5,7 @@
 
 <form class="admin" action="{{ url }}" method="post">
 
-  <h1>{{ action|title }} a List</h1>
+  <h1>{{ action|title }} a Service List</h1>
 
   <div class="error">{{ error }}</div>
 
@@ -17,9 +17,9 @@
   </dl>
 
   {% if slug %}
-  <link rel="redirect" href="/admin/lists/{{slug}}">
+  <link rel="redirect" href="/admin/service-lists/{{slug}}">
   {% else %}
-  <link rel="redirect" href="/admin/lists">
+  <link rel="redirect" href="/admin/service-lists">
   {% endif%}
 
   <button type="submit" class="button pill big primary">
