@@ -2,6 +2,13 @@ ChangeLog
 ===========
 
 
+2012.2.20, Version 1.5.1
+-------------------------
+
+* Add new Service List resource for grouping similar services
+
+* Update public REST API documentation to only document GET methods 
+
 2011.11.27, Version 1.5
 -------------------------
 
