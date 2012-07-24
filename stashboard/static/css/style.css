@@ -485,5 +485,9 @@ form.admin ul.images li img {
   font-weight: bold;
 }
 
-
+#rss-button {
+  line-height: 32px;
+  vertical-align: bottom;
+  margin-right: 15px;
+}
 
