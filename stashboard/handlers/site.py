@@ -361,7 +361,7 @@ class CredentialsRedirectHandler(BaseHandler):
         self.redirect("/admin/credentials")
 
 class RSSHandler(BaseHandler):
-    """ Feed of the last 100 events """
+    """ Feed of the last settings.RSS_NUM_EVENTS_TO_FETCH events """
 
     def get(self):
         self.response.headers['Content-Type'] = "text/xml"
@@ -371,7 +371,7 @@ class RSSHandler(BaseHandler):
 
         events = []
         query = Event.all().order("-start")
-        for event in query.fetch(100):
+        for event in query.fetch(settings.RSS_NUM_EVENTS_TO_FETCH):
             event.link = base_url + '/services/' + event.service.slug
             event.title = '[%s - %s] %s' % (event.service.name, event.status.name, event.message)
             events.append(event)
