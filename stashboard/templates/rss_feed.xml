@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+<channel>
+        <title>{{ site_name }} Service Events</title>
+        <description>This feed shows the last 50 events on {{ site_name }}</description>
+        <link>{{ base_url }}</link>
+
+{% for event in events %}
+        <item>
+                <title>{{ event.title }}</title>
+                <description>{{ event.message }}</description>
+                <link>{{ event.link }}</link>
+                <service>{{ event.service.name }}</service>
+                <time>{{ event.start }}{{ " UTC" }}</time>
+                <status>{{ event.status.name }}</status>
+        </item>
+{% endfor %}
+
+</channel>
+</rss>
+
