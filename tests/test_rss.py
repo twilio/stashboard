@@ -29,7 +29,7 @@ class RSSFeedTest(StashboardTest):
 
     def test_empty_feed(self):
         response = self.get("/rss")
-        self.assertEquals(response.headers["Content-Type"], "text/xml")
+        self.assertEquals(response.headers["Content-Type"], "application/rss+xml")
         self.assertEquals(response.status_code, 200)
 
     def test_feed_with_events(self):
@@ -38,7 +38,7 @@ class RSSFeedTest(StashboardTest):
                                 status=random.choice(self.statuses))
         event.put()
         response = self.get("/rss")
-        self.assertEquals(response.headers["Content-Type"], "text/xml")
+        self.assertEquals(response.headers["Content-Type"], "application/rss+xml")
         self.assertEquals(response.status_code, 200)
 
         result = xml.etree.ElementTree.fromstring(response.content)
@@ -54,9 +54,9 @@ class RSSFeedTest(StashboardTest):
             self.assertEquals(len(channel.findall(tag)), 1)
 
         item = channel.find('item')
-        # assert existence of title, description, link, service, time, and status
+        # assert existence of title, description, link, category, pubDate, and guid
         # elements in channel.
-        for tag in ['title', 'description', 'link', 'service', 'time', 'status']:
+        for tag in ['title', 'description', 'link', 'category', 'pubDate', 'guid']:
             self.assertEquals(len(item.findall(tag)), 1)
 
 
@@ -69,7 +69,7 @@ class RSSFeedTest(StashboardTest):
 
         response = self.get("/rss")
 
-        self.assertEquals(response.headers["Content-Type"], "text/xml")
+        self.assertEquals(response.headers["Content-Type"], "application/rss+xml")
         self.assertEquals(response.status_code, 200)
 
         result = xml.etree.ElementTree.fromstring(response.content)

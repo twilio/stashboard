@@ -364,7 +364,7 @@ class RSSHandler(BaseHandler):
     """ Feed of the last settings.RSS_NUM_EVENTS_TO_FETCH events """
 
     def get(self):
-        self.response.headers['Content-Type'] = "text/xml"
+        self.response.headers['Content-Type'] = "application/rss+xml"
 
         host = self.request.headers.get('host', 'nohost')
         base_url = self.request.scheme + "://" + host
@@ -374,6 +374,9 @@ class RSSHandler(BaseHandler):
         for event in query.fetch(settings.RSS_NUM_EVENTS_TO_FETCH):
             event.link = base_url + '/services/' + event.service.slug
             event.title = '[%s - %s] %s' % (event.service.name, event.status.name, event.message)
+            event.pubdate = format_date_time(mktime(event.start.timetuple()))
+            event.message = unicode(event.message)
+            event.guid = base_url + '/api/v1/services/' + event.service.slug + '/events/' + unicode(event.key())
             events.append(event)
 
         rss_info = {'events': events, 'base_url': base_url, 'site_name': settings.SITE_NAME}

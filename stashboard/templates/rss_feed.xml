@@ -10,9 +10,9 @@
                 <title>{{ event.title }}</title>
                 <description>{{ event.message }}</description>
                 <link>{{ event.link }}</link>
-                <service>{{ event.service.name }}</service>
-                <time>{{ event.start }}{{ " UTC" }}</time>
-                <status>{{ event.status.name }}</status>
+                <category>{{ event.service.name }}</category>
+                <pubDate>{{ event.pubdate }}</pubDate>
+                <guid>{{ event.guid }}</guid>
         </item>
 {% endfor %}
 
