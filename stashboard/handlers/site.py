@@ -42,6 +42,7 @@ from django.template.loader import render_to_string
 from django.utils import simplejson as json
 from time import mktime
 from models import List, Status, Service, Event, Profile
+import xml.etree.ElementTree as et
 from utils import authorized
 from wsgiref.handlers import format_date_time
 
@@ -371,13 +372,43 @@ class RSSHandler(BaseHandler):
 
         events = []
         query = Event.all().order("-start")
-        for event in query.fetch(settings.RSS_NUM_EVENTS_TO_FETCH):
-            event.link = base_url + '/services/' + event.service.slug
-            event.title = '[%s - %s] %s' % (event.service.name, event.status.name, event.message)
-            event.pubdate = format_date_time(mktime(event.start.timetuple()))
-            event.message = unicode(event.message)
-            event.guid = base_url + '/api/v1/services/' + event.service.slug + '/events/' + unicode(event.key())
-            events.append(event)
 
-        rss_info = {'events': events, 'base_url': base_url, 'site_name': settings.SITE_NAME}
-        self.render(rss_info, 'rss_feed.xml')
+        # Create the root 'rss' element
+        rss_xml = et.Element('rss')
+        rss_xml.set('version', '2.0')
+
+        # Create the channel element and its metadata elements
+        channel = et.SubElement(rss_xml, 'channel')
+        title = et.SubElement(channel, 'title')
+        title.text = '%s Service Events' % settings.SITE_NAME
+        description = et.SubElement(channel, 'description')
+        description.text = 'This feed shows the last %d events on %s' % (settings.RSS_NUM_EVENTS_TO_FETCH, settings.SITE_NAME)
+        link = et.SubElement(channel, 'link')
+        link.text = base_url
+
+        # Create each of the feed events.
+        item_subelements = {
+            'title': lambda(event): '[%s - %s] %s' % (event.service.name, event.status.name, unicode(event.message)),
+            'description': lambda(event): '%s' % unicode(event.message),
+            'link': lambda(event): '%s/services/%s' % (base_url, event.service.slug),
+            'category': lambda(event): event.service.name,
+            'pubDate': lambda(event): format_date_time(mktime(event.start.timetuple())),
+            'guid': lambda(event): '%s/api/v1/services/%s/events/%s' % (base_url, event.service.slug, unicode(event.key()))
+        }
+
+        for event in query.fetch(settings.RSS_NUM_EVENTS_TO_FETCH):
+            item = et.SubElement(channel, 'item')
+            for tag, text_func in item_subelements.iteritems():
+                subelement = et.SubElement(item, tag)
+                subelement.text = text_func(event)
+
+        #from xml.dom import minidom
+        #rough_string = et.tostring(rss_xml, 'utf-8')
+        #reparsed = minidom.parseString(rough_string)
+
+        # header = '<?xml version="1.0" encoding="UTF-8"?>'
+        self.response.out.write(et.tostring(rss_xml))
+        #self.response.out.write(et.tostring(rss_xml, 'utf-8'))
+
+        #self.response.out.write(reparsed.toprettyxml(indent="  "))
+
