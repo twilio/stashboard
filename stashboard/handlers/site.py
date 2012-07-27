@@ -373,6 +373,24 @@ class RSSHandler(BaseHandler):
         events = []
         query = Event.all().order("-start")
 
+        # Filter query by requested services, if specified in the 'service' URL parameter.
+        service_list = []
+        for service_arg in self.request.get_all('services'):
+            service_list.extend(service_arg.split(','))
+        service_list = map(lambda serv_slug: Service.get_by_slug(serv_slug), service_list)
+        # filter out any non-existent services
+        service_list = filter(lambda service: not service is None, service_list)
+
+        service_string = 'all services'
+        if len(service_list) > 0:
+            query.filter('service IN', service_list)
+            if len(service_list) == 1:
+                service_string = 'the %s service' % service_list[0].name
+            elif len(service_list) == 2:
+                service_string = 'the %s and %s services' % (service_list[0].name, service_list[1].name)
+            else:
+                service_string = 'the %s, and %s services' % (', '.join([service.name for service in service_list[:-1]]), service_list[-1].name)
+
         # Create the root 'rss' element
         rss_xml = et.Element('rss')
         rss_xml.set('version', '2.0')
@@ -382,7 +400,7 @@ class RSSHandler(BaseHandler):
         title = et.SubElement(channel, 'title')
         title.text = '%s Service Events' % settings.SITE_NAME
         description = et.SubElement(channel, 'description')
-        description.text = 'This feed shows the last %d events on %s' % (settings.RSS_NUM_EVENTS_TO_FETCH, settings.SITE_NAME)
+        description.text = 'This feed shows the last %d events on %s on %s.' % (settings.RSS_NUM_EVENTS_TO_FETCH, service_string, settings.SITE_NAME)
         link = et.SubElement(channel, 'link')
         link.text = base_url
 
@@ -402,13 +420,25 @@ class RSSHandler(BaseHandler):
                 subelement = et.SubElement(item, tag)
                 subelement.text = text_func(event)
 
-        #from xml.dom import minidom
-        #rough_string = et.tostring(rss_xml, 'utf-8')
-        #reparsed = minidom.parseString(rough_string)
 
-        # header = '<?xml version="1.0" encoding="UTF-8"?>'
+        # Taken from effbot: http://effbot.org/zone/element-lib.htm#prettyprint
+        # Indents xml.etree.ElementTree.Element in place.
+        def indent(elem, level=0):
+            i = "\n" + level*"  "
+            if len(elem):
+                if not elem.text or not elem.text.strip():
+                    elem.text = i + "  "
+                if not elem.tail or not elem.tail.strip():
+                    elem.tail = i
+                for elem in elem:
+                    indent(elem, level+1)
+                if not elem.tail or not elem.tail.strip():
+                    elem.tail = i
+            else:
+                if level and (not elem.tail or not elem.tail.strip()):
+                    elem.tail = i
+
+        self.response.out.write('<?xml version="1.0" encoding="UTF-8"?>\n')
+        indent(rss_xml)
         self.response.out.write(et.tostring(rss_xml))
-        #self.response.out.write(et.tostring(rss_xml, 'utf-8'))
-
-        #self.response.out.write(reparsed.toprettyxml(indent="  "))
 
