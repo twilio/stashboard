@@ -13,6 +13,7 @@ from handlers import site
 from models import List, Service, Status, Event, Image, Profile
 from utils import slugify
 
+import oauth2 as oauth
 
 def default_template_data():
     td = site.default_template_data()
