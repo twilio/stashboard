@@ -12,6 +12,7 @@ TWITTER_CONSUMER_KEY = ''
 TWITTER_CONSUMER_SECRET = ''
 TWITTER_ACCESS_TOKEN = ''
 TWITTER_ACCESS_TOKEN_SECRET = ''
+TWITTER_HANDLE = 'stashboard_status'
 
 # OAuth Consumer Credentials
 CONSUMER_KEY = 'anonymous'
