@@ -1,3 +1,4 @@
+from google.appengine.ext import testbed
 import json
 import models
 from test_api import StashboardTest
@@ -133,13 +134,13 @@ class EventListTest(StashboardTest):
         status.put()
 
     def test_post_with_status(self):
-        response = self.post("/admin/api/v1/services/foo/events", 
+        response = self.post("/admin/api/v1/services/foo/events",
             data={"message": "hello", "status": "up"})
         self.assertEquals(response.status_code, 200)
         self.assertEquals(response.headers["Content-Type"], "application/json")
 
     def test_post_success(self):
-        response = self.post("/admin/api/v1/services/foo/events", 
+        response = self.post("/admin/api/v1/services/foo/events",
             data={"message": "hello"})
         self.assertEquals(response.status_code, 200)
         self.assertEquals(response.headers["Content-Type"], "application/json")
@@ -170,5 +171,36 @@ class EventListTest(StashboardTest):
         self.assertEquals(response.status_code, 404)
         self.assertEquals(response.headers["Content-Type"], "application/json")
 
+    def test_post_with_twitter(self):
+        response = self.post("/admin/api/v1/services/foo/events",
+            data={"message": "hello", "status": "up", "tweet": "on"})
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.headers["Content-Type"], "application/json")
+        queue_tasks = self.testbed.get_stub(testbed.TASKQUEUE_SERVICE_NAME).GetTasks('default')
 
+        # Assert that we have the Twitter task in the queue
+        queue_endpoints = [task['url'] for task in queue_tasks]
+        self.assertTrue('/admin/tweet' in queue_endpoints)
+
+        response = self.post("/admin/api/v1/services/foo/events",
+            data={"message": "hello", "status": "up", "tweet": "checked"})
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.headers["Content-Type"], "application/json")
+        queue_tasks = self.testbed.get_stub(testbed.TASKQUEUE_SERVICE_NAME).GetTasks('default')
+
+        # Assert that we have two Twitter tasks lined up.
+        queue_endpoints = [task['url'] for task in queue_tasks]
+        self.assertEquals(queue_endpoints.count('/admin/tweet'), 2)
+
+
+    def test_post_without_twitter(self):
+        response = self.post("/admin/api/v1/services/foo/events",
+            data={"message": "hello", "status": "up", "tweet": ""})
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.headers["Content-Type"], "application/json")
+        queue_tasks = self.testbed.get_stub(testbed.TASKQUEUE_SERVICE_NAME).GetTasks('default')
+
+        # Assert that we have no Twitter tasks lined up.
+        queue_endpoints = [task['url'] for task in queue_tasks]
+        self.assertTrue('/admin/tweet' not in queue_endpoints)
 
