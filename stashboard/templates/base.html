@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="/css/reset.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="/css/style.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="/css/gh-buttons.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/css/font-awesome.css" type="text/css" media="screen" />
     {% block js %}
     {% endblock %}
   </head>
@@ -13,11 +14,14 @@
     <div id="wrapper">
       <header>
 	<div class="actions button-container">
-      <a href="/rss" class="button pill big" title="Subscribe to the RSS feed"><img src="/images/feed-icon-14x14.png"/></a>
+    <a href="/rss" class="button pill big" title="Subscribe to the RSS feed">
+      <i class="icon-rss"></i> Feeds
+    </a>
 	  {% if admin %}
 	  <a class="button pill big" href="/admin">Admin</a>
 	  {% endif %}
-	  <a href="{{ report_url }}" class="button pill big">Report an Issue</a>
+    <a href="{{ report_url }}" class="button pill big">
+      <i class="icon-exclamation-sign"></i> Report an Issue</a>
 	</div>
         <img id="logo" src="/images/logo.png" alt="Logo"/>
         <a href="/"><h1 id="title">{{ title }}</h1></a>
