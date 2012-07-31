@@ -485,5 +485,7 @@ form.admin ul.images li img {
   font-weight: bold;
 }
 
-
+.service-rss {
+  float: right;
+}
 

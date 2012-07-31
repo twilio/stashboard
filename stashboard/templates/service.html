@@ -2,8 +2,7 @@
 
 {% block content %}
 
-<h2>{{ service.name }}</h2>
-
+<h2>{{ service.name }} <a class="button pill service-rss" href="/rss?services={{ service.slug }}"><img src="/images/feed-icon-14x14.png"/></a></h2>
 <p id="serviceDescription"> {{ service.description }}</p>
 
 {% if start_date %}
