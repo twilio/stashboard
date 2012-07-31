@@ -365,7 +365,7 @@ class RSSHandler(BaseHandler):
     """ Feed of the last settings.RSS_NUM_EVENTS_TO_FETCH events """
 
     def get(self):
-        self.response.headers['Content-Type'] = "application/rss+xml"
+        self.response.headers['Content-Type'] = "application/rss+xml; charset=utf-8"
 
         host = self.request.headers.get('host', 'nohost')
         base_url = self.request.scheme + "://" + host
@@ -420,25 +420,6 @@ class RSSHandler(BaseHandler):
                 subelement = et.SubElement(item, tag)
                 subelement.text = text_func(event)
 
-
-        # Taken from effbot: http://effbot.org/zone/element-lib.htm#prettyprint
-        # Indents xml.etree.ElementTree.Element in place.
-        def indent(elem, level=0):
-            i = "\n" + level*"  "
-            if len(elem):
-                if not elem.text or not elem.text.strip():
-                    elem.text = i + "  "
-                if not elem.tail or not elem.tail.strip():
-                    elem.tail = i
-                for elem in elem:
-                    indent(elem, level+1)
-                if not elem.tail or not elem.tail.strip():
-                    elem.tail = i
-            else:
-                if level and (not elem.tail or not elem.tail.strip()):
-                    elem.tail = i
-
         self.response.out.write('<?xml version="1.0" encoding="UTF-8"?>\n')
-        indent(rss_xml)
         self.response.out.write(et.tostring(rss_xml))
 
