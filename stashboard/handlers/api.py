@@ -32,7 +32,6 @@ import string
 import re
 import os
 import cgi
-import urllib
 import logging
 
 from datetime import timedelta
@@ -47,9 +46,6 @@ from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext import db
 from handlers import restful
-import oauth2 as oauth
-import settings
-import socket
 from time import mktime
 from utils import authorized
 from utils import slugify
@@ -324,9 +320,6 @@ class ServiceInstanceHandler(restful.Controller):
 
 class EventsListHandler(restful.Controller):
     def get(self, version, service_slug):
-
-        consumer = oauth.Consumer(key=CONSUMER_KEY, secret=CONSUMER_SECRET)
-        token = oauth.Token(key=key, secret=secret)
         if not self.valid_version(version):
             self.error(404, "API Version %s not supported" % version)
             return
@@ -401,27 +394,10 @@ class EventsListHandler(restful.Controller):
         e.informational = informational and informational == "true"
         e.put()
 
-        # Post to Twitter
+        # Queue up a task that calls the Twitter API to make a tweet.
         if self.request.get('tweet'):
-            logging.info('Attempting to post a tweet for the latest event')
-            if not (settings.TWITTER_CONSUMER_KEY and settings.TWITTER_CONSUMER_SECRET and \
-                    settings.TWITTER_ACCESS_TOKEN and settings.TWITTER_ACCESS_TOKEN_SECRET):
-                logging.error('Twitter credentials not configured properly in settings.py')
-            else:
-                consumer = oauth.Consumer(key=settings.TWITTER_CONSUMER_KEY, secret=settings.TWITTER_CONSUMER_SECRET)
-                token = oauth.Token(key=settings.TWITTER_ACCESS_TOKEN, secret=settings.TWITTER_ACCESS_TOKEN_SECRET)
-
-                client = oauth.Client(consumer, token, timeout=10)
-
-                try:
-                    resp, content = client.request(
-                        'http://api.twitter.com/1/statuses/update.json',
-                        method='POST',
-                        body=urllib.urlencode({'status': '[%s - %s] %s' % (service.name, status.name, message)})
-                    )
-                    logging.info('Tweet successful: [%s - %s] %s' % (service.name, status.name, message))
-                except socket.timeout:
-                    logging.error('Unable to post to Twitter API.')
+            logging.info('Attempting to post a tweet for the latest event via async GAE task queue.')
+            taskqueue.add(url='/admin/tweet', params={'service_name': service.name, 'status_name': status.name, 'message': message})
 
         invalidate_cache()
         self.json(e.rest(self.base_url(version)))

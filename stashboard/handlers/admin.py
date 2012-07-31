@@ -8,12 +8,15 @@ from google.appengine.api import memcache
 from google.appengine.api import taskqueue
 from google.appengine.api import users
 from google.appengine.ext import db
+from google.appengine.ext import webapp
 from handlers import api
 from handlers import site
 from models import List, Service, Status, Event, Image, Profile
 from utils import slugify
 
 import oauth2 as oauth
+import socket
+import urllib
 
 def default_template_data():
     td = site.default_template_data()
@@ -428,6 +431,37 @@ class OAuthVerifyHandler(site.BaseHandler):
         profile.put()
 
         self.redirect("/admin/credentials")
+
+
+class EventTweetHandler(webapp.RequestHandler):
+    def post(self):
+        if not (settings.TWITTER_CONSUMER_KEY and settings.TWITTER_CONSUMER_SECRET and \
+                settings.TWITTER_ACCESS_TOKEN and settings.TWITTER_ACCESS_TOKEN_SECRET):
+            logging.error('Twitter credentials not configured properly in settings.py')
+            return
+
+        service_name = self.request.get('service_name')
+        status_name = self.request.get('status_name')
+        message = self.request.get('message')
+
+        if not service_name or not status_name or not message:
+            logging.error('Internal Twitter endpoint not called correctly')
+            return
+
+        consumer = oauth.Consumer(key=settings.TWITTER_CONSUMER_KEY, secret=settings.TWITTER_CONSUMER_SECRET)
+        token = oauth.Token(key=settings.TWITTER_ACCESS_TOKEN, secret=settings.TWITTER_ACCESS_TOKEN_SECRET)
+
+        client = oauth.Client(consumer, token, timeout=10)
+
+        try:
+            resp, content = client.request(
+                'http://api.twitter.com/1/statuses/update.json',
+                method='POST',
+                body=urllib.urlencode({'status': '[%s - %s] %s' % (service_name, status_name, message)})
+            )
+            logging.info('Tweet successful: [%s - %s] %s' % (service_name, status_name, message))
+        except socket.timeout:
+            logging.error('Unable to post to Twitter API.')
 
 
 class InvalidateCacheHandler(site.BaseHandler):
