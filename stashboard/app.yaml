@@ -15,6 +15,9 @@ handlers:
   script: $PYTHON_LIB/google/appengine/ext/admin
   login: admin
 
+- url: /font
+  static_dir: static/font
+
 - url: /css
   static_dir: static/css
 

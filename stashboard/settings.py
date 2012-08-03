@@ -14,6 +14,9 @@ TWITTER_ACCESS_TOKEN = ''
 TWITTER_ACCESS_TOKEN_SECRET = ''
 TWITTER_HANDLE = 'stashboard_status'
 
+# RSS Feed settings
+RSS_NUM_EVENTS_TO_FETCH = 50
+
 # OAuth Consumer Credentials
 CONSUMER_KEY = 'anonymous'
 CONSUMER_SECRET = 'anonymous'

@@ -488,3 +488,7 @@ form.admin ul.images li img {
 .twitter_handle {
   font-weight: bold;
 }
+
+.service-rss {
+  float: right;
+}
