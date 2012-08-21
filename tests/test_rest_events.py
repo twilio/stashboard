@@ -1,4 +1,3 @@
-import json
 import models
 from test_api import StashboardTest
 
@@ -86,7 +85,7 @@ class EventInstanceTest(StashboardTest):
         event = models.Event(service=service, status=self.status, message="foo")
         event.put()
 
-        url = "/admin/api/v1/services/foo/events/{}".format(event.key())
+        url = "/admin/api/v1/services/foo/events/%s" % event.key()
         response = self.delete(url)
         self.assertEquals(response.status_code, 404)
 
@@ -97,12 +96,12 @@ class EventInstanceTest(StashboardTest):
         event = models.Event(service=service, status=self.status, message="foo")
         event.put()
 
-        url = "/admin/api/v1/services/foo/events/{}".format(event.key())
+        url = "/admin/api/v1/services/foo/events/%s" % event.key()
         response = self.get(url)
         self.assertEquals(response.status_code, 404)
 
     def test_get_event(self):
-        url = "/admin/api/v1/services/foo/events/{}".format(self.event.key())
+        url = "/admin/api/v1/services/foo/events/%s" % self.event.key()
         response = self.get(url)
         self.assertEquals(response.headers["Content-Type"], "application/json")
         self.assertEquals(response.status_code, 200)
@@ -116,7 +115,7 @@ class EventInstanceTest(StashboardTest):
         self.assertEquals(response.status_code, 405)
 
     def test_delete_event(self):
-        url = "/admin/api/v1/services/foo/events/{}".format(self.event.key())
+        url = "/admin/api/v1/services/foo/events/%s" % self.event.key()
         response = self.delete(url)
         self.assertEquals(response.headers["Content-Type"], "application/json")
         self.assertEquals(response.status_code, 200)
