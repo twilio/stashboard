@@ -2,5 +2,6 @@ requests==0.7.4
 mock==0.7.2
 nose==1.1.2
 sphinx
--e git+git@github.com:kyleconroy/webtest.git#egg=WebTest
--e git+git@github.com:kyleconroy/python-oauth2.git#egg=oauth
+git+git://github.com/kyleconroy/webtest.git
+git+git://github.com/kyleconroy/python-oauth2.git
+simplejson

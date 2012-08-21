@@ -1,12 +1,9 @@
 #!/usr/bin/python
-import argparse
-import logging
 import sys
-import unittest
-import os
 import nose
+import os
 
-SDK_PATH = "/usr/local/google_appengine/"
+SDK_PATH = os.environ.get("APPENGINE_SDK", "/usr/local/google_appengine/")
 
 def main():
     #logging.basicConfig(level=logging.DEBUG)
@@ -15,7 +12,6 @@ def main():
     import dev_appserver
     dev_appserver.fix_sys_path()
     nose.main()
-
 
 if __name__ == '__main__':
     main()

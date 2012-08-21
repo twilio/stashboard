@@ -1,4 +1,3 @@
-import json
 from test_api import StashboardTest
 
 class ImageTest(StashboardTest):
