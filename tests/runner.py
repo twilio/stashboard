@@ -1,8 +1,9 @@
 #!/usr/bin/python
 import sys
 import nose
+import os
 
-SDK_PATH = "/usr/local/google_appengine/"
+SDK_PATH = os.environ.get("APPENGINE_SDK", "/usr/local/google_appengine/")
 
 def main():
     #logging.basicConfig(level=logging.DEBUG)
