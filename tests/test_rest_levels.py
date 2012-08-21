@@ -1,4 +1,9 @@
-import json
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
+
 from models import Service
 from test_api import StashboardTest
 

@@ -4,3 +4,4 @@ nose==1.1.2
 sphinx
 git+git://github.com/kyleconroy/webtest.git
 git+git://github.com/kyleconroy/python-oauth2.git
+simplejson

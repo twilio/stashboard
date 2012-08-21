@@ -1,5 +1,9 @@
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
 import oauth2 as oauth
-import json
 import urllib
 import unittest
 import requests

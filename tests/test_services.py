@@ -1,4 +1,8 @@
-import json
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
 from mock import patch
 from models import Service, List
 from test_api import StashboardTest
