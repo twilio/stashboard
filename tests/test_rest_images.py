@@ -1,8 +1,3 @@
-try:
-    import json
-except ImportError:
-    import simplejson as json
-
 from test_api import StashboardTest
 
 class ImageTest(StashboardTest):
