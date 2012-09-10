@@ -51,12 +51,12 @@ h3.date-range {color: #999; margin-top: 20px}
   margin: 0 0 10px 25px;
 }
 
-header {height: 70px;}
+#header {height: 70px;}
 
-header h1 {margin: 15px; float: left; height: 40px; line-height: 40px;}
-header h1 span {font-weight: normal;}
-header h2 {margin: 15px 0; float: left; line-height: 67px;}
-header .button-container { float: right; margin-top: 20px;}
+#header h1 {margin: 15px; float: left; height: 40px; line-height: 40px;}
+#header h1 span {font-weight: normal;}
+#header h2 {margin: 15px 0; float: left; line-height: 67px;}
+#header .button-container { float: right; margin-top: 20px;}
 #logo { height: 40px; width: 54px; float: left; margin: 15px 0;}
 
 #status { height: 200px; }
@@ -64,7 +64,7 @@ header .button-container { float: right; margin-top: 20px;}
 
 #content {
   border: 1px solid rgb(228, 228, 228);
-  background: white;
+  background-color: #fff;
   padding: 20px;
   position: relative;
 }
@@ -232,13 +232,13 @@ nav .selected {
 #legend li {margin-right: 10px; display: inline-block;}
 #legend img, #legend p {vertical-align: middle; display: inline-block;}
 
-footer, #push {height: 3em;}
-footer {width: 900px; margin: auto;}
-footer ul {padding: 10px 0px;}
-footer ul li {display: inline-block;}
-footer ul.left { float: left;}
-footer ul.left li {margin-right: 7px}
-footer ul.right { float: right;}
+#footer, #push {height: 3em;}
+#footer {width: 900px; margin: auto;}
+#footer ul {padding: 10px 0px;}
+#footer ul li {display: inline-block;}
+#footer ul.left { float: left;}
+#footer ul.left li {margin-right: 7px}
+#footer ul.right { float: right;}
 #icons, #icons a{ color: #ccc; }
 
 td.status a{position: relative;}

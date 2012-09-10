@@ -12,7 +12,7 @@
   </head>
   <body>
     <div id="wrapper">
-      <header>
+      <div id="header">
 	<div class="actions button-container">
     <a href="/rss" class="button pill big" title="Subscribe to the RSS feed">
       <i class="icon-rss"></i> Feeds
@@ -25,14 +25,14 @@
 	</div>
         <img id="logo" src="/images/logo.png" alt="Logo"/>
         <a href="/"><h1 id="title">{{ title }}</h1></a>
-      </header>
-      <section id="content">
+      </div>
+      <div id="content">
         {% block content %}
         {% endblock %}
-      </section>
+      </div>
       <div id="push"></div>
     </div>
-    <footer>
+    <div id="footer">
       <ul class="left">
 	{% if user %}
 	<li>
@@ -47,7 +47,7 @@
       <ul class="right">
 	<li id="powered"><a href="http://www.stashboard.org">POWERED BY <img src="/images/poweredbystash.png" alt="stash!" /> STASHBOARD</a></li>
        </ul>
-    </footer>
+    </div>
     {% block js_end %}
     {% endblock %}
   </body>
