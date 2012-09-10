@@ -18,6 +18,8 @@
     <dd>The level of this status. Can be any value listed in the Levels List resource</dd>
     <dt>image</dt>
     <dd>The URL of the image for this status</dd>
+    <dt>default</dt>
+    <dd>Defines the status as default</dd>
   </dl>
   <h3>List all statuses</h3>
   <blockquote>GET /api/v1/statuses</blockquote>
@@ -30,6 +32,7 @@
             "level": "NORMAL",
             "image": "/images/status/tick-circle.png",
             "url": "api/v1/statuses/up",
+            "default": true,
         },
         {
             "name": "Down",
@@ -38,6 +41,7 @@
             "level": "ERROR",
             "image": "/images/status/cross-circle.png",
             "url": "api/v1/statuses/down",
+            "default": false,
         },
     ]
 }</code></pre>
@@ -50,6 +54,7 @@
     "level": "ERROR",
     "image": "/images/status/cross-circle.png",
     "url": "/api/v1/statuses/down",
+    "default": false,
 }</code></pre>
 </section>
 {% endblock %}

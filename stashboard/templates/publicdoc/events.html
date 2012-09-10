@@ -16,12 +16,15 @@
     <dd>The URL of the specific event resource</dd>
     <dt>status</dt>
     <dd>The status of this event, as described by the Statuses resource</dd>
+    <dt>informational</dt>
+    <dd>This determines if event is a note or event</dd>
   </dl>
   <h3>List all events for a service</h3>
   <blockquote>GET /api/v1/services/{service-id}/events</blockquote>
   <pre><code>{
     "events": [
         {
+            "informational": false,
             "timestamp": "Mon, 28 Jun 2010 22:17:06 GMT",
             "message": "Problem fixed", 
             "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GBAM",
@@ -36,6 +39,7 @@
             },
         }, 
         {
+            "informational": false,
             "timestamp": "Mon, 28 Jun 2010 22:18:06 GMT",
             "message": "Might be up", 
             "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
@@ -65,8 +69,9 @@
   <blockquote>GET /api/v1/services/{service-id}/events?end=2010-06-17&start=2010-06-01</blockquote>
   <p>Return all events between June 6, 2010 and June 17, 2010</p>
   <h3>Get the current event for a service</h3>
-  <blockquote>GET /api/v1/services/{service-id}/current</blockquote>
+  <blockquote>GET /api/v1/services/{service-id}/events/current</blockquote>
   <pre><code>{
+    "informational": true,
     "timestamp": "Mon, 28 Jun 2010 22:17:06 GMT",
     "message": "Might be up", 
     "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",
@@ -83,6 +88,7 @@
   <h3>Get an individual event</h3>
   <blockquote>GET /api/v1/services/{service-id}/events/{event-sid}</blockquote>
   <pre><code>{
+    "informational": false,
     "timestamp": "Mon, 28 Jun 2010 22:17:06 GMT",
     "message": "Might be up", 
     "sid": "ahJpc215d2Vic2VydmljZWRvd25yCwsSBUV2ZW50GA8M",

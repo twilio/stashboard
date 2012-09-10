@@ -8,23 +8,23 @@
   <dl>
     <dt>name</dt>
     <dd>The name of the status image</dd> 
-    <dt>set</dt>
+    <dt>icon_set</dt>
     <dd>The icon set this image belongs to</dd>
     <dt>url</dt>
     <dd>The image URL<dd>
   </dl>
   <h3>List all status images</h3>
-  <blockquote>GET /api/v1/statuses</blockquote>
+  <blockquote>GET /api/v1/status-images</blockquote>
   <pre><code>{
     "images": [
         {
             "url": "http://status.twilio.com/images/icons/fugue/broom.png",
-            "set": "fugue",
+            "icon_set": "fugue",
             "name": "broom"
         },
         {
             "url": "http://status.twilio.com/images/icons/fugue/flag.png",
-            "set": "fugue",
+            "icon_set": "fugue",
             "name": "flag"
         },
     ]
