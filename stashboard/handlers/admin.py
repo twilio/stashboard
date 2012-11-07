@@ -29,6 +29,10 @@ def setup_occurred():
     return InternalEvent.get_by_key_name("load_defaults") is not None
 
 
+def finish_setup():
+    assert InternalEvent.get_or_insert("load_defaults", name="load_defaults")
+
+
 class RootHandler(site.BaseHandler):
 
     def get(self):
@@ -47,7 +51,7 @@ class SetupHandler(site.BaseHandler):
             Status.load_defaults()
             Image.load_defaults()
             api.invalidate_cache()
-            assert InternalEvent.get_or_insert("load_defaults", name="load_defaults")
+            finish_setup()
         self.redirect("/admin")
 
 
