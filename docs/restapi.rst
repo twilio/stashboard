@@ -733,7 +733,6 @@ Returns a list of possible status levels in increasing severity
 
         {
             "levels": [
-                "INFO", 
                 "NORMAL", 
                 "WARNING", 
                 "ERROR", 
