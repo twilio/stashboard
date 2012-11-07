@@ -11,8 +11,9 @@ from google.appengine.ext import db
 from google.appengine.ext import webapp
 from handlers import api
 from handlers import site
-from models import List, Service, Status, Event, Image, Profile
+from models import List, Service, Status, Event, Image, Profile, InternalEvent
 from utils import slugify
+
 
 import oauth2 as oauth
 import socket
@@ -24,6 +25,10 @@ def default_template_data():
     return td
 
 
+def setup_occurred():
+    return InternalEvent.get_by_key_name("load_defaults") is not None
+
+
 class RootHandler(site.BaseHandler):
 
     def get(self):
@@ -33,18 +38,25 @@ class RootHandler(site.BaseHandler):
 class SetupHandler(site.BaseHandler):
 
     def get(self):
+        if setup_occurred():
+            self.redirect("/admin")
         self.render(default_template_data(), 'admin/setup.html')
 
     def post(self):
-        Status.load_defaults()
-        Image.load_defaults()
-        api.invalidate_cache()
+        if not setup_occurred():
+            Status.load_defaults()
+            Image.load_defaults()
+            api.invalidate_cache()
+            assert InternalEvent.get_or_insert("load_defaults", name="load_defaults")
         self.redirect("/admin")
 
 
 class ServiceHandler(site.BaseHandler):
 
     def get(self):
+        if not setup_occurred():
+            self.redirect("/admin/setup")
+
         td = default_template_data()
         td["services_selected"] = True
         td["services"] = Service.all().order("name").fetch(1000)

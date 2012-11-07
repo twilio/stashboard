@@ -29,6 +29,17 @@ from django.utils import simplejson as json
 from time import mktime
 from wsgiref.handlers import format_date_time
 
+
+class InternalEvent(db.Model):
+    """An event that happens internally that we need to track. If the event
+    exists, that mean the event happened.
+
+    Properties:
+    name -- string: The name of this event
+    """
+    name = db.StringProperty(required=True)
+
+
 class Image(db.Model):
     """A service to track
 
