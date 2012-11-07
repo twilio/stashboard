@@ -492,3 +492,9 @@ form.admin ul.images li img {
 .service-rss {
   float: right;
 }
+
+#skip {
+  display: inline-block;
+  text-decoration: underline;
+  margin: 0px 10px;
+}

@@ -55,6 +55,13 @@ class SetupHandler(site.BaseHandler):
         self.redirect("/admin")
 
 
+class SkipHandler(site.BaseHandler):
+
+    def get(self):
+        finish_setup()
+        self.redirect("/admin")
+
+
 class ServiceHandler(site.BaseHandler):
 
     def get(self):
