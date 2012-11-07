@@ -13,16 +13,16 @@
   <body>
     <div id="wrapper">
       <div id="header">
-	<div class="actions button-container">
-    <a href="/rss" class="button pill big" title="Subscribe to the RSS feed">
-      <i class="icon-rss"></i> Feeds
-    </a>
-	  {% if admin %}
-	  <a class="button pill big" href="/admin">Admin</a>
-	  {% endif %}
-    <a href="{{ report_url }}" class="button pill big">
-      <i class="icon-exclamation-sign"></i> Report an Issue</a>
-	</div>
+        <div class="actions button-container">
+          <a href="/rss" class="button pill big" title="Subscribe to the RSS feed">
+            <i class="icon-rss"></i> Feeds
+          </a>
+          {% if admin %}
+          <a class="button pill big" href="/admin">Admin</a>
+          {% endif %}
+          <a href="{{ report_url }}" class="button pill big">
+            <i class="icon-exclamation-sign"></i> Report an Issue</a>
+        </div>
         <img id="logo" src="/images/logo.png" alt="Logo"/>
         <a href="/"><h1 id="title">{{ title }}</h1></a>
       </div>
@@ -34,19 +34,21 @@
     </div>
     <div id="footer">
       <ul class="left">
-	{% if user %}
-	<li>
-	  <a href="{{ logout_url }}">Logout</a>
-	</li>
-	{% endif %}
-	<li>
-	  <a href="/documentation">API</a>
-	</li>
+        <li>
+          {% if user %}
+          <a href="{{ logout_url }}">Logout</a>
+          {% else %}
+          <a href="/admin">Admin</a>
+        </li>
+        {% endif %}
+        <li>
+          <a href="/documentation">API</a>
+        </li>
         <li>&copy; 2010-{% now "Y" %} <a href="http://www.twilio.com">Twilio Inc.</a></li>
       </ul>
       <ul class="right">
-	<li id="powered"><a href="http://www.stashboard.org">POWERED BY <img src="/images/poweredbystash.png" alt="stash!" /> STASHBOARD</a></li>
-       </ul>
+        <li id="powered"><a href="http://www.stashboard.org">POWERED BY <img src="/images/poweredbystash.png" alt="stash!" /> STASHBOARD</a></li>
+      </ul>
     </div>
     {% block js_end %}
     {% endblock %}
