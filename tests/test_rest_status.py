@@ -93,10 +93,24 @@ class StatusInstanceTest(StashboardTest):
         self.assertEquals(response.status_code, 200)
         self.assertEquals(response.headers["Content-Type"], "application/json")
 
+    def test_url_api_correct(self):
+        response = self.get("/admin/api/v1/statuses/foo")
+        data = json.loads(response.content)
+        self.assertEquals(data['url'], 'http://localhost:80/admin/api/v1/statuses/foo')
+
+    def test_url_admin_api_correct(self):
+        response = self.get("/api/v1/statuses/foo")
+        data = json.loads(response.content)
+        self.assertEquals(data['url'], 'http://localhost:80/api/v1/statuses/foo')
+ 
     def test_delete_success(self):
         response = self.delete("/admin/api/v1/statuses/foo")
         self.assertEquals(response.status_code, 200)
         self.assertEquals(response.headers["Content-Type"], "application/json")
+
+        data = json.loads(response.content)
+
+        self.assertEquals(data['url'], 'http://localhost:80/admin/api/v1/statuses/foo')
 
         status = Status.get(self.status.key())
         self.assertEquals(status, None)

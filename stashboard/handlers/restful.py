@@ -137,7 +137,10 @@ class Controller(webapp.RequestHandler):
     def base_url(self, version):
         "Returns the base url for the given host and version"
         host = self.request.headers.get('host', 'nohost')
-        return self.request.scheme + "://" + host + "/api/" + version
+        if "admin/api" in self.request.path:
+            return self.request.scheme + "://" + host + "/admin/api/" + version
+        else:
+            return self.request.scheme + "://" + host + "/api/" + version
 
     def valid_version(self, version):
         return version == "v1"
