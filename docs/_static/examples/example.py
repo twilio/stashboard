@@ -10,8 +10,8 @@ app_id = "stashboard-hrd"
 # These keys can be found at /admin/credentials
 consumer_key = 'anonymous'
 consumer_secret = 'anonymous'
-oauth_key = '1/97AeXBu2IRJMOmG5c1km50Nb4_-OLZ0tU93T2G1Pay0'
-oauth_secret = 'QniHPrrux6EgV1_p6L6cAvs0'
+oauth_key = 'ACCESS_TOKEN'
+oauth_secret = 'ACCESS_SECRET'
 
 # Create your consumer with the proper key/secret.
 # If you register your application with google, these values won't be
