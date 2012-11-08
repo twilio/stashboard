@@ -16,14 +16,14 @@ base = "https://stashboard.appspot.com"
 
 # POST to the Services Resource to create a new service. Save the response for
 # later
-@response = @token.post("/api/v1/services", {
+@response = @token.post("/admin/api/v1/services", {
     :name => "An Example Service",
     :description => "An example service, created using the StashBoard API",
 })
 srvice = JSON.parse(@response.body)
 
 # GET the list of possible status images
-@response = @token.get("/api/v1/status-images")
+@response = @token.get("/admin/api/v1/status-images")
 data = JSON.parse(@response.body)
 images = data['images']
 
@@ -32,16 +32,16 @@ image = images[rand(images.length)]
 
 
 # POST to the Statuses Resources to create a new Status
-@response = @token.post("/api/v1/statuses", {
-    :name => "Example Status",
-    :description => "An example status, means nothing",
-    :severity => 10000,
+@response = @token.post("/admin/api/v1/statuses", {
+    :name => "Maintenance",
+    :description => "The web service is under-going maintenance",
+    :level => "WARNING",
     :image => image["name"],
 })
 
 status = JSON.parse(@response.body)
 
-@response = @token.post("/api/v1/services/" + srvice["id"] + "/events", {
+@response = @token.post("/admin/api/v1/services/" + srvice["id"] + "/events", {
     :message => "Our first event! So exciting",
     :status => status["id"],
 })

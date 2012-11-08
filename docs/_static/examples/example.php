@@ -36,7 +36,7 @@ function request($consumer, $token, $url, $method = "GET", $data = null) {
 }
 
 // Fill in your website
-$base_url = "https://$app_id.appspot.com/api/v1";
+$base_url = "https://$app_id.appspot.com/admin/api/v1";
 
 $data = array(
 				"name" => "An Example Service",
@@ -59,7 +59,7 @@ $image = $images[0];
 $data = array(
 				"name" => "Example Status",
 				"description" => "An example status, means nothing",
-				"severity" => 10000,
+				"level" => "NORMAL",
 				"image" => $image->name,
 			);
 
