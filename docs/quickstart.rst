@@ -23,8 +23,11 @@ Customzing
 -------------
 
 Open the ``settings.py`` file and change the ``SITE_NAME``, ``SITE_URL``, and
-``REPORT_URL`` options to the desired values. The ``CONSUMER_KEY`` and
-``CONSUMER_SECRET`` values don't need to be changed
+``REPORT_URL`` options to the desired values. 
+
+If you're planning on authenicating using the REST API, you need to `register
+your application with Google <https://accounts.google.com/ManageDomains>`_ to
+get your ``CONSUMER_KEY`` and ``CONSUMER_SECRET`` values.
 
 Deploying
 -------------
