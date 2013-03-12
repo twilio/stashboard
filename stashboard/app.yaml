@@ -1,7 +1,8 @@
 application: stashboard-hrd
 version: 2
-runtime: python
+runtime: python27
 api_version: 1
+threadsafe: false
 
 derived_file_type:
 - python_precompiled
@@ -9,6 +10,10 @@ derived_file_type:
 builtins:
 - appstats: on
 - remote_api: on
+
+libraries:
+- name: django
+  version: 1.2
 
 handlers:
 - url: /console/.*
