@@ -5,8 +5,8 @@ python:
 # command to install dependencies
 install:
   - "pip install -r requirements.txt --use-mirrors"
-  - "wget http://googleappengine.googlecode.com/files/google_appengine_1.7.5.zip"
-  - "unzip google_appengine_1.7.5.zip"
+  - "wget -q http://googleappengine.googlecode.com/files/google_appengine_1.7.5.zip"
+  - "unzip -q google_appengine_1.7.5.zip"
 # command to run tests
 script: 
   - "APPENGINE_SDK=google_appengine python tests/runner.py tests"
