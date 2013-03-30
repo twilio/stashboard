@@ -22,17 +22,17 @@
 	  {% if service.has_issues %}
 	    <img class="information" src="/images/small-information.png" alt="Had Issues"/>
 	  {% endif %}
-	  <img class="sym" src="/images/{{ service.status.image }}" alt="{{ service.status.title }}"/>
+	  <img class="sym" src="/images/{{ service.status.image }}" alt="{{ service.status.name }}"/>
 	</a>
       </td>
       {% for h in service.history %}
       <td class="status">
 	{% if h.information %}
 	<a href="{{ service.url }}/{{ h.day|date:"Y/m/j" }}">
-	  <img class="sym" src="/images/{{ h.image }}" alt="{{ h.title }}"/>
+	  <img class="sym" src="/images/{{ h.image }}" alt="{{ h.name }}"/>
 	</a>
 	{% else %}
-	<img class="sym" src="/images/{{ h.image }}" alt="{{ h.title }}"/>
+	<img class="sym" src="/images/{{ h.image }}" alt="{{ h.name }}"/>
 	{% endif %}
       </td>
       {% endfor %}
