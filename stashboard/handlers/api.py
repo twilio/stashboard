@@ -75,7 +75,7 @@ def aware_to_naive(d):
 
 class NotFoundHandler(restful.Controller):
     def get(self):
-        self.error(404, "Can't find resouce")
+        self.error(404, "Can't find resource")
 
 class ListsListHandler(restful.Controller):
 
