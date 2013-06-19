@@ -482,7 +482,10 @@ class EventTweetHandler(webapp.RequestHandler):
                 method='POST',
                 body=urllib.urlencode({'status': '[%s - %s] %s' % (service_name, status_name, message)})
             )
-            logging.info('Tweet successful: [%s - %s] %s' % (service_name, status_name, message))
+            if resp.status == 200:
+                logging.info('Tweet successful: [%s - %s] %s' % (service_name, status_name, message))
+            else:
+                logging.error('Tweet failed: %s' % resp)
         except socket.timeout:
             logging.error('Unable to post to Twitter API.')
 
