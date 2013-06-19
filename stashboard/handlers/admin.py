@@ -478,7 +478,7 @@ class EventTweetHandler(webapp.RequestHandler):
 
         try:
             resp, content = client.request(
-                'http://api.twitter.com/1/statuses/update.json',
+                'http://api.twitter.com/1.1/statuses/update.json',
                 method='POST',
                 body=urllib.urlencode({'status': '[%s - %s] %s' % (service_name, status_name, message)})
             )
