@@ -46,7 +46,7 @@
     {% for e in events %}
     <tr>
       <td class="time">{{ e.start|timesince }} ago</td>
-      <td class="status highlight"><img src="/images/{{ e.status.image }}" alt="{{ e.status.title }}" /></td>
+      <td class="status highlight"><img src="/images/{{ e.status.image }}" alt="{{ e.status.name }}" /></td>
       <td>{{ e.message }}</td>
       <td class="action"><a class="button icon remove danger" href="/admin/services/{{ service.slug }}/events/{{e.sid}}/delete">Delete</a></td>
     </tr>

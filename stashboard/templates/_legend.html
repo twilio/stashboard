@@ -3,7 +3,7 @@
   <ul>
     {% for status in statuses %}
     <li>
-      <img class="sym" src="/images/{{ status.image }}" alt="{{ status.title }}">
+      <img class="sym" src="/images/{{ status.image }}" alt="{{ status.name }}">
       <p>{{ status.description }}</p>
     </li>
     {% endfor %}
