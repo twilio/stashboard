@@ -19,7 +19,7 @@ button to start the application.
 
 Visit http://localhost:8080/admin/setup to complete the installation.
 
-Customzing
+Customizing
 -------------
 
 Open the ``settings.py`` file and change the ``SITE_NAME``, ``SITE_URL``, and
