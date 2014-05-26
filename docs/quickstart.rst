@@ -11,7 +11,7 @@ You'll then need to checkout the Stashboard repository.
 
 .. code-block:: bash
 
-    git clone git://github.com/twilio/stashboard.git`
+    git clone git://github.com/twilio/stashboard.git
 
 Open the SDK, choose ``File > Add Existing Application...`` and select the
 ``stashboard`` folder inside the cloned repository. Then click the green "Run"
